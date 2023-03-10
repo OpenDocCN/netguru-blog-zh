@@ -1,0 +1,162 @@
+<html>
+<head>
+<title>Lazy Loading Images with Vue.js Directives and IntersectionObserver</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>使用Vue.js指令和IntersectionObserver延迟加载图像</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/lazy-loading-images-with-vue.js-directives-andintersectionobserver#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/lazy-loading-images-with-vue.js-directives-andintersectionobserver#0001-01-01</a></blockquote><div><span><p class="blog-post__lead h2">当我考虑性能和网站如何加载时，我首先想到的是当内容被加载时，页面上出现的最后一个元素是图像。</p><p>如今，当谈到性能时，图像(它们在单个页面上的大小和数量)可能是一个主要问题。请记住，一个网站的页面加载时间对转化率有直接影响，这个问题不应该被忽视。</p>
+<p>在这篇文章中，我想介绍一种降低网站初始权重的方法。我将演示的是如何在用户看到初始视图时只加载对他/她可见的内容，并且只在需要时才延迟加载所有其余的重要元素(如图像)。</p>
+<p> </p>
+<p>为此，我们需要解决两件事:</p>
+<ol>
+<li>如何在第一时间存储我们想要加载的图片的来源而不加载。</li>
+<li>如何检测图像何时对用户可见(是必需的)并触发加载图像的请求。</li>
+</ol>
+<p> </p>
+<p><strong>我们将使用<a href="http://web.archive.org/web/20221209120138/https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes" target="_blank">数据属性</a>、<a href="http://web.archive.org/web/20221209120138/https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" target="_blank">交叉观察器</a>和<a href="http://web.archive.org/web/20221209120138/https://vuejs.org/v2/guide/custom-directive.html" target="_blank"> Vue.js自定义指令</a>来解决上述问题。</strong></p>
+<p>为了更容易理解，我创建了一个例子，一个随机文章的列表，每篇文章都包含一个简短的描述、图片和文章来源的链接。我们将介绍用于显示文章列表、显示单个文章以及显示(和延迟加载)特定文章的图像的组件的创建过程。</p>
+<p>我想展示的大部分内容都是基于显示图像的组件，所以我将展示一个组件的基本示例。我们将在接下来的部分中一步一步地解释，所以现在还不要太深入代码。</p>
+<p> </p>
+<p><strong>image item . view</strong></p>
+<p>在这个组件中，我们有一个在加载图像时显示的<code>ImageSpinner</code>组件，以及一个负责保存图像源并在加载完成时显示图像的<code>img</code>标签。</p>
+<p>关键的惰性加载逻辑被提取到一个<code>LazyLoadDirective</code>中，通过添加<code>v-lazyload</code>属性在我们的组件上使用。</p>
+<p data-style-text-align-center=""><em>image item . view</em></p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-1-1.png 0w" src="../Images/5b57e077e605cbcfd76e608ab12bcbc1.png" alt="" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-1-1.png"/>
+  </figure><p>该组件的脚本部分如下所示:</p>
+<p data-style-text-align-center=""><em>image item . view</em></p>
+<p>如上所述，惰性加载逻辑保存在<code>LazyLoadDirective</code>中:</p>
+<p><em>lazy addictive . js</em></p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-2.png 0w" src="../Images/cd6c7211a569ac00a19d3c2427f7cedb.png" alt="" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-2.png"/>
+  </figure><p>这只是一个工作示例的一部分。你可以在这个<strong> <a href="http://web.archive.org/web/20221209120138/https://codesandbox.io/s/5v17x4zr64" target="_blank"> Codesandbox示例</a> </strong>中找到完整的解决方案。我们将一段一段地分析代码，看看在下一节中实际发生了什么。</p>
+<p data-style-text-align-center=""><strong>真实世界的例子:创建一个LazyLoadDirective并在ImageItem组件中使用它</strong></p>
+<p><strong> 1。创建一个基本的ImageItem组件</strong></p>
+<p>让我们从创建一个显示图像的组件开始(不涉及延迟加载)。在模板中，我们创建一个包含图像的<code>figure</code>标签，图像本身接收一个携带图像源(URL)的<code>src</code>属性。</p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-3.png 0w" src="../Images/6f50ac40d0679e9f55057d47ff888c8d.png" alt="" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-3.png"/>
+  </figure><p><em>image item . view</em></p>
+<p data-style-text-align-center="">在脚本部分，我们接收属性<code>source</code>,它给出了我们正在显示的图像的源URL。</p>
+<p><em>image item . view</em></p>
+<h3>这很好——我们渲染了我们想要的图像。但是如果我们让它保持原样，我们将直接加载图像，而不需要等待组件在我们的屏幕上可见。这不是我们想要的，所以让我们进入下一步。</h3>
+<h3><strong> 2。防止在创建组件时加载图像。</strong></h3>
+<p>为了防止图像被加载，我们需要从<code>img</code>标签中去掉<code>src</code>属性。但是，正如开头所指出的，我们仍然需要在某个地方保存图像源。保存这些信息的好地方是<a href="http://web.archive.org/web/20221209120138/https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes" target="_blank">数据-* </a> <a href="http://web.archive.org/web/20221209120138/https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes" target="_blank">属性</a>。</p>
+
+<p data-style-text-align-center="">根据定义，<a href="http://web.archive.org/web/20221209120138/https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes" target="_blank">数据-* </a> <a href="http://web.archive.org/web/20221209120138/https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes" target="_blank">属性</a>允许我们在标准的语义HTML元素中存储信息。</p>
+<p>听起来非常适合我们的需要。</p>
+
+<p data-style-text-align-center=""><em>image item . view</em></p>
+<p>好了，完成后，我们将不会加载我们的图像。但是等等，我们不会加载我们的图像…永远不会！</p>
+<h3>显然，这不是我们想要的。我们希望加载我们的图像，但是在特定的条件下。我们可以通过用保存在<code>data-url</code>中的图像源url替换<code>src</code>属性来请求加载图像。这是容易的部分，我们现在遇到的问题是——我们什么时候应该替换那个<code>src?</code></h3>
+<p>我们希望当承载图像的组件对用户可见时加载图像。我们如何检测用户是否看到我们的图像？让我们在下一步检查一下。</p>
+<p><strong> 3。检测图像何时对用户可见。</strong></p>
+<p>如果你曾经遇到过这样的挑战，你可能最终会使用一些疯狂的、不可思议的JavaScript，当你完成时，它们看起来并不是很好。例如，我们可以使用事件和事件处理程序来检测滚动位置、偏移值、元素高度和视口高度，并计算图像是否在视口中。这听起来很疯狂，不是吗？如果我们真的需要，我们可能会坚持那个解决方案(不管那会有多难看)，但是那样做对我们网站的性能有直接的影响。每次发生滚动事件时，都会执行这些计算。更糟糕的是，想象几十个图像，每个都必须重新计算它们在每个滚动事件中是否可见。这太疯狂了！</p>
+<p>通过使用<strong> <a href="http://web.archive.org/web/20221209120138/https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" target="_blank">交叉点观察器API </a> </strong>可以解决这种非常低效的检测元素在视口中是否可见的方法。</p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-6.png 0w" src="../Images/14acc3e32336b15bc1a7478236c6e0fd.png" alt="" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-6.png"/>
+  </figure><p>查看描述，它允许您配置一个<strong>回调</strong>，每当一个元素(称为<strong>目标</strong>)与设备视口或指定元素相交时，就会调用这个回调。</p>
+<p data-style-text-align-center="">当元素在视口中可见时触发自定义回调函数？听起来像是我们需要的魔咒。</p>
+<p>那么，我们需要做些什么来使用它呢？</p>
+<p>要使用<strong> <a href="http://web.archive.org/web/20221209120138/https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" target="_blank">交点观察者</a> </strong>我们需要做几件事:</p>
+<p>创建新的交叉点观察点</p>
+<h3>观察我们希望延迟加载的元素的可见性变化</h3>
+<p>当元素在视口中时，加载元素(用我们的<code>data-url</code>替换<code>src</code>)</p>
+
+<p>一旦元素被加载，停止观察它的可见性变化(<code>unobserve</code>)</p>
+<p>在<strong> <a href="http://web.archive.org/web/20221209120138/https://vuejs.org/" target="_blank"> Vue </a> </strong>中，我们可以使用一个<strong> <a href="http://web.archive.org/web/20221209120138/https://vuejs.org/v2/guide/custom-directive.html" target="_blank">自定义指令</a> </strong>来包装所有这些功能，然后在需要时重用它们。</p>
+<p>什么是自定义指令？根据文档，这是获得对元素的低级DOM访问的一种方式。例如，改变一个特定DOM元素的属性，或者在我们的例子中，改变一个<code>img</code>元素的<code>src</code>属性。</p>
+<p>我们的指令如下所示。同样，我们一会儿会把它分成几个部分，我只是想给你们一个概述。</p>
+<p><em>lazy addictive . js</em></p>
+<ul>
+<li>我们一步一步来。</li>
+<li><strong> <a href="http://web.archive.org/web/20221209120138/https://vuejs.org/v2/guide/custom-directive.html#Hook-Functions" target="_blank">挂钩功能</a> </strong></li>
+<li>允许我们在绑定元素生命周期的特定时刻触发定制逻辑。</li>
+<li>我们使用一个<code>inserted</code>钩子，因为当绑定元素被插入到它的父节点时，它会被调用(这保证了父节点的存在)。因为我们想要观察一个元素相对于它的父元素(或者任何祖先)的可见性，我们需要使用这个钩子。</li>
+</ul>
+<p><em>lazy addictive . js</em></p>
+
+<p><strong> loadImage函数</strong></p>
+<p>负责用<code>data-url</code>替换<code>src</code>值。</p>
+
+<p data-style-text-align-center="">在这个函数中，我们可以访问我们的<code>el</code>，指令所应用到的元素。我们可以从那个元素中提取出<code>img</code>。</p>
+<p>我们检查图像是否存在，如果存在，我们添加一个监听器，它将在加载完成时触发一个回调函数。该回调将负责隐藏微调器，并使用CSS类向图像添加动画(淡入效果)。</p>
+<p>我们添加了第二个监听器，当从我们的源URL加载图像失败时，将调用这个监听器。</p>
+<ul>
+<li>最后，我们用我们想要请求和显示的图像的源URL替换我们的<code>img</code>元素的<code>src</code>(这触发了请求)。</li>
+<li><em>lazy addictive . js</em></li>
+</ul>
+<p><strong> handleIntersect函数</strong></p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-8.png 0w" src="../Images/2fef6d8bfa8d7c5d309523b559b9830c.png" alt="" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-8.png"/>
+  </figure><p>这是一个IntersectionObserver回调函数，负责在特定条件下触发<code>loadImage</code>。</p>
+<p data-style-text-align-center="">当IntersectionObserver检测到元素进入了viewport或父component元素时，将触发该事件。</p>
+<p>它可以访问<code>entries</code>，这是观察者和<code>observer</code>本身所观察到的所有元素的数组。</p>
+<ul>
+<li>我们遍历<code>entries</code>并检查单个条目是否通过<code>isIntersecting</code>对我们的用户可见，如果可见，则触发<code>loadImage</code>函数。</li>
+<li>请求图像后，我们<code>unobserve</code>元素(从观察者的观察列表中移除它)。这可以防止图像被再次加载。</li>
+<li><em>lazy addictive . js</em></li>
+<li><strong> <a href="http://web.archive.org/web/20221209120138/https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Creating_an_intersection_observer" target="_blank">创建观察者</a> </strong> <strong>功能</strong></li>
+<li>负责创建我们的<strong> IntersectionObserver </strong>并将其附加到我们的元素。</li>
+</ul>
+
+<p data-style-text-align-center=""><strong>intersect observer</strong>构造函数接受一个<strong>回调</strong>(我们的<strong> handleIntersect </strong>函数)，当被观察的元素经过指定的<code>threshold</code>时，该函数被触发，并接受一个携带我们的观察器选项的<strong> options </strong>对象。</p>
+<p><code>options</code>对象指定了一个<code>root</code>——这是我们所关注元素的可见性所基于的引用对象(如果我们传递了<code>null</code>，它可以是对象的任何祖先或者是我们的浏览器视窗)。它还指定了一个<code>threshold</code>值，该值可以在0到1之间变化，并告诉我们观察者的回调应该在目标可见性的多少百分比上执行(0表示一个像素可见，1表示整个元素必须可见)。</p>
+<ul>
+<li>在创建了<strong> IntersectionObserver </strong>之后，我们使用<code>observe</code>方法将它附加到我们的元素上。</li>
+<li><em>lazy addictive . js</em></li>
+<li><strong>浏览器支持</strong></li>
+<li>尽管并非所有浏览器都支持它，但覆盖73%的网络用户(截至2018年8月28日)听起来已经足够好了。</li>
+<li>但是，记住我们想要向所有用户显示图像(记住使用<code>data-url</code>会阻止图像被加载)，我们需要在我们的指令中再添加一个部分。</li>
+</ul>
+
+<p data-style-text-align-center="">我们需要检查浏览器是否支持IntersectionObserver，如果不支持就触发<code>loadImage</code>(这将一次请求所有图像)，如果支持就触发<code>createObserver</code>。</p>
+<p><em>lazy addictive . js</em></p>
+<ul>
+<li>要使用我们新创建的指令，我们需要首先注册它。我们可以通过两种方式实现，全局(在应用程序中随处可用)或本地(在指定的组件级别上)。</li>
+<li> </li>
+<li><strong>全球注册</strong></li>
+<li>为了全局注册一个指令，我们导入我们的指令并使用<code>Vue.directive</code>方法来传递我们希望用来注册我们的指令的名字和指令本身。这允许我们将<code>v-lazyload</code>属性添加到代码中的任何元素。</li>
+</ul>
+<p><em> main.js </em></p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-11.png 0w" src="../Images/df31797954148f0e0f27179ba2149efb.png" alt="" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-11.png"/>
+  </figure><p><strong>本地注册</strong></p>
+<p data-style-text-align-center="">如果我们只想在特定的组件中使用我们的指令，并限制对它的访问，我们可以在本地注册该指令。要做到这一点，我们需要将指令导入到将要使用它的组件中，并在<code>directives</code>对象中注册它。这将使我们能够向该组件中的任何元素添加<code>v-lazyload</code>属性。</p>
+<p><strong> 7。使用ImageItem组件上的指令</strong></p>
+<p>注册我们的指令后，我们可以通过向携带我们的<code>img</code>(在我们的例子中是<code>figure</code>标签)的父元素添加<code>v-lazyload</code>属性来使用它。</p>
+
+<p><em>image item . view</em></p>
+<p><strong>总结</strong></p>
+<p>延迟加载图像可以显著提高页面的性能。它只允许你在用户可以看到图片的时候加载图片。</p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-13.png 0w" src="../Images/8e6d642265b4b85ab85dc456c9f99e4b.png" alt="" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-13.png"/>
+  </figure><p>对于那些仍然不相信它是否值得一试的人，我准备了一些原始数据。就拿我们简单的文章列表来说吧。在我进行测试的时候，它有11篇文章带有图片(意味着页面上有11张图片)。我不认为这是很多的图片，你可以在一秒钟内找到更多的图片。</p>
+<p data-style-text-align-center="">让我们坚持我们的11张图片，检查我们的页面在<em> fast 3G </em>上的性能，只有第一篇文章可见，没有惰性加载的图片。</p>
+
+<p> </p>
+<p> </p>
+<p>不出所料——11张图片，11个请求，总页面大小3.2 MB。</p>
+<p>现在，同一个页面上只有第一篇文章可见，还有延迟加载的图片。</p>
+<p> </p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-14.png 0w" src="../Images/74f1cdc8a6238d3bfe0a6c801fdb32cb.png" alt="" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-14.png"/>
+  </figure><p>结果:1个图像，1个请求，总页面大小1.4 MB。</p>
+<p data-style-text-align-center="">通过将这个指令添加到我们的文章中，我们<strong>节省了10个请求</strong>，我们<strong>将页面大小减少了56%</strong>——记住这是一个非常简单的例子。</p>
+<p>不再多做评论，让数字自己说话。</p>
+<p>If we want to use our directive only in a specific component and restrict the access to it, we can register the directive locally. To do that, we need to import the directive inside the component that will use it and register it in the <code>directives</code> object. This will give us the ability to add the <code>v-lazyload</code> attribute to any element in that component.</p>
+
+<h3><strong>7. Using the directive on the ImageItem component</strong></h3>
+<p>After registering our directive, we can use it by adding the <code>v-lazyload</code> attribute to the parent element that carries our <code>img</code> (the <code>figure</code> tag in our case).</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-16.png 0w" src="../Images/8f60e81354117cb12db5b9bb558ee401.png" alt="" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-16.png"/>
+  </figure><p/>
+<p data-style-text-align-center=""><em>ImageItem.vue</em></p>
+<h3><strong>Summary</strong></h3>
+<p>Lazy loading images can <strong>significantly improve your page's performance</strong>. It allows you to load images only when the user can actually see them. </p>
+<p>For those still not convinced if it is worth playing with, I prepared some raw numbers. Let’s take our simple articles list. At the moment I was performing that test, it had 11 articles with images (meaning 11 images on the page). I don’t think that is a lot of images, you can probably find bigger number in a second by going to any news page.</p>
+<p>Let’s stick to our 11 images and check the performance of our page on <em>fast 3G </em>with only the first article visible, without lazy-loaded images.</p>
+<p> </p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-17.png 0w" src="../Images/8737ed79e8093e1c9c05c62d55d86647.png" alt="" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221209120138im_/https://www.netguru.com/hubfs/snippet-17.png"/>
+  </figure><p/>
+<p>As expected - 11 images, 11 requests, total page size 3.2 MB.</p>
+<p>Now, the same page with only the first article visible and lazy-loaded images.</p>
+
+<p> </p>
+<p>Result: 1 image, 1 request, total page size 1.4 MB. </p>
+<p>By adding this directive to our articles we <strong>saved 10 requests</strong> and we <strong>reduced the page size by 56%</strong> - and bear in mind this is a really simple example.</p>
+<p>No more comments, let the numbers speak for themselves.</p></span></div>    
+</body>
+</html>

@@ -1,0 +1,139 @@
+<html>
+<head>
+<title>ActiveRecord - Part 2: Useful methods</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>ActiveRecord -第2部分:有用的方法</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/activerecord-tips-2#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/activerecord-tips-2#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h3"><p>在<a href="/web/20221226224529/https://www.netguru.com/blog/activerecord-tips-1" rel="noopener">第一部分</a>中，我们讨论了“N+1查询”问题以及如何使用Rails的ActiveRecord来处理它。在这一部分中，我们将讨论一些其他有用的ActiveRecord方法，它们可以帮助我们更快地或者只是以一种更优雅的方式获得一些结果。</p></div>
+<h2>#地图vs #拔毛</h2>
+<p>假设我们想获取所有客户的电子邮件地址。我们可以这样做:</p>
+<pre><code class="language-ruby">Client.all.map(&amp;:email)</code></pre>
+<p>在这种情况下，幕后发生了什么？简单来说:</p>
+<p>1.Rails使用以下查询从数据库获取数据:</p>
+<pre><code class="language-sql">SELECT "clients".* FROM "clients"</code></pre>
+<p>2.从所获取的数据中，创建客户端对象的集合</p>
+<p>3.Ruby遍历整个集合，从每个对象获取email属性，并将其存储在新的集合(一个数组)中</p>
+<p>4.返回新创建的数组</p>
+<p>现在，让我们将只从Ruby获取客户端电子邮件地址的责任直接转移到数据库。我们可以通过使用# pull<em/>方法来实现:</p>
+<pre><code class="language-ruby">Client.pluck(:email)</code></pre>
+<p><span>在这种情况下，将执行以下查询</span></p>
+<pre><code class="language-sql">SELECT "clients"."email" FROM "clients"</code></pre>
+<p>瞧，我们可以观察到同样的结果。</p>
+<p>不同之处在于，在第一个例子中，我们获取了所有的数据，然后Ruby必须处理这些数据。在第二个例子中，我们告诉数据库只获取email列/属性。</p>
+<p>从下表中，您可以看到数据库处理该任务的速度要快得多。</p>
+<table>
+<tbody>
+<tr>
+<td> </td>
+<td data-style-text-align-center=""><strong>时间</strong> <em>【秒】</em></td>
+</tr>
+<tr>
+<td data-style-text-align-center=""><strong>#拔毛</strong></td>
+<td data-style-text-align-center="">0.0040</td>
+</tr>
+<tr>
+<td data-style-text-align-center=""><strong>#地图</strong></td>
+<td data-style-text-align-center="">0.0306</td>
+</tr>
+<tr>
+<td data-style-text-align-center="" colspan="2"><em> <span>(数据库中的1000个客户端)</span> </em></td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p><strong>重要提示</strong></p>
+<p>我们传递给<em>#</em><em>puck</em>方法的参数(是的，我们可以一次获取多个属性)只不过是数据库中列的名称。由于这个原因，我们不能使用这个方法来映射记录，例如，在我们的模型中使用一个自定义方法。</p>
+<pre><code class="language-ruby">class Client &lt; ApplicationRecord
+  ...
+  def visible?
+    [true, false].sample
+  end
+end</code></pre>
+<p>出于明显的原因，我们不能在<em>可见的情况下调用<em># pull</em>方法？</em>论证，仅仅是因为没有<em>可见吗？</em>数据库表中的列。在这种情况下，我们只能使用<em> #map </em>的方法。</p>
+<p><strong>另一个有用的东西</strong></p>
+<p><em># puck</em>方法的一个典型用例是当我们想从数据库中检索一个id(主键)列表时。</p>
+<pre><code class="language-ruby">Client.pluck(:id)</code></pre>
+<p>我们可以通过编写更少的代码并使用<em> # </em> <em> ids </em>方法:来做到这一点</p>
+<pre><code class="language-ruby">Client.ids</code></pre>
+<h2><span>#总和</span></h2>
+<p>假设我们想知道商店中所有订单的总和。</p>
+<p>有两种简单的方法可以实现这一点:</p>
+<pre><code class="language-ruby">1) Order.sum(:total)
+2) Order.sum(&amp;:total)</code></pre>
+<p>这两个代码行看起来非常相似。不同的是，在一种情况下，我们传递一个简单的符号作为参数，而在另一种情况下，我们传递一个块。执行上的差异是显著的。将执行以下查询</p>
+<pre><code class="language-sql">1) SELECT SUM("orders"."total") FROM "orders"
+2) SELECT "orders".* FROM "orders"</code></pre>
+<p>如我们所见，在第一种情况下，我们将计算订单总数的责任转移到了数据库上。</p>
+<p>第二种情况更复杂。首先，Rails从数据库中获取所有订单。创建一个由<em>个订单</em>个对象组成的集合。然后Ruby映射集合<span>——它</span>遍历所有项目，并从它们那里获取<em>总</em>属性。我们最终得到一个包含每个订单的总属性的数组。现在，ruby在创建的数组上调用<em> #sum </em>方法，这将产生所需的值。</p>
+<p>同样，正如您在下表中看到的，数据库的速度要快得多。</p>
+<table>
+<tbody>
+<tr>
+<td> </td>
+<td data-style-text-align-center=""><strong>时间</strong> <span> </span> <em>【秒】</em></td>
+</tr>
+<tr>
+<td data-style-text-align-center=""><strong>使用符号</strong></td>
+<td data-style-text-align-center="">0.0032</td>
+</tr>
+<tr>
+<td data-style-text-align-center=""><strong>使用块</strong></td>
+<td data-style-text-align-center="">0.0916</td>
+</tr>
+<tr>
+<td data-style-text-align-center="" colspan="2"><em> <span>(数据库中的5000个订单)</span> </em></td>
+</tr>
+</tbody>
+</table>
+<h2>#uniq</h2>
+<p><span> <em>这对RAILS 5.x不再有效，在Rails 5.x中，没有静态。ActiveRecord::基类的uniq方法。</em>T3】</span></p>
+<p>另一个有趣的例子说明了执行方法的顺序是多么重要。假设我们想列出在我们店里至少下过一次订单的客户的所有电子邮件地址。这个列表应该包含唯一的值，这样如果有人做了一个以上的订单，他们的电子邮件应该只出现一次。</p>
+<p>好吧。有两种简单的方法可以实现这一点:</p>
+<pre><code class="language-ruby">1) Order.pluck(:email).uniq
+2) Order.uniq.pluck(:email)</code></pre>
+<p>正如你所看到的，这些例子只是在我们调用<em>#</em><em/>&amp;<em>#</em><em>uniq</em>方法的顺序上有所不同。在这两个例子中，数据库只负责获取电子邮件地址(所以Ruby不需要映射额外的数据)。那么区别在哪里呢？请查看将在以下每种情况下执行的查询:</p>
+<pre><code class="language-sql">1) SELECT "orders"."email" FROM "orders"
+2) SELECT DISTINCT "orders"."email" FROM "orders"</code></pre>
+<p>区别就在这里。在第二种情况下，数据库负责筛选唯一值(通过使用DISTINCT指令)。在第一种情况下，Rails获取所有的电子邮件地址，从它们创建一个数组，然后在其上调用<em> Array#uniq </em>方法。</p>
+<p>下表显示了性能差异:</p>
+<table>
+<tbody>
+<tr>
+<td> </td>
+<td data-style-text-align-center=""><strong>时间</strong> <span> </span> <em>【秒】</em></td>
+</tr>
+<tr>
+<td data-style-text-align-center=""><strong> #uniq - Array#uniq </strong></td>
+<td data-style-text-align-center="">0.0762</td>
+</tr>
+<tr>
+<td data-style-text-align-center=""><strong>#独特的</strong></td>
+<td data-style-text-align-center="">0.0197</td>
+</tr>
+<tr>
+<td data-style-text-align-center="" colspan="2"><em> <span>(数据库中的5000个订单)</span> </em></td>
+</tr>
+</tbody>
+</table>
+<p><span>#更新_全部</span></p>
+<p>此方法用于...批量更新记录:)V <span>非常有用，但也不是没有缺陷。</span></p>
+<p>假设我们的商店系统中有一些订单。我们希望识别所有尚未完成(即，它们仍处于购物车状态)且一周内未更新的订单。然后我们必须在所有这样的订单上将<em>无效</em>标志设置为<em>真</em>。</p>
+<p><span>这样做的第一个想法是:</span></p>
+<p>当然，这很有效。但是我们来分析一下解决方案的成本。执行一个查询来获取符合给定标准的所有订单，然后执行<em> n </em>个查询来更新每个订单。当然，<em> n </em>是第一次查询返回的订单数。成本相当高，尤其是当我们有很多记录要更新的时候。</p>
+<pre><code class="language-ruby">Order.where(state: 'cart').where('updated_at &lt; ?', 7.days.ago).each do |order|
+  order.update(inactive: true)
+end</code></pre>
+<p>ActiveRecord也为我们提供了一个解决方案。是<em> #update_all </em>方法:</p>
+<p>所有记录都将在一次查询中更新。</p>
+<pre><code class="language-ruby">Order.where(state: 'cart').where('updated_at &lt; ?', 7.days.ago).update_all(inactive: true)</code></pre>
+<p>警告？当然也有一些。通过使用<em> #update_all </em>方法，我们创建了一个原始SQL查询，并将其直接发送到数据库，这意味着该方法省略了在我们的模型上设置的所有回调:验证、after_save等。<span>正因为如此，如果我们在很大程度上依赖于这样的回调，我们必须非常小心地使用这种方法。否则，我们的应用程序可能会出现数据不一致的情况。</span></p>
+<p>摘要</p>
+<h2>查看所有这些性能比较表，我们可以得出一个简单的结论:在检索、解析或处理数据方面，数据库总是比Ruby快。那么我们应该总是要求数据库做这样的事情吗？当然不是。一如既往，没有灵丹妙药。不朽的声明:“这取决于”在这里也是有效的。</h2>
+<p>我们能承受长时间锁定数据库，而不是发出一个简单的请求，让Ruby运行更复杂的操作吗？当然，Ruby将花费更长的时间来处理相同的查询，但同时，数据库将可用于执行其他操作。</p>
+<p>根据应用的逻辑、应用的架构或硬件能力，上述问题和其他相关问题的答案会有所不同。</p>
+<p>我们需要知道的是，ActiveRecord相当灵活。它基于某些约定为我们做了许多事情，但同时，它允许我们忽略这些默认约定，按照我们想要的方式做事。我们可以真正控制活动记录如何执行其操作。</p>
+<p><em>测量是在Ruby 2.5.0和Ruby on Rails 5.2.0上进行的</em></p>
+<p><em>Measurements were made on Ruby 2.5.0 and Ruby on Rails 5.2.0</em></p></span></div>    
+</body>
+</html>

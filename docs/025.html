@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>Update your app to Android Oreo – Important Information for app owners</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>将您的应用程序更新到Android Oreo——应用程序所有者的重要信息</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/update-to-android-oreo#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/update-to-android-oreo#0001-01-01</a></blockquote><div><div id="hs_cos_wrapper_post_body"><span><div class="blog-post__lead h3"><p>谷歌开始发送电子邮件通知谷歌Play商店政策即将发生的变化。从2018年11月1日开始，每一个作为新应用或之前发布的应用的更新上传的应用都必须针对<a href="/web/20221001234426/https://www.netguru.com/services/android-mobile-development" rel=" noopener" target="_blank">安卓</a>奥利奥(API等级26)或更高。</p></div><h2>我为什么要在乎？</h2>
+<h3><span>后台执行限制</span></h3>
+<p><span> <a href="/web/20221001234426/https://www.netguru.com/services/android-mobile-development">安卓</a> O通过改变后台服务的行为，持续提升电池续航能力。虽然默认情况下，新的限制不适用于旧的应用程序，但用户可以从设置中手动强制新的行为，这可能会导致旧应用程序出现问题。谷歌为移动开发者提供了可能的替代品，比如JobScheduler。</span></p>
+<h3><span>平台版本市场份额</span></h3>
+<h4><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image"><img class="image__content" srcset="http://web.archive.org/web/20221001234426im_/https://www.netguru.com/hs-fs/hubfs/image1-16.png?width=700&amp;name=image1-16.png 700w, http://web.archive.org/web/20221001234426im_/https://www.netguru.com/hs-fs/hubfs/image1-16.png?width=2400&amp;name=image1-16.png 2400w" src="../Images/709a62f2412f1e9b01c979ad6cb8abe3.png" alt="image1-16" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221001234426im_/https://www.netguru.com/hs-fs/hubfs/image1-16.png?width=700&amp;name=image1-16.png"/>T2】</figure></h4>
+<p><span> <em>来源:【https://developer.android.com/about/dashboards/】</em></span></p>
+<p><span>Android 8.0+的市场份额在不断增长，所以当你瞄准较低的API时，你已经让14.6%的潜在用户面临糟糕的用户体验，这可能导致不利的Play Store评论。</span></p>
+<h3><span>安卓后台位置限制</span></h3>
+<p>为了节省电池，并保持相同水平的用户体验和系统健康，在运行Android 8.0的设备上使用时，后台应用程序接收位置更新的频率会降低。如果您的应用程序依赖实时警报或后台运行的运动检测，记住这种位置检索行为尤为重要。</p>
+<h3><span> App快捷方式</span></h3>
+<p>com . Android . launcher . action . install _ SHORTCUT广播不再对您的应用程序有任何影响，因为它现在是一个私有的隐式广播。相反，您应该通过使用ShortcutManager类中的requestPinShortcut()方法来创建应用程序快捷方式。</p>
+<h3><span>通知</span></h3>
+<p>奥利奥对通知进行了修改。您的应用程序可能不会显示与用户交互所需的重要通知。</p>
+<h3><span>总体改进</span></h3>
+<p>除了不好的方面，新的API在安全性和用户隐私方面做了很多改进。Android 8.1 (API level 27)对自动填充框架进行了一些改进，你可以将这些改进整合到你的应用中。通过使用安全浏览API的WebView实现，您的应用程序可以检测WebView实例何时试图导航到Google已归类为已知威胁的URL。Android支持库26允许您从提供商应用程序请求字体，而不是将字体捆绑到APK或让APK下载字体。新版本的Android还为创建自己的辅助功能服务的开发人员增加了对几个新的辅助功能的支持。</p>
+<h2><span>最终想法</span></h2>
+<p>将最新Android设备的用户排除在应用程序的预期工作流程之外，肯定会给你带来一些差评。迁移您的应用程序以支持API 26+将消耗您的一些时间，但从长远来看，API的常规修复和改进带来的好处(新功能、与用户交互的新方式，以及最重要的是不会让用户面临API限制导致的不可预测的行为)肯定会带来回报。</p>
+<p><span>一些有用的资源:</span></p>
+</span></div></div>    
+</body>
+</html>

@@ -1,0 +1,119 @@
+<html>
+<head>
+<title>Getting Started with GraphQL and Node.js Made Simple - How We Innovated Our App</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>GraphQL和Node.js入门变得简单——我们如何创新我们的应用</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/getting-started-with-graphql-and-nodejs#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/getting-started-with-graphql-and-nodejs#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h2"><p>GraphQL是一项相当新的技术，它将允许您动态调整数据要求，并在保持当前堆栈的同时提高应用程序的效率。</p></div><p> </p>
+<p>如果您曾经想知道如何开始使用Node.js开发<a href="http://web.archive.org/web/20221203080153/https://graphqleditor.com/" rel="noopener" target="_blank"> GraphQL </a> API，那么您正在阅读正确的文章。我们将学到足够的知识来帮助你开始开发真实世界的API。如果GraphQL听起来不熟悉，或者你想知道为什么它可能是在复杂应用程序中提供数据的最佳方式，我们有一篇关于它的文章<a href="http://web.archive.org/web/20221203080153/https://www.netguru.com/blog/grapghql-vs-rest" target="_blank" rel="noopener">在这里</a>。</p>
+<h3>这是我们正在建造的</h3>
+<p>在Netguru，我们有一个名为Profile的应用程序，我们在将开发人员分配到项目的过程中使用它。该应用程序的主要功能是搜索具有特定技能的Netguru员工(如GraphQL)，这些技能会在应用程序中定期更新，或者搜索完整的团队(如我们公司每个前端开发人员的列表)。近几个月来，Profile在Netguru团队管理中的作用迅速增加，这也是制作移动版的想法的来源——以及为其创建全新API的想法。我们正在用React Native构建一个应用程序，我们选择了Node.js和GraphQL作为后端。</p>
+<p>在下图中，你可以看到我们的API是如何工作的。我们将在Netguru中查询可用的技能，然后检查某些用户在这些技能上有多好。</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image5-916030-edited.png?width=652&amp;name=image5-916030-edited.png 652w, http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image5-916030-edited.png?width=1304&amp;name=image5-916030-edited.png 1304w" src="../Images/35cabcae56a9deedec7f9f91fc99cb51.png" alt="image5-916030-edited.png" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image5-916030-edited.png?width=652&amp;name=image5-916030-edited.png"/>
+  </figure><p/>
+<p>您可以在上面看到的是一个动态构建的示例查询。在左边我们可以看到我们正在请求的字段，在右边是我们的API的响应:我们检索到的数据。我们可以查询我们的数据的其他片段，它会工作。看一看:</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image3-779313-edited.png?width=652&amp;name=image3-779313-edited.png 652w, http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image3-779313-edited.png?width=1304&amp;name=image3-779313-edited.png 1304w" src="../Images/bd3aec45866c397f84a8f13cd6a56ab0.png" alt="image3-779313-edited.png" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image3-779313-edited.png?width=652&amp;name=image3-779313-edited.png"/>
+  </figure><p/>
+<p>这样，我们可以请求适量的数据，而不必创建无数的端点。我们就要知道它是如何做到的了，所以做好准备。</p>
+<h3>先决条件</h3>
+<p>在开始之前，你应该已经安装了<a href="http://web.archive.org/web/20221203080153/https://nodejs.org/en/" rel="nofollow noopener" target="_blank"> Node.js </a>，最好是最新的稳定版本。</p>
+<p>我们的项目中有eslint，因为它可以让我们保持代码的整洁。我们包含了预提交，以避免提交没有通过elint测试的代码。我们将使用es6及其令人敬畏的功能，所以如果你不熟悉es6，你可能想看类似于<a href="http://web.archive.org/web/20221203080153/https://www.youtube.com/watch?v=sjyJBL5fkp8&amp;index=1&amp;list=PL0zVEGEvSaeHJppaRLrqjeTPnCH6vw-sm" rel="nofollow noopener" target="_blank">这个</a>和<a href="http://web.archive.org/web/20221203080153/https://www.youtube.com/watch?v=6sQDTgOqh-I&amp;index=3&amp;list=PL0zVEGEvSaeHJppaRLrqjeTPnCH6vw-sm" rel="nofollow noopener" target="_blank">这个</a>的视频。</p>
+<p>我们用MongoDB作为我们的数据库。我们将使用Mongoose.js来搜索相关文档。为了在线存储数据，我们将使用MongoLab。我们需要babel和webpack将es6翻译成旧版本的JavaScript，它们已经设置好了，所以我们可以马上开始用未来的JavaScript编码。我们的数据将来自种子，这将使用预定义的脚本填充数据库。</p>
+<h3>设置服务器</h3>
+<p>我们要做的第一件事是从Github下载教程起点并安装它的依赖项。</p>
+<p>打开终端并键入:</p>
+<p>git克隆git @ github . com:netguru/netguru-graph QL-tutorial . git</p>
+<p>netguru-graphql教程cd</p>
+<p>npm一号</p>
+<p>一旦我们进入应用程序文件夹并安装了依赖项，我们将需要设置数据库。我们的应用程序使用MongoDB，这也是我们将在教程中使用的。我们将使用云数据库服务MongoLab在线存储我们的数据。前往MongoLab并创建一个帐户(这是免费的)。现在创建一个新的部署并选择以下选项:</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image8-992041-edited.png?width=652&amp;name=image8-992041-edited.png 652w, http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image8-992041-edited.png?width=1304&amp;name=image8-992041-edited.png 1304w" src="../Images/5a88852d096014ff4e42b092f6473b90.png" alt="image8-992041-edited.png" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image8-992041-edited.png?width=652&amp;name=image8-992041-edited.png"/>
+  </figure><p/>
+<p>选择名称后，单击“创建新的MongoDB部署”。我们现在需要创建一个用户，因此单击新创建的部署，然后单击Users选项卡。使用一个您容易记住的密码，因为您需要连接到数据库。</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image2-044500-edited.png?width=652&amp;name=image2-044500-edited.png 652w, http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image2-044500-edited.png?width=1304&amp;name=image2-044500-edited.png 1304w" src="../Images/d00608864a800dd21a856f07dedfef7f.png" alt="image2-044500-edited.png" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image2-044500-edited.png?width=652&amp;name=image2-044500-edited.png"/>
+  </figure><p/>
+<p>瞧，现在我们需要做的就是从这里复制链接:</p>
+<p>我们马上就要用到它了！</p>
+<p>现在，在您最喜欢的文本编辑器(我使用的是Atom)中打开一个项目，并在服务器文件夹中创建一个名为mongoLabLink.js的文件，然后粘贴链接，如下图所示，并注明“export default”。确保使用您的MongoLab部署名称以及您的用户名和密码。如果您有一个名为glorious-database的部署，用户为“hamsterFeeder ”,密码为“hamster123 ”,那么您导出的链接将如下所示</p>
+<p>导出默认的' MongoDB://hamsterFeeder:<a href="http://web.archive.org/web/20221203080153/mailto:hamster123@ds113630.mlab.com" rel="nofollow noopener" target="_blank">hamster123@ds113630.mlab.com</a>:&lt;你的部署id，上图你可以看到我的id是13630&gt;/光荣-数据库'；</p>
+<p>现在运行:</p>
+<p>npm开始</p>
+<p>您应该会在控制台中看到类似这样的内容:</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image6-096711-edited.png?width=652&amp;name=image6-096711-edited.png 652w, http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image6-096711-edited.png?width=1304&amp;name=image6-096711-edited.png 1304w" src="../Images/a4436a59324cf19c3acb7c8759b4d6d9.png" alt="image6-096711-edited.png" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image6-096711-edited.png?width=652&amp;name=image6-096711-edited.png"/>
+  </figure><p/>
+<p>我创建了一个脚本，将种子数据放在您的服务器上。如果您访问您的MongoLab部署，您会看到三个名为users、skills和level_skills的集合。正如您在控制台中看到的，我们还可以在端口8000上访问我们的GraphiQL。GraphQL是一个API，用于通过提供对graph QL端点的访问和可视化返回数据来测试它。最重要的是，它支持自动完成，并为我们请求的字段提供描述。</p>
+<p>教程的下一部分将讨论如何创建查询数据的方法。</p>
+<p>现在当心！我们将体验可能是市场上最复杂的API，GraphiQL。在浏览器中访问localhost:8000，看看它是什么样子。</p>
+<h3>使用查询</h3>
+<p>在图形的左边部分键入{ helloQuery }。以下是键入过程中的查询:</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image11.png?width=642&amp;name=image11.png 642w, http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image11.png?width=1284&amp;name=image11.png 1284w" src="../Images/3286249f724f48f53686daa4e4c08e7a.png" alt="image11.png" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image11.png?width=642&amp;name=image11.png"/>
+  </figure><p/>
+<p>您应该会看到自动文档系统在运行。不仅我们请求的数据是强类型的，而且我们还可以看到查询将返回什么类型。最重要的是，每一个领域都可以按照我们的意愿来描述，并且这种描述是可见的。查询的功能远远超出了我们在一篇文章中所能涵盖的范围，所以你可能想在这里阅读一下。</p>
+<p>此时，我们已经定义了一个查询字段，它实际上并没有做任何有用的事情，所以我们可以真正地从头开始开发我们的模式。</p>
+<p>我们需要为用户添加一个查询字段。GraphQL定义了一组我们可以用来描述用户的类型。简而言之，我们可以说用户有一个字符串类型的字段firstName。类型在官方文档中有很好的解释。如果你想更深入地了解它们是什么，你可以在这里了解它们。</p>
+<p>我们现在将为用户创建一个GraphQLObject类型。要查看用户可能有哪些类型的字段，请访问server/appData/models/user.js。我们有一个模型，它告诉您用户可以有以下字段:名字、姓氏、角色和_level_skills。_level_skills字段返回一个标识符数组，我们将很快处理它。现在我们只处理四个字段，即id、名字、姓氏和角色。<br/>这是我们的用户模型:</p>
+
+<p>我们现在可以创建一个对MongoDB的调用来调用数据库中的所有用户。我们需要导入GraphQLList来实现这一点。这是我们目前的进口声明:</p>
+
+<p>现在我们可以向fields函数添加一个新的对象参数。简单地复制这段代码:</p>
+
+<p>要查看是否一切正常，请在终端中重启服务器。</p>
+<p>运行ctrl + c，然后npm start。</p>
+<p>如果有些东西不工作，不用担心，这里是我们迄今为止完整的模式:</p>
+
+<p>免责声明！您可能需要在浏览器中重新加载GraphiQL窗口来查看新的查询字段。</p>
+<p>现在访问<a href="http://web.archive.org/web/20221203080153/http://localhost:8000/" rel="nofollow noopener" target="_blank"> http://localhost:8000/ </a>。您现在可以拨打用户查询电话，查看一下！</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image9-304074-edited.png?width=652&amp;name=image9-304074-edited.png 652w, http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image9-304074-edited.png?width=1304&amp;name=image9-304074-edited.png 1304w" src="../Images/200d77b1e36fa7bff3a99af071114349.png" alt="image9-304074-edited.png" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image9-304074-edited.png?width=652&amp;name=image9-304074-edited.png"/>
+  </figure><p/>
+<p>我们想做的是找出我们的每个用户在每个编程技能上有多好。我们还没有技能级别或技能类型的字段，所以我们还不能查询。让我们解决这个问题！</p>
+<h3>添加技能和技能级别类型</h3>
+<p>注意:技能水平模型有一个最喜欢的字段，它是一个布尔值，所以我们需要导入GraphQLBoolean，就像我们导入GraphQLList一样。我们还需要GraphQLInt用于级别字段，因为我们用整数描述技能。</p>
+<p>这是我们目前的进口货:</p>
+
+<p>以下是我们的类型:</p>
+
+<p>要检查我们的更改是否有效，请在终端中键入ctrl + c，然后在浏览器中键入npm start并重新加载localhost:8000。您将在可用查询中看到技能和技能水平。还要注意，我们被告知它们返回什么类型，就像这样:</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image7-370871-edited.png?width=652&amp;name=image7-370871-edited.png 652w, http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image7-370871-edited.png?width=1304&amp;name=image7-370871-edited.png 1304w" src="../Images/9b52c954d2aa2707159f3f7878f8f19a.png" alt="image7-370871-edited.png" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image7-370871-edited.png?width=652&amp;name=image7-370871-edited.png"/>
+  </figure><p/>
+<p>我们已经准备好做我们最初打算做的事情，那就是显示分配给我们用户的技能水平。</p>
+<p>为此，我们需要skillLevel字段来返回一个对象列表(技能级别)。这听起来可能令人困惑，但只要看看这个例子:</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image4-431779-edited.png?width=652&amp;name=image4-431779-edited.png 652w, http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image4-431779-edited.png?width=1304&amp;name=image4-431779-edited.png 1304w" src="../Images/d8afb99a4c350a7ad9b5a27c5c3dec5f.png" alt="image4-431779-edited.png" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image4-431779-edited.png?width=652&amp;name=image4-431779-edited.png"/>
+  </figure><p/>
+<p>resolve函数有几个参数，但在这种情况下，我们只关心第一个参数，它反映了传递给类型的内容。在我们的例子中，它只是我们在用户模型下获取的内容。接下来，我们找到与标识符相对应的技能水平，并将它们放在一个列表中。这样我们就有了一个技能等级对象的列表。<br/>如果您想复制代码，看看它是如何为您工作的，以下是用户类型:</p>
+
+<p>我们现在可以看到用户的技能水平。看一看。</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image13-734595-edited.png?width=652&amp;name=image13-734595-edited.png 652w, http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image13-734595-edited.png?width=1304&amp;name=image13-734595-edited.png 1304w" src="../Images/0a4dcffd51b6cf1cc8b43a8da3d587e8.png" alt="image13-734595-edited.png" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image13-734595-edited.png?width=652&amp;name=image13-734595-edited.png"/>
+  </figure><p/>
+<p>我们可以映射我们的逻辑来搜索组织中的技能水平。如果我们需要知道我们有多少像样的Node.js和GraphQL开发人员，这将非常有用。如果你是来复制粘贴代码的，这是我们升级的技能类型:</p>
+
+<p>为了能够随心所欲地查询字段，我们应该查找skill_level字段和评级技能的所有者。我们可以用很少的代码做到这一点。</p>
+
+<p>有了这个，一切都应该很好地工作。如果您重新加载应用程序并刷新GraphiQL，您将能够像第一个示例中一样查询我们的数据:</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image10-572508-edited.png?width=652&amp;name=image10-572508-edited.png 652w, http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image10-572508-edited.png?width=1304&amp;name=image10-572508-edited.png 1304w" src="../Images/b62b03f6123c8a21196d170e87c6c47e.png" alt="image10-572508-edited.png" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image10-572508-edited.png?width=652&amp;name=image10-572508-edited.png"/>
+  </figure><p/>
+<p>这是我们使用graphql-voyager 可视化的整个模式结构:</p>
+<p>包扎</p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image1-2.png?width=653&amp;name=image1-2.png 653w, http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image1-2.png?width=1306&amp;name=image1-2.png 1306w" src="../Images/07b57dc7183f440764aff291daa0daac.png" alt="image1-2.png" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203080153im_/https://www.netguru.com/hs-fs/hubfs/Blog_posts_-_images/getting%20started%20with%20graphql/image1-2.png?width=653&amp;name=image1-2.png"/>
+  </figure><p>我们已经了解了GraphQL(不要与graph QL混淆)如何帮助编写API文档。</p>
+<h3>我们知道GraphQL的强类型是如何工作的，也了解了一些内置类型。</h3>
+<p>我们可以随心所欲地创建对象、列表和查询数据。</p>
+<p>如果您在任何地方遇到困难，您可以在completeSchema分支中找到完整的代码。只需提交您的更改并键入:</p>
+<p>文本</p>
+<p>git签出完成模式</p>
+<p>还有许多主题有待讨论，例如创建突变、使用惊人的数据加载器库防止N+1查询、在查询中使用限制、认证或使用<br/>查询变量等参数。既然您已经了解了基础知识，那么开始学习所有这些知识应该很容易。</p>
+<p>我们只在最容易和最有效的时候将GraphQL添加到现有的应用程序中。我们不会废弃或破坏已经存在并正在运行的解决方案——相反，我们会利用GraphQL进一步发展移动应用。因此，我们充分利用我们的资产，创造新的价值。考虑一下这对你的企业来说是不是最好的选择。</p>
+<p>There are many subjects left to be discussed, such as creating mutations, preventing N+1 queries with an amazing data-loader library, using arguments like limits in queries, authentication or using <br/>query variables. Now that you know the basics, getting started with learning about all of them should be easy.</p>
+<p>We’re only adding GraphQL to existing applications when it’s the easiest and most efficient thing to do. We don’t scrap or destroy solutions that are already there and working - instead, we build up by taking the mobile app further with GraphQL. Thus, we’re taking full advantage of our assets and creating new value. Consider whether that’s not the best option for your business, too.</p></span></div>    
+</body>
+</html>

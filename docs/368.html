@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>How to Solve It: Mathematical Approach to Programming</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>如何解决:编程的数学方法</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/programming-mathematics#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/programming-mathematics#0001-01-01</a></blockquote><div><span><p class="blog-post__lead h2"/><p>每天，我们都在处理比以前解决的问题更复杂的问题。在这篇博文中，我想用数学方法来扩展我以前的后题解决中讨论的概念。</p><figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20220924162534im_/https://www.netguru.com/hubfs/images/posts/1444737767-maths.jpg 0w" src="../Images/d6283c1ddb245cd9de30a8d29435b2c0.png" alt="" loading="lazy" data-original-src="http://web.archive.org/web/20220924162534im_/https://www.netguru.com/hubfs/images/posts/1444737767-maths.jpg"/>
+  </figure><p/>
+<p>每天，我们都在处理比以前解决的问题更复杂的问题。在这篇博客文章中，我想把之前在我的文章中讨论的关于<a href="http://web.archive.org/web/20220924162534/https://www.netguru.com/blog/success-junior-web-developer">秘密的概念扩展到成功的大三</a>。在学习数学的时候，我看了一本名为《<a href="http://web.archive.org/web/20220924162534/http://www.amazon.com/How-Solve-It-Mathematical-Princeton/dp/069111966X">如何求解</a>》的书，讲的是把复杂的问题简单化。它是关于启发式的——非常直接的(尽管不一定是最有效的)获得解决方案的方法。</p>
+<p>这篇博客文章展示了伟大的匈牙利数学家乔治·波利亚讨论的一些启发法。我们将讨论一些寻找解决方案的成功方法。Pólya完全改变了我解决问题的方式。不仅仅是数学领域——他的想法可以成功地应用到其他领域，包括计算机科学。我将解释我们如何在编程中使用这些试探法，并举例说明它们在实际代码中是如何工作的。我邀请你去读读Pólya，试着找到你自己的解决方案。示例代码是用Ruby编写的，别忘了这一点！</p>
+<h2>注意，这是规则</h2>
+<p>下面我用简短的评论介绍了Pólya书中的基本步骤。我发现这些小事在寻求解决方案时非常有用:</p>
+<h3>1.理解问题</h3>
+<p>仔细阅读任务，努力理解，深入思考。想想你有什么，想找什么。用你自己的话描述这项任务。</p>
+<h3>2.形成算法</h3>
+<p>找出所给信息和你想找的东西之间的关系。在同样的情况下，如果你不能直接找到解决方案，解决一个稍微不同的问题会容易得多。在你工作结束的时候，你应该已经做出了解决问题的算法。想象一个功能是一个<strong>黑盒</strong>，你在其中输入一些信息，然后以某种改变的形式取回。</p>
+<p>想想类似的问题。也许你已经解决了类似的问题，你可以用稍微不同的方法以稍微不同的方式重用这个解决方案。如何转变您的数据？你需要什么样的数据结构？通过函数需要什么参数？想想你的数据结构，也许它有一个特殊的结构，允许你使用一些合适的算法。</p>
+<h3>3.随便做个算法！</h3>
+<p>一步一步来，看你能不能证明每一步。做一些有意义的事情。不要只是盲目地重复自己。一个好的算法为自己辩护。现在你可以写一个程序来解决它。</p>
+<h3>4.回头看看你的解决方案</h3>
+<p>第二次审视可以让你找到更有效的解决方案。找到答案后- <strong>想想是否能做得更好</strong>。有时这些改进是脆弱的和不确定的，通常它们会让你写出更有效的程序，并关心更好的时间复杂度。反馈给你正面和负面的信息。它让你看到自己的优势和劣势，这样你就能知道你需要改进的地方。下次当你面临问题时，你将能够更快更好地解决它。</p>
+<h2>它是如何工作的？</h2>
+<p>让我们写一个程序来计算第n个斐波那契数，然后对于两个相邻的这样的数，找到一种方法来计算它们的最大公约数，<code>gcd(F(n),F(n+1)) = ?</code>。</p>
+<h3>明白；理解</h3>
+<p>你需要什么？两个斐波纳契数的最大公约数。</p>
+<p>你是怎么得到它的？写一个通用函数来计算给定变量的斐波那契数。</p>
+<p>我们需要什么类型的变量？它必须是整数</p>
+<p>我们还需要什么吗？是的，最大公约数的函数。</p>
+<h3>想办法</h3>
+<p>我的计划很简短:</p>
+<p>我要写一个斐波那契函数，我需要一个公式，这将是一个递归函数。接下来，我将编写一个函数来寻找两个数字的最大公约数(gcd)。最后，将第一个放入第二个，我将得到两个斐波那契数的最大公约数。</p>
+<p>我给出了基于公式的函数，它非常简单。序列中的第一个和第二个数字等于1，每个下一个元素是序列中前两个元素的和。更多细节见<a href="http://web.archive.org/web/20220924162534/https://en.wikipedia.org/wiki/Fibonacci_number">斐波纳契数</a>(维基百科上)。</p>
+<p class="legacy-code-gist" data-gist-id="996d382883f0cdfe9875"> </p>
+<p>现在，<code>gcd</code>功能</p>
+<p class="legacy-code-gist" data-gist-id="c22cec8c9e27b3092062">执行它</p>
+<h3>对于给定的<code>n</code></h3>
+<p>例如<code>n = 32</code></p>
+<p class="legacy-code-gist" data-gist-id="6983f3d91ba450118344"> </p>
+<p>您可以使用调试器来一步一步地移动并检查这个函数是如何工作的——这在出现问题时非常有用。</p>
+<p class="legacy-code-gist" data-gist-id="76ff2893e8e38327a298">回顾</p>
+<p>我能做得更好吗？我觉得斐波那契函数不够高效。我可以计算一个数组，然后选择相邻的条目。</p>
+<h3>该函数返回数组中的<code>n</code>斐波纳契数:</h3>
+<p> </p>
+<p>下面的函数返回两个相邻数字的数组</p>
+<p class="legacy-code-gist" data-gist-id="3bfdc501ad0fc746830e"> </p>
+<p>然后我可以连接这两个函数，并使用splat操作符将参数传递给<code>gcd</code>函数。</p>
+<p class="legacy-code-gist" data-gist-id="0fe401d452598d6c910b"> </p>
+<p>如果这两个数字没有公约数，它应该返回“1”。这是一个比前一个递归更快的解决方案，并且不需要太多的计算。</p>
+<p class="legacy-code-gist" data-gist-id="6a2187b11b4481fec94b">回到波利亚</p>
+<p>我重新阅读他的书，因为每次阅读都会有新的发现。在20世纪，<a href="http://web.archive.org/web/20220924162534/https://en.wikipedia.org/wiki/Hermeneutic_circle">诠释循环</a>的概念首次被讨论。它描述了一个简单的观察结果，即每当我们阅读一篇文章时，先前的阅读会改变当前的阅读。结果，我们对课文的思想有了更好更深的理解。当我们将这一点应用到Pólya的试探法中时，我们得到了可以在工作中使用的强大而有用的设备。此外，他的书包含了一个启发式的字典，我想一个好奇的读者会在里面找到很多有用的策略和破坏者。</p>
+<h2>再见</h2>
+<p>最后，你应该检查所有相邻斐波纳契数列的最大公约数是否为1。我将引用另一位杰出的数学家<a href="http://web.archive.org/web/20220924162534/https://en.wikipedia.org/wiki/Paul_Halmos">保罗·哈尔莫斯</a>的话，这句话表明了问题的重要性，也是对这篇文章的一个很好的总结:</p>
+<h2>不要光看；战胜它！提出你自己的问题，寻找你自己的例子，发现你自己的证据。假设有必要吗？反过来是真的吗？在经典特例中会发生什么？堕落的案例呢？证明在哪里使用了假设？</h2>
+<p>To finish up - you should check if the greatest common divisor of all neighbouring Fibonacci numbers is 1. I’ll leave you with a quote from another excellent mathematician, <a href="http://web.archive.org/web/20220924162534/https://en.wikipedia.org/wiki/Paul_Halmos">Paul Halmos</a>, which shows the remarkable importance of questions and is a good summary of this post:</p>
+<blockquote>
+<p>Don't just read it; fight it! Ask your own questions, look for your own examples, discover your own proofs. Is the hypothesis necessary? Is the converse true? What happens in the classical special case? What about the degenerate cases? Where does the proof use the hypothesis?</p>
+</blockquote></span></div>    
+</body>
+</html>

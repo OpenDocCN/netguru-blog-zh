@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>How to Integrate Intercom with Ruby on Rails</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>如何将Intercom与Ruby on Rails集成</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/how-to-integrate-intercom-with-ruby-on-rails#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/how-to-integrate-intercom-with-ruby-on-rails#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h2"><p>对讲机是一种流行的营销和消费者沟通工具。在你的Ruby on Rails应用程序中集成对讲机<a href="/web/20220927110528/https://www.netguru.com/services/ruby-on-rails-development" rel="noopener">并不复杂，多亏了这个指南，你应该很快就能做到。</a></p></div><p>我假设你有:</p>
+<p>你将使用什么</p>
+<p>I assume you have:</p>
+
+<p>优点:</p>
+<h2 id="id-[#ng-training]Intercomintegration-Whatyouwilluse:">易于集成；</h2>
+
+<p>多功能应用实时聊天、营销自动化、客户反馈、客户支持、客户跟踪；</p>
+<h3>许多集成可用-脸书，Github，Mailchimp，Salesforce，Mixpanel，Stripe，Hipchat，Zendesk，Slack，Zapier，Webhooks</h3>
+<ul>
+<li>
+<p>很棒的文档。</p>
+</li>
+<li>
+<p>multipurpose - in-app live chat, marketing automation, customer feedback, customer support, client tracking;</p>
+</li>
+<li>
+<p>缺点:</p>
+</li>
+<li>
+<p>定价-在某些情况下可能会变得昂贵-有几个方案可供选择(实时聊天、营销自动化、客户反馈、客户支持；基于被追踪客户数量的定价。</p>
+</li>
+</ul>
+<p>第一步</p>
+<h3>从<a href="http://web.archive.org/web/20220927110528/https://www.intercom.io/" rel="nofollow">https://www.intercom.io/</a>获得一个应用id——有14天的试用期；但是，需要信用卡。</h3>
+<ul>
+<li>
+<p>第二步</p>
+</li>
+</ul>
+<p>将intercom-rails gem添加到您的gem文件:</p>
+<h3 id="id-[#ng-training]Intercomintegration-Step1">然后运行:</h3>
+<p>使用您的应用id生成配置文件:</p>
+<h3>第三步</h3>
+<h3 id="id-[#ng-training]Intercomintegration-Step2">初始化器保存为<span>config/initializer/intercom . Rb。</span>这是所有定制完成的地方。</h3>
+<p>记住从初始化器中移除硬编码的<span> APP-ID </span>。它应该存储在git忽略的配置文件中，或者作为一个环境变量。</p>
+
+<p> </p>
+
+<p>默认情况下，内部通信脚本会添加到可以识别当前用户的每个页面上。这种行为可以通过限制特定控制器的聊天插入来改变</p>
+<div title="Hint: double-click to select code">
+<pre>rails generate intercom:config APP-ID</pre>
+</div>
+<br/>
+<h3 id="id-[#ng-training]Intercomintegration-Step3">或者为未识别的用户添加聊天。</h3>
+<p>第四步</p>
+<pre>config.app_id = ENV["INTERCOM_APP_ID"] || "sOm3th1ng"</pre>
+<p>进一步定制。Intercom提供了一些非常有趣的选项。</p>
+<p> </p>
+<p>定义当前用户的方法可以通过以下方式与内部通信关联:</p>
+<pre>skip_after_action :intercom_rails_auto_include</pre>
+<p>自定义数据可以与用户相关联:</p>
+<div title="Hint: double-click to select code">
+<pre>config.include_for_logged_out_users = true</pre>
+</div>
+<p data-hasbody="true" data-macro-name="code">可以将用户分组，就像他们来自一个公司一样:</p>
+<h3 id="id-[#ng-training]Intercomintegration-Step4">默认情况下，Intercom会添加一个激活聊天的按钮。如果您想覆盖这种行为，请添加:</h3>
+<p>现在，每个具有Intercom id的元素将充当激活器。CSS选择器的进一步定制可通过以下方式实现:</p>
+<p>用例</p>
+<p>对讲机可用于应用程序的四个重要领域。</p>
+<div title="Hint: double-click to select code">
+<pre>config.user.current = Proc.new { some_method }</pre>
+</div>
+<p><strong>实时聊天</strong></p>
+<div title="Hint: double-click to select code">
+<pre>config.user.custom_data = {<br/> plan: Proc.new { |user| user.plan.name },<br/> happy_user: Proc.new { |user| user.happy? }<br/>}</pre>
+</div>
+<p>实时聊天——可以跟踪哪些用户正在访问网页，他们在做什么。最常回答的问题可以保存为模板，而消息可以自动发送<span/>(例如，当用户第一次访问特定页面或当用户第三次访问网站时)。内部通信收件箱通知客户何时输入消息以及哪个团队成员正在处理对话。</p>
+<div title="Hint: double-click to select code">
+<pre>config.company.current = Proc.new { company_method }</pre>
+</div>
+<p> </p>
+<div title="Hint: double-click to select code">
+<pre>config.inbox.style = :custom</pre>
+</div>
+<p><strong>营销自动化</strong></p>
+<div title="Hint: double-click to select code">
+<pre>config.inbox.custom_activator = '.intercom-link'</pre>
+</div>
+<p>面向客户的自动定向电子邮件。为用户消息创建规则(例如，用户1个月没有登录，或者用户只使用了一次应用程序的特定部分)。个性化的内容丰富的信息-嵌入的图像、视频、按钮等。可以基于有效性创建度量(例如，70%的用户在接收到消息A后填写了简档页面；60%的用户在收到消息B后填写了个人资料页面；消息A表现更好)。</p>
+<h3 id="id-[#ng-training]Intercomintegration-UseCases"> </h3>
+<p><strong>客户反馈</strong></p>
+<p>收集关于产品的信息(例如，在用户停止使用应用程序后请求反馈的消息；就在第一次交互之后询问关于新特征的反馈)。轻量级回复系统(拇指向上/拇指向下)，询问用户的反馈，而不会引起太多的分心。</p>
+<p> </p>
+<p><strong>客户支持</strong></p>
+<p>客户可以通过入站电子邮件或应用程序内的messenger联系。客户问题处理可以分配给在给定领域最有经验的团队成员。所有客户数据和以前的对话都存储在一个地方，以便团队始终与客户保持一致。私人笔记可以添加到任何对话中——这些笔记只对团队可见，对客户不可见。</p>
+<p>摘要</p>
+<p>Automated, targeted emails for customers. Creating rules for users messaging (e.g. the user didn’t log in for 1 month, or the user used a specific part of an application only once). Personalised content-rich messages - embedded images, videos, buttons, etc. Metrics can be created based on the effectiveness (e.g. 70% of users filled up profile page after receiving message A; 60% of users filled up the profile page after receiving message B; message A performs better).</p>
+<p> </p>
+<p><strong>Customer Feedback</strong></p>
+<p>Gathering information about a product (e.g. a message asking for feedback after the user stopped using an application; asking for feedback about the new feature just after the first interaction). Lightweight replying system (thumb up / thumb down), asking users about feedback without causing too much distraction.</p>
+<p> </p>
+<p><strong>Customer Support</strong></p>
+<p>Customers can get in touch via inbound email or in-app messenger. Client questions handling can be assigned to a team member with the greatest experience in a given field. All customer data and previous conversations are stored in one place so that the team is always on the same page with the customer. Private notes can be added to any conversation - these notes are only visible to the team, not the client.</p>
+<p> </p>
+<h3 id="id-[#ng-training]Intercomintegration-Summary">Summary</h3>
+During this tutorial, you have learned how to properly integrate and customise Intercom using a gem and example uses cases how to use it in business applications. I hope you find it helpful - feel free to comment if you have questions or like to add something.</span></div>    
+</body>
+</html>

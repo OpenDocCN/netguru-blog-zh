@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>What Are Static Site Generators?</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>什么是静态站点生成器？</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/what-are-static-site-generators#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/what-are-static-site-generators#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h3"><p>一个新的趋势正在开发领域出现——静态站点生成器(SSG)。多年来，在网站上开发、发布和编辑内容需要HTML创作技能，这些过程超出了普通用户的能力。从那以后，内容管理系统(CMSs)出现了——如WordPress、Joomla、Drupal等。–缓解依赖技术支持来修改网页内容的问题。</p></div><p> </p>
+<p>CMSs使用方便简单，使非技术用户能够管理他们自己的网站内容，并控制网站的设计和显示。</p>
+<p>然而，随着时间的推移，CMS因其局限性而声名狼藉，也因其优势而备受赞誉——它们可能会运行缓慢、操作繁琐，并且在可伸缩性和安全性方面存在问题。这为静态站点生成器的回归创造了条件，它可以解决所有这些问题以及更多其他问题。</p>
+<p>近年来，静态站点生成器越来越受欢迎，因为它们简单、安全，并且能够快速提供内容。但是它们是什么，它们如何影响web开发过程，什么时候你应该考虑使用它们？</p>
+<h2>首先，什么是静态站点？</h2>
+<p>网站通常可以分为两类——静态和动态。一个静态网站就像它听起来一样——静态的、固定的、持续的。也就是说，它是按原样设计、存储在服务器上并交付给用户的web浏览器的。在开发人员点击“保存”按钮和最终用户点击它之间，它不会改变。开发人员使用HTML创建内容，用CSS对其进行格式化，然后将静态页面上传到服务器，在服务器上页面保持不变，随时可以被浏览器请求访问。</p>
+<p>另一方面，动态网站几乎处于不断变化的状态，通常由CMS驱动。每次用户点击时，CMS都会按需创建每个页面。开发人员创建存储在后端数据库中的内容。当用户请求URL时，CMS驱动的网站从数据库中获取适当的内容，加载HTML模板，在模板中呈现内容，并将格式化的HTML页面返回给访问者的浏览器，这一过程称为服务器端处理。</p>
+<h2><strong>CMS网站的问题</strong></h2>
+<p>不幸的是，内容管理系统提出了一系列web开发人员必须不断应对的问题。首先，随着它们越来越受欢迎，它们已经成为网络攻击的目标。CMS软件和插件容易受到大量已知安全漏洞的攻击。例如，WP WhiteSecurity 发现了2407个用户必须不断应对的WordPress核心、插件和主题漏洞——而且这个数字一直在增长。<a href="http://web.archive.org/web/20220924162842/https://www.itpro.co.uk/security/33149/90-of-hacked-cms-sites-in-2018-were-powered-by-wordpress" rel="nofollow noopener" target="_blank"> ITPRO报道</a>2018年90%被黑的CMS网站由WordPress驱动，尽管由其他CMS系统驱动的网站——包括<a href="http://web.archive.org/web/20220924162842/https://www.theregister.co.uk/2019/01/18/drupal_critical_patches/" rel="nofollow noopener" target="_blank"> Drupal </a>和<a href="http://web.archive.org/web/20220924162842/https://www.trendmicro.com/vinfo/us/security/news/cybercrime-and-digital-threats/compromised-wordpress-and-joomla-sites-found-distributing-malware-to-visitors" rel="nofollow noopener" target="_blank">Joomla</a>——也充满漏洞。</p>
+<p>这不仅仅是安全问题。由于服务器正在做更多的工作，CMS站点的性能也会受到影响。每次发送请求时，每个页面都需要由模板和内容组合而成。这是一种非常缓慢的做事方式。对于访问站点的每个用户，服务器上运行的PHP代码需要启动，与数据库通信，根据恢复的数据构造HTTP响应，将其传递回web服务器，然后web服务器向用户的浏览器返回一个HTML文件来解释显示的内容。</p>
+<p>所有这些步骤都增加了网页加载的时间——对许多网站来说，这些步骤完全没有必要，只会增加复杂性、性能问题和安全问题。</p>
+<p>谢天谢地，还有另一种方法。</p>
+<h2><strong>静态现场发电机</strong></h2>
+<figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20220924162842im_/https://www.netguru.com/hs-fs/hubfs/Mularczyk%20Quote%20on%20Static%20site%20generators.png?width=700&amp;name=Mularczyk%20Quote%20on%20Static%20site%20generators.png 700w, http://web.archive.org/web/20220924162842im_/https://www.netguru.com/hs-fs/hubfs/Mularczyk%20Quote%20on%20Static%20site%20generators.png?width=2400&amp;name=Mularczyk%20Quote%20on%20Static%20site%20generators.png 2400w" src="../Images/8abb2a3edd02bd618bd38f4480f736df.png" alt="Mularczyk Quote on Static site generators" loading="lazy" data-original-src="http://web.archive.org/web/20220924162842im_/https://www.netguru.com/hs-fs/hubfs/Mularczyk%20Quote%20on%20Static%20site%20generators.png?width=700&amp;name=Mularczyk%20Quote%20on%20Static%20site%20generators.png"/>
+  </figure>
+<p> </p>
+<p>静态站点生成器本质上是一组基于一组输入文件构建静态网站的工具。它们是发布工具，不像Adobe Acrobat，它采用可编辑的格式，如Microsoft Word文件，并将其转换为易于使用的格式，如. PDF。使用SSGs，开发人员创建一个静态网站，主要由一系列部署到HTTP服务器的HTML页面组成。从这个意义上说，只有文件和文件夹，意味着没有数据库，也没有服务器端的渲染。在设置服务器时，开发人员使用静态站点生成器创建的静态站点，并将其部署到服务器上。当用户请求一个页面时，服务器只需找到匹配的文件并将其发送回用户。</p>
+<p>这与典型的WordPress网站有很大的不同，后者必须进行大量的数据库查询来为每个用户呈现一个页面。如果正在使用WordPress插件，情况会变得更糟，因为每个插件都需要从数据库中访问数据，甚至需要更多的时间来处理所有的数据。另一方面，使用静态站点生成器，速度和性能会大大提高，因为web服务器需要做的只是返回一个文件，而不是构建一个页面来显示每个客户端发送的每个HTTP请求。简而言之，同样的内容不需要一次又一次的构造。</p>
+<h2><strong>提高安全性</strong></h2>
+<p>除了速度和性能，静态站点生成器还解决了困扰CMS支持的站点的安全问题。由于静态网站仅由静态文件组成，因此它们没有数据库——由于没有数据库，攻击者无法执行标准的<a href="/web/20220924162842/https://www.netguru.com/services/fraud-detection" rel="noopener" target="_blank">黑客攻击</a>,如脚本编写、SQL数据库注入或利用服务器端数据库安全漏洞。</p>
+<p>此外，像WordPress这样被全球数百万人使用的平台自然成为恶意攻击者的常见目标。网络犯罪分子可以轻松下载并运行数百种工具，这些工具试图自动破坏现有的WordPress、Drupal和Joomla网站——只需通过研究每个CMS系统(及其插件)的所有已知漏洞，寻找安全漏洞。因此，网站管理员需要不断用安全更新修补他们的系统，不断玩猫捉老鼠的游戏，以确保他们不会被黑客滥用。</p>
+<p>相比之下，静态网站几乎不可能被黑掉。没有代码运行——当用户请求一个页面时，服务器只发送该页面的一个文件——因此没有漏洞可利用。</p>
+<h2><strong>提高成本和可靠性</strong></h2>
+<p>使用静态站点生成器的另一个好处是提高了可靠性。因为没有数据库，可怕的“未能建立数据库连接”的错误消息永远不会出现。使用CMS时，流量激增经常会引起问题，这会导致数据库崩溃或限制活动连接。然而，使用SSGs，服务器只需托管和返回平面HTML文件，这意味着在这个过程中出现任何问题的可能性都很小。</p>
+<p>还有SSGs的成本优势。运行一个静态站点并不昂贵。同样，没有数据库，持续支持和维护成本更低，因为更新系统及其插件、应用补丁和执行备份所需的时间更少。</p>
+<h2><strong>版本控制</strong></h2>
+<p>一个静态站点的所有源代码可以存在于一个版本控制系统中，比如T2 Git T3。有了Git，就有可能回到该站点整个历史中的任何一个版本。这意味着旧文件将被保留，任何更改或错误都可以快速撤销或纠正。另一方面，CMS数据库非常不稳定。任何拥有适当权限的用户都可以随心所欲地添加、更改或永久删除内容。的确，您可以(也应该)备份数据库，但是即使定期备份，如果有人出错或者攻击者找到了他/她的方法，很可能会丢失一些数据。</p>
+<p>版本控制系统充当高度可靠的异地备份。只要敲几下键盘就可以回到网站的前一个版本，因为所有需要的文件都在版本控制系统的存储库中。</p>
+<h2>什么时候应该使用静态站点生成器？</h2>
+<p>使用静态站点生成器的好处是显而易见的，全球许多公司都选择静态站点，因为它们在设计上快速、可伸缩且安全。在今天的网络世界中，速度和安全性确实非常重要，客户体验比以往任何时候都重要。</p>
+<p><a href="/web/20220924162842/https://www.netguru.com/blog/ruby-on-rails-ecommerce" rel="noopener" target="_blank">电子商务客户</a>尤其会对<a href="/web/20220924162842/https://www.netguru.com/services/web-development" rel="noopener" target="_blank">的网站速度</a>做出反应——如果他们试图查看的产品页面在一个网站上加载速度不快，那么在那里有很多竞争对手可以购买他们想要的商品。研究表明，<a href="http://web.archive.org/web/20220924162842/https://brainiuminfotech.com/blog/how-we-optimized-our-website-to-load-in-under-3-seconds/" rel="nofollow noopener" target="_blank"> 40%的消费者</a>会放弃一个加载时间超过三秒的网站——这意味着所有想要在线销售(甚至只是吸引潜在客户的注意力)的公司都需要让他们的网站速度更快。当然，无论金钱和敏感的客户数据在哪里通过网络交换，安全性都是至关重要的。</p>
+<p>正如我们所见，静态网站提供了高速度和高安全性——但是它们适合像电子商务网站这样的网站吗？毕竟，在线商店确实需要一定程度的活力来应对产品供应和价格的变化。但通常仅此而已。产品标题和描述不会经常改变，图片可能永远不会改变。所有这些数据都可以保持静态——动态特性可以通过JavaScript和API添加到静态站点中。事实上，这凸显了静态站点的另一个好处——灵活性。</p>
+<p>我们这里说的是一个叫做<a href="http://web.archive.org/web/20220924162842/https://jamstack.org/" rel="nofollow noopener" target="_blank"> JAMstack </a>的东西，它是一个基于客户端JavaScript、API和标记(JAM)的现代web开发架构。</p>
+<p>使用JAMstack，可以构建包含静态和动态内容的快速、可靠和安全的电子商务网站。例如，产品图像、视频和描述可以在网站构建期间作为静态数据导入，而库存水平、价格和购物车等信息可以在客户端实时获取。</p>
+<p>这首先需要根据项目的需求(例如，多少产品页面)和开发人员的要求选择最合适的静态站点生成器。有大量的静态站点生成器可供选择，事实上大多数编程语言都有一个SSG——对于JavaScript，有Next和Gatsby，对于Go，有Hugo和InkPaper，对于Ruby，有Jekyll和Middleman，这里仅举几个例子。</p>
+<p>接下来，您需要选择一个“<a href="/web/20220924162842/https://www.netguru.com/blog/headless-cms" rel="noopener">headless CMS</a>”——也称为“<a href="http://web.archive.org/web/20220924162842/https://headlesscms.org/about/"> JAMstack CMS </a>”。它们使用CMS接口来处理内容管理，但也允许其他系统通过REST API访问数据，从而可以在需要的地方提供动态内容。</p>
+<p>最后，您需要添加一个<a href="http://web.archive.org/web/20220924162842/https://commercelayer.io/api/reference/" rel="nofollow noopener" target="_blank">商业层</a>到组合中，它允许您通过API无缝集成价格、库存、结帐和客户账户。</p>
+<p>现在您已经有了一个准备构建和部署的电子商务JAMStack。</p>
+<h2><strong>静态网站正在崛起</strong></h2>
+<p>事实上，它们是——而且不仅仅是电子商务。例如，Smashing Magazine 将其网站从WordPress(已经高度优化)转移到静态网站生成器，速度提高了10倍。</p>
+
+<p>(视频来源:<a href="http://web.archive.org/web/20220924162842/https://www.youtube.com/watch?v=rB4Cl5LSe2c#action=share" rel="nofollow noopener" target="_blank">youtube.com</a>)</p>
+<p>对静态站点生成器的兴趣正在快速增长。Netlify是一家总部位于旧金山的云计算公司，为静态网站提供托管和无服务器后端服务。该公司每年都会发布一篇关于最受欢迎的十大解决方案的文章，报告SSG的现状。正如你从下面的图表中看到的——基于从GitHub activity收集的数据(每个SSG获得多少GitHub星)——随着静态网站越来越受欢迎，这一类别近年来一直在增长。</p>
+<p>SSG最近人气飙升，很大一部分原因是这些技术对开发人员来说更加友好——而CMS正迅速失宠。根据<a href="http://web.archive.org/web/20220924162842/https://insights.stackoverflow.com/survey/2019#most-loved-dreaded-and-wanted" rel="nofollow noopener" target="_blank"> Stack Overflow的2019年开发者调查</a>结果，WordPress是最可怕的开发平台(59.5%)，Drupal是最可怕的web框架(69.9%)。</p>
+<p>事实是，用SSG从零开始创建一个全新的网站要比用WordPress这样的CMS容易得多。SSG有更大的灵活性，产品开发有更好的工作流程，开发者可以使用自己喜欢的工具。结合静态站点的速度、安全性和性能的提高，所有这些都有助于SSG的日益流行。</p>
+<h2><strong>当使用静态现场发电机不是最佳选择时</strong></h2>
+<p>作为一种解决方案，<a href="/web/20220924162842/https://www.netguru.com/services/cybersecurity" rel="noopener">允许公司获得一个高度安全的</a>、快速、可扩展和灵活的网站，并快速运行，难怪静态网站生成器现在如此受欢迎。</p>
+<p>但是，尽管它们确实提供了CMS和静态站点世界的好处，但它们并不一定适合每个项目，在这方面你应该考虑很多事情。</p>
+<p>对于初学者来说，静态站点生成器对于非程序员来说可能看起来很复杂，而且如果没有一些开发方面的专业知识，使用SSG是不会有太大进展的。这里还有另一个症结——静态站点生成器社区仍然相对较新，因此与现有的大量WordPress支持相比规模较小。</p>
+<p>更重要的是，有了像WordPress 这样流行的<a href="/web/20220924162842/https://www.netguru.com/blog/refinerycms-a-ruby-based-alternative-for-wordpress" rel="noopener" target="_blank"> CMS系统，即使非技术用户也可以相对容易地管理和编辑他们的网站——有大量现成的WordPress主题可用于构建开箱即用的网站，甚至更多的插件可以实现简单的定制。相比之下，当运行静态站点生成器时，非技术人员可能需要一些设置方面的帮助，以及持续的支持。</a></p>
+<p>拥有数百或数千个页面的大型网站也很难用静态网站生成器来管理。虽然可能，例如，如果您在多个地点有多个作者，他们都定期提供多篇文章或博客帖子，那么使用静态站点生成器编辑和发布内容会变得更加棘手和耗时。实时更新可能会延迟，构建时间可能会迅速增加。</p>
+<p>如果你需要一个完全动态的网站，其中某些页面(如用户管理面板)的内容不能被预先知道和生成，静态站点生成器可能不是最好的选择。</p>
+<h2><strong>最终想法</strong></h2>
+<p>对于不需要动态网站功能的网站，静态网站生成器提供了一大堆好处。大多数网站很少超过几十页，甚至那些不需要经常更新的网站也是如此。因此，CMS通常是多余的，会影响站点性能，使站点面临安全风险，并增加成本。</p>
+<p>有了静态站点生成器，移动部件就更少了，这大大提高了速度和性能。它们也是<a href="/web/20220924162842/https://www.netguru.com/clients/security-solution-for-android" rel="noopener" target="_blank">高度安全</a>，高度可靠，功能越来越丰富和强大，需要最少的维护工作，运营成本更低。出于这些原因，展望未来，我们应该会看到SSG的使用进一步增长，以及提供商的改进，使他们更容易为非技术用户使用。</p>
+<strong>If you’re stuck between deciding on a website powered by a traditional CMS or static site generator,</strong> <strong><a href="/web/20220924162842/https://www.netguru.com/contact" rel=" noopener">get in touch</a> with the experts here at </strong><a href="/web/20220924162842/https://www.netguru.com/" rel=" noopener">Netguru</a><strong>. We’ll be more than happy to chat through your requirements and advise you on the best path forward. </strong></span></div>    
+</body>
+</html>

@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>Sections-decorator-android Introduction</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>章节-装饰-android简介</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/sections-decorator-android-introduction#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/sections-decorator-android-introduction#0001-01-01</a></blockquote><div><div id="hs_cos_wrapper_post_body"><span><div class="blog-post__lead h2"><p>你有没有想过要有一个滚动列表，其中的部分标题一直可见？现在你可以在自己的应用程序中完成。只需使用我们的小图书馆部分-装饰！</p></div><p>它支持Recyclerview的垂直和水平线性布局管理器，可以很容易地定制。您可以更改显示页眉的线条和文本视图的颜色和宽度。</p>
+<h2>怎么用？</h2>
+<ol>
+<li>
+<p>将jitpack.io添加到“build.gradle”项目存储库列表中:</p>
+<pre><code class="language-java">repositories {
+   maven { url 'https://jitpack.io' }
+}</code></pre>
+</li>
+<li>
+<p>将库依赖项添加到应用程序的模块build.gradle依赖项列表:</p>
+<pre><code class="language-java">implementation 'com.github.netguru:sections-decorator-android:0.1.1'</code></pre>
+</li>
+<li>
+<p>在RecyclerView的适配器类中实现SectionsAdapterInterface接口，该接口告诉库这些节是如何构造的:</p>
+<pre><code class="language-java">interface SectionsAdapterInterface {
+   fun getSectionsCount() : Int
+   fun getSectionTitleAt(sectionIndex: Int): String
+   fun getItemCountForSection(sectionIndex: Int): Int
+}
+</code></pre>
+<p>第一种方法返回adapter中可用的许多部分。第二个问题——每个部分的标题是什么，最后一个问题——每个部分有多少条目。</p>
+</li>
+<li>
+<p>向回收器视图添加SectionDecorator。</p>
+<pre><code class="language-java">SectionDecorator decorator = new SectionDecorator(getContext());
+decorator.setLineColor(R.color.green)
+decorator.setLineWidth(15f)
+recyclerView.addItemDecoration(decorator);</code></pre>
+</li>
+</ol>
+<p>就是这样:</p>
+<p><span>总结</span></p>
+<p><span>源代码在Github上有:</span><u><a href="http://web.archive.org/web/20221203101917/https://github.com/netguru/sections-decorator-android">【https://github.com/netguru/sections-decorator-android】</a>T5】</u></p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221203101917im_/https://lh6.googleusercontent.com/vLFoNPsvAOcwhlHFjLgdp1PBMW8EGqRFNXVqAcxoQkz2CDlrWrOKUhqKO4o7BR4HrOxVMNQeV2GnU4EIimM3sNlFE9bhtHhrtnp_2oteetAha4ss4maTDb6WT8ObBf06Yza7dNx5 242w, http://web.archive.org/web/20221203101917im_/https://lh6.googleusercontent.com/vLFoNPsvAOcwhlHFjLgdp1PBMW8EGqRFNXVqAcxoQkz2CDlrWrOKUhqKO4o7BR4HrOxVMNQeV2GnU4EIimM3sNlFE9bhtHhrtnp_2oteetAha4ss4maTDb6WT8ObBf06Yza7dNx5 484w" src="../Images/e61b503d893a20f62c0420eeb8a3d627.png" alt="" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221203101917im_/https://lh6.googleusercontent.com/vLFoNPsvAOcwhlHFjLgdp1PBMW8EGqRFNXVqAcxoQkz2CDlrWrOKUhqKO4o7BR4HrOxVMNQeV2GnU4EIimM3sNlFE9bhtHhrtnp_2oteetAha4ss4maTDb6WT8ObBf06Yza7dNx5"/>
+  </figure><p>你觉得怎么样？如果您有任何问题或反馈，请随时参与该项目并联系我们。我们很乐意帮助并听取您的意见！</p>
+<br/>
+<p> </p>
+<h2><span>照片由<span> </span> </span> <a href="http://web.archive.org/web/20221203101917/https://unsplash.com/photos/2JIvboGLeho?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">苏珊</a> <span> <span> </span>上<span> </span> </span> <a href="http://web.archive.org/web/20221203101917/https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">上</a></h2>
+<p><span>The source code is available on Github: </span><u><a href="http://web.archive.org/web/20221203101917/https://github.com/netguru/sections-decorator-android">https://github.com/netguru/sections-decorator-android</a></u></p>
+<p>How do you like it? Feel free to contribute to the project and contact us if you have any questions or feedback. We are happy to help and listen to your opinion!</p>
+<p> </p>
+<p><span>Photo by<span> </span></span><a href="http://web.archive.org/web/20221203101917/https://unsplash.com/photos/2JIvboGLeho?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Susan Yin</a><span><span> </span>on<span> </span></span><a href="http://web.archive.org/web/20221203101917/https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></p></span></div></div>    
+</body>
+</html>

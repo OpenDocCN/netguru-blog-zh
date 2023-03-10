@@ -1,0 +1,107 @@
+<html>
+<head>
+<title>Starting a New Compose Multiplatform Project</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>开始新的合成多平台项目</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/starting-compose-multiplatform-project#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/starting-compose-multiplatform-project#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h3"><p>Compose Multiplatform (CM)是谷歌与Android Studio和IntelliJ背后的公司合作的结果。这是一个UI框架，通过使用Kotlin简化并加速了桌面应用程序的开发。CM使用与Jetpack Compose相同的部分技术，但将其扩展到跨平台工作。</p></div><p>Compose多平台框架将Android开发人员熟知的声明性UI模型带到了其他平台，包括:</p>
+<ul>
+<li aria-level="1">桌面应用程序(Linux、macOS和Windows)</li>
+<li aria-level="1">webapps</li>
+<li aria-level="1">iOS应用程序(目前正在开发中)</li>
+</ul>
+<p>本技术指南旨在解释如何创建自己的Compose多平台项目、添加模块和执行基本设置。</p>
+<h2>撰写多平台应用程序模板</h2>
+<p>要开始一个<a href="/web/20221006015908/https://www.netguru.com/blog/compose-multiplatform-custom-charts" rel="noopener">新的构建多平台项目</a>，你首先需要安装<a href="http://web.archive.org/web/20221006015908/https://www.jetbrains.com/idea/" rel="noopener" target="_blank"> IntelliJ IDEA </a></p>
+<p>选择<code>New Project</code>后，继续选择<code>Kotlin</code>。然后，从可用的模板中选择<code>Compose Multiplatform Application</code> …。</p>
+<p>请注意，您的JDK必须至少是JDK 11。此外，为了能够使用本地分发包，您必须使用JDK 15或更高版本。</p>
+<p>为新项目选择名称和位置后，单击<code>Next</code>。</p>
+<p><em>新项目创建者</em></p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/new_project_creator_compose_multiplatform.jpg?width=700&amp;name=new_project_creator_compose_multiplatform.jpg 700w, http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/new_project_creator_compose_multiplatform.jpg?width=2588&amp;name=new_project_creator_compose_multiplatform.jpg 2588w" src="../Images/fa8a64437e10e7a2c95421f07551e8f8.png" alt="new_project_creator_compose_multiplatform" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/new_project_creator_compose_multiplatform.jpg?width=700&amp;name=new_project_creator_compose_multiplatform.jpg"/>
+  </figure><p>在Android上使用时，会提示你提供Android SDK的路径。您可以使用与您的Android Studio安装捆绑在一起的那个，它应该位于<code>/Users/&lt;your name&gt;/Library/Android/sdk.</code></p>
+<p><em>模块设置</em></p>
+<p>在这个阶段，您还可以单击您的模块和目标。您可以根据需要修改它们。</p>
+
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/modul_setup.jpg?width=700&amp;name=modul_setup.jpg 700w, http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/modul_setup.jpg?width=1644&amp;name=modul_setup.jpg 1644w" src="../Images/4345792e422f36842af30608dfb0f329.png" alt="modul_setup" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/modul_setup.jpg?width=700&amp;name=modul_setup.jpg"/>
+  </figure><p/>
+<p><em>Module setup</em></p>
+<p>At this stage, you can also click on your modules and targets. You can modify them to your needs.</p>
+<p><em>可用模块列表</em></p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/modules_targets.jpg?width=700&amp;name=modules_targets.jpg 700w, http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/modules_targets.jpg?width=1652&amp;name=modules_targets.jpg 1652w" src="../Images/c278d2fd15e92f3503d542fca02aaa69.png" alt="modules_targets" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/modules_targets.jpg?width=700&amp;name=modules_targets.jpg"/>
+  </figure>You can also include additional modules, such as Web or iOS, by selecting <code>Project</code> in the menu and clicking (or right-clicking) the <code>+</code> button.<p>添加完<code>browser</code>模块后，如果您想在<code>browser</code>模块中引用它，您可以继续向<code>common</code>模块添加一个<code>js</code>目标。</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/list_modules.jpg?width=265&amp;name=list_modules.jpg 265w, http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/list_modules.jpg?width=530&amp;name=list_modules.jpg 530w" src="../Images/27a23bf578aadf94a263bb91a8f1913d.png" alt="list_modules" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/list_modules.jpg?width=265&amp;name=list_modules.jpg"/>
+  </figure><p/>
+<p>您也可以通过右击并选择<code>Remove …:.</code>来删除任何不想要的<code>modules</code>和<code>targets</code></p>
+<p>如果您已经准备好配置，单击Finish跳转到您的新项目。这应该是模板配置的结果:</p>
+<p>模块及其用途</p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/browser_module.jpg?width=268&amp;name=browser_module.jpg 268w, http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/browser_module.jpg?width=536&amp;name=browser_module.jpg 536w" src="../Images/9787af06a65f0ec59b769cda00114747.png" alt="browser_module" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/browser_module.jpg?width=268&amp;name=browser_module.jpg"/>
+  </figure><p>现在，每个平台的模块目录— <code>Android</code>、<code>browser</code>和<code>desktop</code> —已经生成。它们可能是您认为的应用程序的入口点。例如，<code>Android</code>模块可以被认为是Android多模块项目中的传统<code>app</code>模块。您已经将主要活动放在那里，并且可以从里面设置来自<code>common</code>模块的内容。</p>
+<p>这些特定于平台的模块都引用了<code>common</code>模块，您可以在其中放置公共代码，如组合多平台组件、域和数据代码。</p>
+<p>在公共模块中生成的所有目录中，您应该感兴趣的主要目录是<code>commonMain</code>,您将在那里放置大多数多平台代码。我将在本指南中进一步解释其他目录。</p>
+<p>Web合成有何不同？</p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/template_configuration.jpg?width=278&amp;name=template_configuration.jpg 278w, http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/template_configuration.jpg?width=556&amp;name=template_configuration.jpg 556w" src="../Images/549b4795c358606b867380948fabeed7.png" alt="template_configuration" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/template_configuration.jpg?width=278&amp;name=template_configuration.jpg"/>
+  </figure><em>Project structure straight out of configuration phase</em><p>尽管Compose for Web的工作方式与经典的Jetpack Compose类似(即视图由可组合函数组成，当参数值发生变化时，这些函数会重新组合)，但它具有创建布局的独特元素。</p>
+<h2>截至发稿时，还不能使用Compose的<code>Column()</code>、<code>Row()</code>和<code>Box()</code>。相反，Compose for Web中的视图需要由DOM元素组成，这些元素可以使用像<code>Div()</code>、<code>Span()</code>和<code>Button()</code>这样的可组合函数来添加，这不同于传统的Compose按钮()。要对这些元素进行主题化，您需要使用样式生成器在Compose中应用CSS。</h2>
+<p> </p>
+<p>由于这些原因，我将跳过web实现，并在本文中进一步讨论。</p>
+<p>添加平台特定的可组合组件</p>
+<h2>假设在<code>commonMain</code>目录中的<code>common</code>模块中，你想要一些下拉菜单的通用代码。问题是(在撰写本指南时)这两个平台没有可组合的公共下拉菜单。正因为如此，我们需要针对每个平台的特定代码。你是怎么做到的？在<code>commonMain</code>中，你可以创建一个<code>CustomDropdown.kt</code>文件。在里面，使用<code>expect</code>关键字:</h2>
+<p> </p>
+<p>在<code>desktopMain</code>中，您可以创建<code>DesktopCustomDropdown.kt.</code></p>
+<p>这个<code>DropdownMenu</code>可组合的看起来和Android的一模一样。请注意，这可能具有欺骗性。它们是独立的实现，并且是特定于平台的。他们不一样。</p>
+<pre><code>Div({ style { padding(25.px) } }) {
+    Button(attrs = {
+        onClick { console.log(“Clicked”) }
+    }) {
+        Text(“Click me”)
+    }
+}
+</code></pre>
+<p>在创建了这三个文件之后，您现在可以在<code>commonMain</code>目录中使用一个公共的可组合的<code>CustomDropdownMenu()</code>。</p>
+<h3>在<code>androidMain</code>子目录中，您还需要始终有一个<code>AndroidManifest.xml</code>文件，其中包含包的名称，如下所示:</h3>
+<p>带有<code>Test</code>后缀的目录当然是为了测试相应目录中的代码。例如，您应该对<code>androidTest.</code>中的<code>androidMain</code>代码进行测试</p>
+<p>手动添加新目标(使用web示例)</p>
+<pre><code>@Composable
+expect fun  CustomDropdownMenu(
+    expanded: Boolean,
+    onDismissRequest: () -&gt; Unit,
+)
+</code></pre>
+<p>如果在IntelliJ IDEA中设置项目后需要添加web模块，可以按照下列步骤操作:</p>
+<pre><code>@Composable
+actual fun  CustomDropdownMenu(
+    expanded: Boolean,
+    onDismissRequest: () -&gt; Unit,
+) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismissRequest,
+        focusable = false // Example of a parameter available only on desktop implementation
+    ) {
+        // desktop dropdown content
+    }
+}
+</code></pre>
+<p>在IntelliJ IDEA中，选择<code>File</code><span>&gt;</span><code><span>New</span></code><span>&gt;</span><code><span>Module</span></code><span>。</span></p>
+<p>选择<code>Compose Multiplatform</code> <span>发电机，选择</span> <code><span>Web</span></code> <span>为平台，并填写其他字段。</span></p>
+<p><span/></p>
+<pre><code>&lt;?xml version=“1.0” encoding=“utf-8"?&gt;<br/>&lt;manifest xmlns:android=“http://schemas.android.com/apk/res/android”<br/>package=“com.netguru.common” /&gt;
+</code></pre>
+<p>为多平台项目中的依赖关系保留一个真实的来源与常规的多模块Android应用程序没有什么不同——如果你愿意，你可以选择使用buildSrc 的<a href="http://web.archive.org/web/20221006015908/https://proandroiddev.com/better-dependencies-management-using-buildsrc-kotlin-dsl-eda31cdb81bf" rel="noopener" target="_blank"> Kotlin对象，或者</a><a href="http://web.archive.org/web/20221006015908/https://proandroiddev.com/gradle-version-catalogs-for-an-awesome-dependency-management-f2ba700ff894" rel="noopener" target="_blank"> Gradle版本目录</a>。</p>
+<h3>当决定在多平台项目中使用新的库时，您需要记住这一点。</h3>
+<p>虽然这个组合多平台模板目前只在IntelliJ IDEA中可用，但是一旦您创建了所需的初始配置，您就可以返回Android Studio来开发您的应用程序。不同的目标，如桌面或网络，可以通过适当的<code>gradlew</code>命令运行。</p>
+<ul>
+<li>随着Compose Multiplatform的发展，我将非常乐意分享即将出现的新方法。更多类似于本指南的技术说明，您可以在Netguru查看我们的资源库。如果您正在寻找使用<a href="/web/20221006015908/https://www.netguru.com/services/kotlin-multiplatform" rel="noopener"> Kotlin或编写多平台</a>的帮手，请联系我们，告诉我们更多关于您的项目的信息。</li>
+<li>Select the <code>Compose Multiplatform</code><span> generator, pick </span><code><span>Web</span></code><span> for the platform, and fill out the other fields.</span></li>
+</ul>
+<p><span/></p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/compose_multiplatform_generator.jpg?width=700&amp;name=compose_multiplatform_generator.jpg 700w, http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/compose_multiplatform_generator.jpg?width=1590&amp;name=compose_multiplatform_generator.jpg 1590w" src="../Images/c219d643ed3b20d65818c32cbc461c6e.png" alt="compose_multiplatform_generator" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221006015908im_/https://www.netguru.com/hs-fs/hubfs/compose_multiplatform_generator.jpg?width=700&amp;name=compose_multiplatform_generator.jpg"/>
+  </figure></span><p>Holding a single source of truth for the dependencies in a multiplatform project is no different from a regular multimodule Android application - you can opt in to use <a href="http://web.archive.org/web/20221006015908/https://proandroiddev.com/better-dependencies-management-using-buildsrc-kotlin-dsl-eda31cdb81bf" rel="noopener" target="_blank">Kotlin objects from buildSrc</a>, or <a href="http://web.archive.org/web/20221006015908/https://proandroiddev.com/gradle-version-catalogs-for-an-awesome-dependency-management-f2ba700ff894" rel="noopener" target="_blank">Gradle version catalogues</a> if you prefer.</p>
+<p>You need to keep this in mind when deciding to use a new library in your multiplatform project.</p>
+<p>While this Compose Multiplatform template is at this time available only in IntelliJ IDEA, once you have created the desired initial configuration you can return to Android Studio to develop your application. Different targets, such as Desktop or Web, can be run via appropriate <code>gradlew</code> commands.</p>
+<p>As Compose Multiplatform evolves, I’ll be more than happy to share new approaches that will surface. For more technical notes similar to this guide, you may check out our library of resources at Netguru. If you’re looking for an extra hand with <a href="/web/20221006015908/https://www.netguru.com/services/kotlin-multiplatform" rel="noopener">Kotlin or Compose Multiplatform</a>, reach out to us, and tell us more about your project.</p></div>    
+</body>
+</html>

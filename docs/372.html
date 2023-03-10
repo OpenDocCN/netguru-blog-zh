@@ -1,0 +1,354 @@
+<html>
+<head>
+<title>Ruby on Rails Invoicing Solutions Comparison (UPDATED)</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>Ruby on Rails发票解决方案比较(更新)</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/ruby-on-rails-invoicing-solutions-comparison#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/ruby-on-rails-invoicing-solutions-comparison#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h3"><p>发票是几乎所有允许用户进行支付的应用程序中最重要也是最复杂的部分之一。</p> 
+<p>所有的数字、税收、字段、规则和等式会让开发人员非常头疼。幸运的是，有很多开发票的解决方案，对我们来说也很幸运，其中很多都可以在Rails中找到。</p> 
+<p>让我们来看看在我们的<a href="/web/20221007181720/https://www.netguru.com/services/ruby-on-rails-development" rel="noopener" target="_blank"> Ruby on Rails应用</a>中实现发票的一些方法。</p></div><p/>
+<p><span>为了尽可能客观地展示每个解决方案，我将使用相同的标准，在每个类别中给它们打一到五分:</span></p>
+<ul>
+<li><strong>易用性</strong> <span>:使用和实施解决方案的难易程度</span></li>
+<li><strong>维护</strong> <span>:如果解决方案仍由其创建者维护(基于上次提交日期)</span></li>
+<li><strong>全面性</strong> <span>:解决方案有多复杂和通用</span></li>
+<li><strong>可用性</strong> <span>:它提供了多少有用的功能</span></li>
+</ul>
+<p><span>关于GitHub上可用的解决方案，我还会看看另外两件重要的事情:</span></p>
+<ul>
+<li><strong>星星</strong> <span>:基于Github星星的人气有多高(为了这篇评测我们假设250颗星星是一个非常好的结果)</span></li>
+<ul>
+<li><span> 200-250颗星= 5点</span></li>
+<li><span> 150-199颗星= 4点</span></li>
+<li><span> 100-149颗星= 3点</span></li>
+<li><span> 50-99颗星= 2点</span></li>
+<li><span> 0 - 49颗星= 1分。</span></li>
+</ul>
+<li><strong>未决问题</strong> <span>:有多少问题(漏洞或功能缺失)已被报告但尚未解决(数字越大得分越低)</span></li>
+<ul>
+<li><span> 0-1期= 5分</span></li>
+<li><span> 2-4期= 4分</span></li>
+<li><span> 5-7期= 3分</span></li>
+<li><span> 8-9期= 2分</span></li>
+<li>10个问题及以上= 1分。</li>
+</ul>
+</ul>
+<h3><span>编码员/开票</span></h3>
+<p><a href="http://web.archive.org/web/20221007181720/https://github.com/code-mancers/invoicing" target="_blank" rel="noopener"> <span> Github </span> </a></p>
+<p><span> <a href="http://web.archive.org/web/20221007181720/http://invoicing.codemancers.com/" target="_blank" rel="noopener">网站</a> </span></p>
+<p>在为您的Rails服务搜索发票解决方案时，名为“invoicing”的gem可能是您遇到的第一件事。</p>
+<p>它提供了广泛的功能。这里只是其中的一部分(摘自官方文档):</p>
+<ul>
+<li>代表客户和供应商账户，以及多方记账关系；</li>
+<li><span>自动将货币值舍入到该货币的惯用精度，例如基于流通中最小的硬币；</span></li>
+<li><span>同时支持任意数量的不同货币；</span></li>
+<li><span>提交发票、对账单等。一个完全可定制的HTML文档；</span></li>
+<li><span>提供默认增值税(VAT)实施和插入您自己的税务逻辑的能力；</span></li>
+<li><span>汇总账户余额、销售报表等。在选定的条件下(例如，一个季度的数据，或在特定日期到期的付款)。</span></li>
+</ul>
+<p>听起来不错，不是吗？让我们添加非常简单的安装和初始化，许多有用的功能和精心编写的指南，我们可能会在我们小小的调查的最开始就找到完美的解决方案。不幸的是，当你检查最后一次提交的日期并看到“3年前”时，事情开始变得有点令人失望。太可惜了！</p>
+<table>
+<tbody>
+<tr>
+<td>
+<p><span>易用性</span></p>
+</td>
+<td>
+<p><span> 4 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>维护</span></p>
+</td>
+<td>
+<p><span> 1 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>全面性</span></p>
+</td>
+<td>
+<p><span> 4 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>可用性</span></p>
+</td>
+<td>
+<p><span> 3 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>星星</span></p>
+</td>
+<td>
+<p><span> 197 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>未决问题</span></p>
+</td>
+<td>
+<p><span> 6 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><strong>总计:</strong></p>
+</td>
+<td>
+<p><strong> 3 </strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><span> <br/> siwapp/siwapp </span></h3>
+<p><a href="http://web.archive.org/web/20221007181720/https://github.com/siwapp/siwapp" target="_blank" rel="noopener"> <span> Github </span> </a></p>
+<p><span> <a href="http://web.archive.org/web/20221007181720/http://www.siwapp.com/" target="_blank" rel="noopener">网站</a> </span></p>
+<p>这段代码不是宝石。相反，它是一个基于Rails的开箱即用的发票管理解决方案。</p>
+<p>它被描述为“一个开源的网络应用程序，旨在以简单直接的方式帮助管理和创建发票”。它仍在维护中(最后一次提交是在18天前),并提供了一系列基本的有用功能，如绘图、打印以及管理客户和产品。它也有一个很好的简单布局，似乎很容易使用。</p>
+<p><span>即使你不需要单独的解决方案，你也可以在siwapp中找到一些灵感，来改进你自己在应用程序中开具发票的方法。</span></p>
+<table>
+<tbody>
+<tr>
+<td>
+<p><span>易用性</span></p>
+</td>
+<td>
+<p><span> 5 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>维护</span></p>
+</td>
+<td>
+<p><span> 4 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>全面性</span></p>
+</td>
+<td>
+<p><span> 3 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>可用性</span></p>
+</td>
+<td>
+<p><span> 4 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>星星</span></p>
+</td>
+<td>
+<p><span> 106 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>未决问题</span></p>
+</td>
+<td>
+<p><span> 9 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><strong>总计:</strong></p>
+</td>
+<td>
+<p><strong> 3.5 </strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><span><br/></span></h3>
+<p><a href="http://web.archive.org/web/20221007181720/https://github.com/ianmurrays/active_invoices" target="_blank" rel="noopener"> <span> Github </span> </a></p>
+<p><span>Rails中创建的另一个开箱即用的开票解决方案是:</span><i><span>active _ invoices</span></i><span>。</span></p>
+<p><span>它的名字来源于它所基于的gem，叫做</span><i><span>active _ admin</span></i><span>，它提供了一个基本的管理面板。作者将其描述为“非常简单的发票应用程序”，这些话是对它最准确的评价。</span></p>
+<p>但是简单性并不总是与有用性携手共进——尤其是自从2012年年底(也许是因为那一年是世界末日——这毕竟在某些情况下是真实的)以来，它就没有被保持过。)</p>
+<table>
+<tbody>
+<tr>
+<td>
+<p><span>易用性</span></p>
+</td>
+<td>
+<p><span> 4 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>维护</span></p>
+</td>
+<td>
+<p><span> 0 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>全面性</span></p>
+</td>
+<td>
+<p><span> 2 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>可用性</span></p>
+</td>
+<td>
+<p><span> 2 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>星星</span></p>
+</td>
+<td>
+<p><span> 150 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>未决问题</span></p>
+</td>
+<td>
+<p><span> 1 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><strong>总计:</strong></p>
+</td>
+<td>
+<p><strong> 2.5 </strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><span>外部API </span></h3>
+<p>当我们的发票问题没有现成的解决方案能满足您的需求时，最好考虑其他选择。</p>
+<p>有很多工具和应用程序可以帮助创建和管理发票，其中许多都提供了自己的API。这通常提供了更多的可能性和功能，但另一方面，实现一个完整的解决方案要耗费更多的时间。如果我们需要一个复杂的解决方案或者只是想让一切都在绝对的控制之下，那么考虑这样一个选项绝对是明智的。</p>
+<p><span>以较高的实施成本作为交换，您将获得根据您的需求定制的高质量解决方案。</span></p>
+<p><span>这里有一些提供漂亮、丰富的API的在线发票和会计提供商——分数反映了这些类型的解决方案的比较:</span></p>
+
+<table>
+<tbody>
+<tr>
+<td>
+<p><span>易用性</span></p>
+</td>
+<td>
+<p><span> 2 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>维护</span></p>
+</td>
+<td>
+<p><span> 5 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>全面性</span></p>
+</td>
+<td>
+<p><span> 5 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>可用性</span></p>
+</td>
+<td>
+<p><span> 5 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><strong>总计:</strong></p>
+</td>
+<td>
+<p><strong> 4 </strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span> <br/>如果你想了解更多并看到一些现实生活中的例子，请查看我们关于<span> </span> </span> <a href="/web/20221007181720/https://www.netguru.com/blog/how-to-use-xero-api-for-invoicing-in-ruby-on-rails" target="_blank" rel="noopener"> <span>如何在Ruby on Rails中使用Xero API进行开票的文章</span> </a> <span>。</span></p>
+<p><span>如果你决定探索新鲜书籍<a href="http://web.archive.org/web/20221007181720/https://www.pcmag.com/article/341332/6-secret-freshbooks-tips-for-smbs" rel=" noopener">这里有一个你可以期待的一些特性和功能</a> <span> </span>的快速纲要，但是如果你想仔细看看(和一些其他选项)<a href="http://web.archive.org/web/20221007181720/https://www.techradar.com/best/best-billing-and-invoicing-software" rel=" noopener">市场上有很多</a>供你考虑<span> </span>。</span></p>
+<h3><span>自定义实现</span></h3>
+<p>如果所提供的解决方案都不符合您的需求(或者它们提供了太多您不需要的功能)，您仍然可以为您的应用量身定制一个发票系统。</p>
+<p>这也很耗时，但绝对值得一试——尤其是如果你不需要复杂的计算和功能，只需要根据用户订单生成简单的发票。</p>
+<p><span>在我们的文章“</span> <a href="/web/20221007181720/https://www.netguru.com/blog/how-to-do-basic-invoicing-for-your-ruby-on-rails-application" target="_blank" rel="noopener"> <span>如何为您的Ruby on Rails应用</span> </a> <span>”中，您可以学习如何使用我们在本文开头提到的gems或者，只需<a href="/web/20221007181720/https://www.netguru.com/services/ruby-on-rails-development" rel=" noopener">联系Netguru来为您构建。</a>T9】</span></p>
+<table>
+<tbody>
+<tr>
+<td>
+<p><span>易用性</span></p>
+</td>
+<td>
+<p><span> 3 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>维护</span></p>
+</td>
+<td>
+<p><span> 5 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>全面性</span></p>
+</td>
+<td>
+<p><span> 4 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>可用性</span></p>
+</td>
+<td>
+<p><span> 4 </span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><strong>总计:</strong></p>
+</td>
+<td>
+<p><strong> 4 </strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>什么排名最好？</h3>
+<ol>
+<li><span>自定义实现<strong>(总数:4/5) </strong> &amp;外部API <strong> (4/5) </strong> </span></li>
+<li><span> siwapp/siwapp <strong>(总计:3.5/5) </strong> </span></li>
+<li>编码员/发票<strong>(总数:3/5) </strong></li>
+<li>ianmurays/active _ invoices<strong>(总计:2.5/5) </strong></li>
+</ol>
+<h3>摘要</h3>
+<p><span>长话短说——Ruby on Rails提供了许多解决方案，当然可以满足您的发票需求。</span></p>
+<p>有一些很好的例子，比如应用程序<a href="http://web.archive.org/web/20221007181720/http://infakt.pl/" rel=" noopener">INF aft</a>——一个非常复杂和有用的基于Ruby on Rails的计价工具。</p>
+<p>即使不再维护某些流行的gem，您仍然可以找到适合您的东西，并且从长远来看，构建自定义实现可以节省大量时间和不确定性。</p></span></div>    
+</body>
+</html>

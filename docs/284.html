@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>How to Make Your App Respond Gracefully to Region Change</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>如何让你的应用程序优雅地响应地区变化</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/firebase-remote-config-react-native#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/firebase-remote-config-react-native#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h3"><p>在某些情况下，您会希望根据应用程序的使用位置来更改应用程序的外观。例如，您可能希望在某些地区显示不同的内容，或者根据用户的位置更改调色板。今天我将向你展示如何使用Firebase远程配置和我们伟大的粘性视差头文件库！</p></div><p>首先，我们来谈谈<a href="/web/20220924154013/https://www.netguru.com/services/firebase-development" rel="noopener"> Firebase </a>远程配置。这是Firebase“堆栈”的一个非常酷的功能，你可以在几个小时之内在你的应用程序中实现它。如果你早点使用它，它可以提高你的开发速度——在开发过程的后期，你可以用它从服务器自动配置应用程序，而不需要用户通过谷歌Play商店或应用商店更新它！此外，您可以根据地区或其他变量来个性化您的应用程序。所有这些都是完全免费的，所以让我们继续看React Native 中的<a href="http://web.archive.org/web/20220924154013/https://www.netguru.com/services/react-native-development" rel="noopener" target="_blank">实现吧！</a></p>
+<p>正如我前面所说的，我将向您展示Firebase Remote Config使用粘性视差头文件库提供的可能性，以及它附带的示例应用程序，您可以在这里找到:<a href="http://web.archive.org/web/20220924154013/https://github.com/netguru/sticky-parallax-header"><span>https://github.com/netguru/sticky-parallax-header</span></a>。我们可以通过远程配置轻松扩展其功能，这将允许您根据位置更改应用程序的配色方案。在我们的例子中，让我们为来自波兰的用户显示一组颜色，为世界其他地方的用户显示其他颜色。你要做的第一件事是安装<em> react-native-firebase </em>包和<em>react-native-firebase/remote-config</em>包。</p>
+<p>接下来您要做的是创建一个RemoteConfigService，它将初始化react-native-firebase/remote-config库。方法如下:</p>
+<pre>import remoteConfig from '@react-native-firebase/remote-config';<br/><br/>const RemoteConfigService = {<br/>  initialize: async () =&gt; {<br/>    await remoteConfig().setConfigSettings({<br/>      minimumFetchIntervalMillis: 300,<br/>    });<br/>    await remoteConfig().setDefaults({region: 'World'});<br/>    await remoteConfig().fetchAndActivate();<br/>  },<br/>};<br/><br/>export default RemoteConfigService;</pre>
+<p>如您所见，我创建了一个initialize方法，将默认的远程配置获取间隔设置为300毫秒。这将使我能够测试是否一切正常。在生产版本中，您可能想减少获取远程配置的频率。接下来是设置默认的配置值。让我们为我们的默认区域指定“World”值——如果我们在波兰，在下一次方法调用之后，它应该会改变。FetchAndActivate负责获取远程配置并在我们的应用程序中激活它。你必须尽快调用这个方法，所以我建议在App.js/App.tsx文件中调用它。</p>
+<p>最后一步是在屏幕中获得一个远程配置，我们将在其中改变我们的粘性视差标题的样式。但是首先，我们必须在RemoteConfigService中为它创建另一个方法。</p>
+<pre>import remoteConfig from '@react-native-firebase/remote-config';<br/><br/>const RemoteConfigService = {<br/>  …,<br/>  getRemoteValue: (key) =&gt; remoteConfig().getValue(key),<br/>};<br/><br/>export default RemoteConfigService;</pre>
+<p> </p>
+<p>现在让我们转到主屏幕，在那里我有我们的粘性视差标题。我们可以将负责获取远程配置值的代码放在componentDidMount方法中。在我们得到它之后，我们必须设置我们的状态，以便组件能够重新呈现。也可以在App.js中完成，并通过导航道具传递到屏幕上，不过我们换个方式来做:</p>
+<pre>componentDidMount() {<br/>    …,<br/>    const regionConfig = RemoteConfigService.getRemoteValue('region')?.asString()<br/>    this.setState({region: regionConfig})<br/>  }</pre>
+<p> </p>
+<p>现在我们只需要为我们的区域和方法创建样式，将颜色应用到我们的粘性视差头。就是这样！您刚刚创建了一个响应地区变化的应用程序。</p>
+<pre>getBackgroundColor = () =&gt; {<br/>    const {region} = this.state;<br/>    let style;<br/>    if (region === 'Poland') {<br/>      style = styles.homeScreenHeaderPoland;<br/>    } else {<br/>      style = styles.homeScreenHeader;<br/>    }<br/>    return style;<br/>};<br/><br/>renderHeader = () =&gt; {<br/>    const {region} = this.state;<br/>    return (<br/>      &lt;View style={[styles.headerWrapper, this.getBackgroundColor()]}&gt;<br/>        &lt;Image<br/>          resizeMode="contain"<br/>          source={require('../../assets/images/logo.png')}<br/>          style={styles.logo}<br/>        /&gt;<br/>      &lt;/View&gt;<br/>    );<br/>  };</pre>
+<p> </p>
+<p><strong>警告！在react-native-firebase/remote-config版本8.1.1中，远程配置的初始化当前被中断。您可以将软件包降级到版本5或等待更新。</strong></p></span></div>    
+</body>
+</html>

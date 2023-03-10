@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>Frontend Quick Tips #1 Map - How to Get Rid of 'If' Hell</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>前端快速提示#1地图-如何摆脱“如果”地狱</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/frontend-tips-1-map-how-to-get-rid-of-if-hell#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/frontend-tips-1-map-how-to-get-rid-of-if-hell#0001-01-01</a></blockquote><div><div id="hs_cos_wrapper_post_body"><span><div class="blog-post__lead h3"><p>没有人喜欢那些大文章——这就是为什么我们创建快速提示——从你阅读它们的那一刻起改变你的开发者生活的简短提示。这些可能是JS代码中解释的一些模式，或者是一些更好的代码的技术。</p></div><h2><span>问题？</span></h2>
+<p>有时你有依赖于许多条件/不同状态的逻辑。如果每个条件都满足，你必须做出不同的反应。</p>
+<p>假设我们有一个包含节的表单。每个部分都有一组不同的字段。</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221006042211im_/https://www.netguru.com/hs-fs/hubfs/quick1.png?width=321&amp;name=quick1.png 321w, http://web.archive.org/web/20221006042211im_/https://www.netguru.com/hs-fs/hubfs/quick1.png?width=642&amp;name=quick1.png 642w" src="../Images/b45626d58ec8f65b550a611785b00abc.png" alt="frontend quick tips" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221006042211im_/https://www.netguru.com/hs-fs/hubfs/quick1.png?width=321&amp;name=quick1.png"/>
+  </figure><p/>
+<p>你明白了。过一会儿，你会有一大堆如果。</p>
+<h2><span>解决方案？</span></h2>
+<p>您可以为每种以字段为值的类型创建一个映射。</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221006042211im_/https://www.netguru.com/hs-fs/hubfs/quick2.png?width=380&amp;name=quick2.png 380w, http://web.archive.org/web/20221006042211im_/https://www.netguru.com/hs-fs/hubfs/quick2.png?width=760&amp;name=quick2.png 760w" src="../Images/eb7800f2b024a56f22c55aff5757ad9c.png" alt="frontend quick tips" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221006042211im_/https://www.netguru.com/hs-fs/hubfs/quick2.png?width=380&amp;name=quick2.png"/>
+  </figure><p/>
+<p>让我们看看——我们首先声明了一组完整的键:值对，因此很容易理解哪个部分由哪个字段组成。如果我们想添加一个额外的部分，我们可以只添加另一个键:值对。</p>
+<p>下面我们只是使用一个简单的对象属性来访问所选的键:</p>
+<pre>return sectionFields[sectionName] || [];</pre>
+<p>所以我们可以有例如</p>
+<pre>sectionFields['car'] </pre>
+<p>它只是从一个定义得更高的对象中获取一个数组。</p>
+<h2><span>什么时候用？</span></h2>
+<p>每当你看到如果列表可以扩展。</p></span></div></div>    
+</body>
+</html>

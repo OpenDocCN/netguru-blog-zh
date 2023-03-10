@@ -1,0 +1,185 @@
+<html>
+<head>
+<title>Comparison of Text to Speech Solutions for React Native</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>React Native的文本到语音解决方案的比较</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/react-native-text-to-speech#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/react-native-text-to-speech#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h3"><p>文本到语音解决方案的比较</p><p>市场上有许多文本到语音的解决方案，从谷歌云文本到语音，微软Azure文本到语音，亚马逊AWS Polly，到Android和iOS设备的原生实现解决方案。虽然最后一种似乎更容易实现，更可靠，并提供了在没有互联网连接的情况下使用它的可能性，但“更大的”<a href="/web/20221205013216/https://www.netguru.com/services/machine-learning" rel="noopener">解决方案由机器学习</a>支持，并提供更高质量的语音。最大的缺点是对React Native的支持——虽然他们都有官方的iOS和Android SDKs，但真的很难找到React Native的库。在本文中，我们对普通React本地应用、Expo本地应用和Google语音转文本的Rest API的本地解决方案进行了比较。</p></div><h2>React-Native-TTS库</h2>
+<p>在<a href="/web/20221205013216/https://www.netguru.com/blog/react-native-apps" rel="noopener"> React Native apps </a>中实现文本到语音功能的最简单方法是使用React-Native-TTS库。它非常容易设置，并且该库可以与React-Native版本0.60+的自动链接一起使用。<br/>这种解决方案的最大优势是什么？两个平台上的原生文本到语音引擎允许您在应用程序中轻松使用该功能，更重要的是，允许您在没有网络连接的情况下使用一些语音。</p>
+<p>这种解决方案的缺点是缺乏一致性。Android和iOS有不同的文本到语音引擎，所以每个平台对语音的选择是不同的。如果你想创建一个会说话的聊天机器人，这可能是一个问题。</p>
+<p>你可以在Android上选择281种不同语言的语音，在iOS上选择苹果提供的38种。</p>
+<p>在配置您的声音时，您可以设置如下参数:</p>
+<ul>
+<li>语言<br/> <pre><code class="language-js">Tts.setDefaultLanguage('en-IE');</code></pre></li>
+<li>声音<br/> <pre><code class="language-js">Tts.setDefaultVoice('com.apple.ttsbundle.Moira-compact');</code></pre></li>
+<li>语速<br/> <pre><code class="language-js">Tts.setDefaultRate(0.6);</code></pre></li>
+<li>音高<br/> <pre><code class="language-js">Tts.setDefaultPitch(1.5);</code></pre></li>
+</ul>
+<p>在Android上还有平移和音量:</p>
+<pre><code class="language-js">Tts.speak('Hello, world!', { androidParams: { KEY_PARAM_PAN: -1, KEY_PARAM_VOLUME: 0.5 } });</code></pre>
+<p>设置非常简单，只需输入:</p>
+<pre><code class="language-bash">yarn add react-native-tts</code></pre>
+<p>并且库应该在运行pod install时链接它自己。</p>
+<p>让我们创建一个简单的语音转文本组件:</p>
+<pre><code class="language-js">
+import React from 'react'
+import { Button } from 'react-native'
+import Tts from 'react-native-tts'
+ 
+Tts.setDefaultLanguage('en-GB')
+Tts.setDefaultVoice('com.apple.ttsbundle.Daniel-compact')
+ 
+const NativeSpeech = () =&gt; (
+ &lt;Button
+   title="Speak!"
+   onPress={() =&gt; Tts.speak('Hello World!')}
+ /&gt;
+)
+ 
+export default NativeSpeech
+</code></pre>
+<h2>语音反应本地Expo模块</h2>
+<p>如果你使用expo，React-Native-TTS库不适合你。相反，你应该使用<a href="http://web.archive.org/web/20221205013216/https://docs.expo.io/versions/latest/sdk/speech/"> Expo-speech SDK </a>。你只需要跑:</p>
+<pre><code class="language-bash">expo install expo-speech</code></pre>
+<p>如果您想在非expo项目中使用这个库，您可以使用unimodules包。只需遵循unimodules文档，运行expo install expo-speech，然后运行pod install。</p>
+<p>expo的语音库使用与React-Native-TTS库相同的本地文本到语音引擎，因此您可以使用与该库相同的语音，配置过程也是类似的。更多信息，请访问世博会演讲文档。<br/>让我们用世博演讲服务创建一个简单的组件:</p>
+<pre><code class="language-jsx">
+import React from 'react'
+import { Button } from 'react-native'
+import * as Speech from 'expo-speech'
+ 
+const NativeSpeech = () =&gt; (
+ &lt;Button title="Speak!" onPress={() =&gt; Speech.speak('Hello World!')} /&gt;
+);
+ 
+export default NativeSpeech
+</code></pre>
+<h2>谷歌云语音转文本</h2>
+<p>Google Cloud语音转文本是一个没有React Native客户端库的解决方案。我们可以使用它的rest API请求base64编码的mp3和我们的文本。这项服务的最大优势是能够选择一种在两个平台上都可用的声音。它也是高度可配置的。您可以从标准声部集合中选取，但也可以从更高质量的声部库中选取。</p>
+<p>前往<a href="http://web.archive.org/web/20221205013216/https://cloud.google.com/text-to-speech/">谷歌文本语音网站</a>。您可以在下面的面板中测试所有可用的声音。</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221205013216im_/https://www.netguru.com/hs-fs/hubfs/Screenshot%202019-12-17%20at%2014.32.07.png?width=700&amp;name=Screenshot%202019-12-17%20at%2014.32.07.png 700w, http://web.archive.org/web/20221205013216im_/https://www.netguru.com/hs-fs/hubfs/Screenshot%202019-12-17%20at%2014.32.07.png?width=1400&amp;name=Screenshot%202019-12-17%20at%2014.32.07.png 1400w" src="../Images/1a9e3080f0edaaa77e2eb905122fa161.png" alt="Screenshot 2019-12-17 at 14.32.07" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221205013216im_/https://www.netguru.com/hs-fs/hubfs/Screenshot%202019-12-17%20at%2014.32.07.png?width=700&amp;name=Screenshot%202019-12-17%20at%2014.32.07.png"/>
+  </figure><p/>
+<p>要开始使用文本到语音转换，请点击“免费开始”按钮并创建一个帐户。</p>
+<p>如果您准备好了，那么在开始之前要做的第一件事就是创建一个API密匙。当然，你可以创建一个简单的API键来测试文本到语音的转换，但是如果你想在一个真正的应用程序中使用它，你应该像这篇博文中描述的那样限制这个键。</p>
+<p>打开<a href="http://web.archive.org/web/20221205013216/https://console.cloud.google.com/">谷歌云控制台</a>，从菜单中选择“API&amp;服务”，然后前往凭证部分。单击“创建凭据”并使用“API密钥”。将创建密钥；点按“限制键”按钮。您将看到这样一个屏幕:</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221205013216im_/https://www.netguru.com/hs-fs/hubfs/Screenshot%202019-12-17%20at%2014.39.28.png?width=700&amp;name=Screenshot%202019-12-17%20at%2014.39.28.png 700w, http://web.archive.org/web/20221205013216im_/https://www.netguru.com/hs-fs/hubfs/Screenshot%202019-12-17%20at%2014.39.28.png?width=2444&amp;name=Screenshot%202019-12-17%20at%2014.39.28.png 2444w" src="../Images/52d067b807402426c38c762e44fce3cf.png" alt="Screenshot 2019-12-17 at 14.39.28" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221205013216im_/https://www.netguru.com/hs-fs/hubfs/Screenshot%202019-12-17%20at%2014.39.28.png?width=700&amp;name=Screenshot%202019-12-17%20at%2014.39.28.png"/>
+  </figure><p/>
+<p>为您的密钥选择一个名称。我们将为Android和iOS应用程序分别创建一个密钥，因此您可以将它们命名为“API key - iOS”和“API key - Android”。然后转到应用程序限制:</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221205013216im_/https://www.netguru.com/hs-fs/hubfs/Screenshot%202019-12-17%20at%2014.40.03.png?width=700&amp;name=Screenshot%202019-12-17%20at%2014.40.03.png 700w, http://web.archive.org/web/20221205013216im_/https://www.netguru.com/hs-fs/hubfs/Screenshot%202019-12-17%20at%2014.40.03.png?width=2492&amp;name=Screenshot%202019-12-17%20at%2014.40.03.png 2492w" src="../Images/5beec270cbcc7566ec28805050e86e3a.png" alt="Screenshot 2019-12-17 at 14.40.03" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221205013216im_/https://www.netguru.com/hs-fs/hubfs/Screenshot%202019-12-17%20at%2014.40.03.png?width=700&amp;name=Screenshot%202019-12-17%20at%2014.40.03.png"/>
+  </figure><p/>
+<p>您可以为您的应用捆绑包限制您的API密钥。它将防止攻击者窃取您的密钥，并在您的应用程序之外使用它们。你得准备两把不同的钥匙，一把安卓的，一把iOS的。如果您愿意，您也可以将这些按键限制为“仅文本到语音”:</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221205013216im_/https://www.netguru.com/hs-fs/hubfs/Screenshot%202019-12-17%20at%2014.42.22.png?width=700&amp;name=Screenshot%202019-12-17%20at%2014.42.22.png 700w, http://web.archive.org/web/20221205013216im_/https://www.netguru.com/hs-fs/hubfs/Screenshot%202019-12-17%20at%2014.42.22.png?width=2408&amp;name=Screenshot%202019-12-17%20at%2014.42.22.png 2408w" src="../Images/4e1a403f3fc635039487e51b70c3050a.png" alt="Screenshot 2019-12-17 at 14.42.22" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221205013216im_/https://www.netguru.com/hs-fs/hubfs/Screenshot%202019-12-17%20at%2014.42.22.png?width=700&amp;name=Screenshot%202019-12-17%20at%2014.42.22.png"/>
+  </figure><p/>
+<p>现在，您可以使用React-Native-Config库将您的密钥安全地存储在您的ENV文件中，然后根据平台提取API密钥。<span><br/>T2】</span></p>
+<p>Google的语音转文本是一个REST API，没有React Native的客户端库。这就是为什么我们需要获取base64编码的语音到我们的应用程序，然后播放它。</p>
+<p>使用这种解决方案的一个巨大优势是由机器学习支持的更高质量的语音。您可以从每种语言的大量声音列表中进行选择。每种语言都有几种声音，男性和女性都有，但也有标准声音和WaveNet声音，因为语音质量更好，所以价格稍微高一点。你可以在谷歌文本到语音转换的参考列表上查看它们。如何设置自己选择的声音？就像把设置添加到一个API调用体中一样简单:<span> <br/> </span></p>
+<pre><code class="language-jsx">
+voice: {
+     languageCode: 'en-US',
+     name: 'en-US-Standard-B',
+     ssmlGender: 'FEMALE'
+   }</code></pre>
+<p>让我们创建一个API调用来获取这些数据。我们的目标是从https://texttospeech.googleapis.com/v1/text:synthesize端点获取数据，所以首先，我们可以创建一个函数，用我们的头和体返回一个对象:</p>
+<pre><code class="language-jsx">
+const createRequest = text =&gt; ({
+ headers : {
+   'Content-Type': 'application/json'
+ },
+ body: {
+   input: {
+     text
+   },
+   voice: {
+     languageCode: 'en-US',
+     name: 'en-US-Standard-B',
+     ssmlGender: 'FEMALE'
+   },
+   audioConfig: {
+     audioEncoding: 'MP3',
+   }
+ },
+ method: 'POST'
+})</code></pre>
+<p>createRequest函数有一些针对语音的设置和针对音频类型的配置，但最重要的是“文本”参数，这是我们希望Google说的文本。现在我们可以创建一个函数来获取我们的mp3。</p>
+<pre><code class="language-jsx">
+import Config from 'react-native-config'
+import { Platform } from 'react-native'
+ 
+const speech = async (text) =&gt; {
+ const key = Platform.OS === 'ios' ? Config.KEY_IOS : Config.KEY_ANDROID
+ const address = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${key}`
+ const payload = createRequest(text)
+ try {
+   const response = await fetch(`${address}`, payload)
+   const result = await response.json()
+   console.log(result)
+ } catch (err) {
+   console.warn(err)
+ }
+}
+</code></pre>
+<p>如您所见，我们使用react-native-config根据当前平台获取API键，使用createRequest函数传递文本，然后从Google Text to Speech API获取。它应该向控制台返回base64编码的数据，只需运行:</p>
+<pre><code class="js">speech(‘Hello world!’)</code></pre>
+<p>如果我们想要解码base64并在我们的设备上播放它，我们需要使用react-native-fs库，因此我们可以创建createFile函数:</p>
+<pre><code class="language-jsx">
+const RNFS = require('react-native-fs')
+ 
+const createFile = async (path, data) =&gt; {
+ try {
+   return await RNFS.writeFile(path, data, 'base64')
+ } catch (err) {
+   console.warn(err)
+ }
+ 
+ return null
+}
+</code></pre>
+<p>作为第一个参数，我们需要传递路径和base64编码的数据。它会将它作为mp3保存在我们的设备内存中，可以通过React-Native-Sound库播放。所以现在我们需要一个函数来播放我们的声音:</p>
+<pre><code class="language-jsx">
+const Sound = require('react-native-sound')
+ 
+const playMusic = (music) =&gt; {
+ const speech = new Sound(music, '', (error) =&gt; {
+   if (error) {
+     console.warn('failed to load the sound', error)
+ 
+     return null
+   }
+   speech.play((success) =&gt; {
+     if (!success) {
+       console.warn('playback failed due to audio decoding errors')
+     }
+   })
+ 
+   return null
+ })
+}</code></pre>
+<p>我们需要将之前创建的路径作为参数传递给playMusic函数。现在，我们可以连接我们的代码并尝试我们新的语音服务:</p>
+<pre><code class="language-jsx">
+const speech = async (text) =&gt; {
+ const key = Platform.OS === 'ios' ? Config.KEY_IOS : Config.KEY_ANDROID
+ const address = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${key}`
+ const payload = createRequest(text)
+ const path = `${RNFS.DocumentDirectoryPath}/voice.mp3`
+ try {
+   const response = await fetch(`${address}`, payload)
+   const result = await response.json()
+   console.log(result)
+   await createFile(path, result.audioContent)
+   playMusic(path)
+ } catch (err) {
+   console.warn(err)
+ }
+}</code></pre>
+<h2>摘要</h2>
+<p>在本文中，我们比较了语音到文本的解决方案——本地解决方案和谷歌云语音到文本解决方案。我们还提供了一些关于在基于Expo的项目和本地项目中使用该服务的信息。</p>
+<p>在选择语音转文本解决方案时，我们必须决定最重要的功能——是离线使用这项服务，还是在所有平台上使用相同的声音？也可以同时使用这两种解决方案，将原生解决方案作为后备方案，因此可以随意试验代码！</p>
+<p> </p>
+<p><span>照片由</span>丹·法雷尔<span>在</span> Unsplash上拍摄</p></span></div>    
+</body>
+</html>

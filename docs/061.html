@@ -1,0 +1,80 @@
+<html>
+<head>
+<title>Brace No More - Going From Java to Ruby on Rails</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>不再需要支撑——从Java到Ruby on Rails</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/ruby-on-rails-to-java#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/ruby-on-rails-to-java#0001-01-01</a></blockquote><div><div id="hs_cos_wrapper_post_body"><span><div class="blog-post__lead h2"><p>从Java到Ruby的过渡并不是我人生中最容易的事情，起初我对我所看到的有很多怀疑。</p></div><img class="js-old-featured-photo hidden" data-bottom-gradient="0.4" data-source="Photo by &lt;a href=&quot;http://www.flickr.com/photos/angeloangelo/9413958694/&quot;&gt;Angelo DeSantis&lt;/a&gt;" data-top-gradient="0.4" shadow="" src="../Images/885d54b6cc937d99f58ad2ee7a82932c.png" data-original-src="http://web.archive.org/web/20221007083944im_/https://www.netguru.com/hubfs/images/posts/1425999364-wild_ride.jpg"/><p/>
+<p>在我来到<a href="/web/20221007083944/https://www.netguru.com/" rel=" noopener"> Netguru </a>之前，我是一名自由职业的C#和Java/ <a href="/web/20221007083944/https://www.netguru.com/services/android-mobile-development"> Android开发人员</a>——让我告诉你，我喜欢这两种语言(尽管C#比Java更喜欢——爱我一些lambdas和LINQ！).我甚至喜欢Eclipse，这是我的首选IDE，根据许多人的说法，这使我成为了被称为受虐狂的一群人。</p>
+<p>但是我跑题了。</p>
+<p>从Java到Ruby的过渡并不是我人生中最容易的事情，起初我对我所看到的有很多怀疑。就拿关于代码块如何编写的最基本的事情来说:大括号与缩进。</p>
+<p>让我们来看看我很久以前写的一些代码:</p>
+<p> </p>
+<p>现在让我们试着在Ruby on Rails中做一些<strong>类似</strong>的事情(现在，这不是Rails的方式，它更像是这里的直译，伙计们！):</p>
+<p><em>我一开始是怎么写的</em></p>
+<p><em>我现在会怎么写</em></p>
+<p> </p>
+<p>当我开始的时候，我有很大的问题，不能到处贴牙套。甚至不要让我开始谈论那些该死的叫做分号的东西——那些东西特别难去掉，并且在早期引起了很大的挫败感。</p>
+<p>但是在你摆脱了这种与括号和烦人的小家伙的不健康关系，并且克服了你需要记录你实际上如何缩进的事实之后，因为这很重要——ruby是一个写起来很棒的东西。</p>
+<p>尽管如此，还是有一些事情让我措手不及:</p>
+<h3><strong>比如像整个退货业务。</strong>得知ruby中的每一个方法都会默认返回值，你不需要特意告诉它一直返回某个东西，这感觉非常酷。相反，它只是获取最后一行中获得的值并返回它..</h3>
+<ul>
+<li>
+<p>所有的成员变量都不能从类的外部访问。这也是我一开始抱怨的一件事，但是很快就开始尊重了。如果你想得到它，你要写一个方法。</p>
+</li>
+<li>
+<p>是nil而不是null。如果你不得不在你的ruby代码旁边写一些javascript代码，这会很快变得混乱。此外，整个“javascript使用大括号、方括号和您最喜欢的小分号，处理它”的态度的事情正在进行。这就是为什么如此多的<a href="/web/20221007083944/https://www.netguru.com/services/ruby-on-rails-development" rel="noopener" target="_blank"> Rails开发者</a>使用coffeescript，这使得在它们之间切换变得更容易忍受。</p>
+</li>
+<li>
+<p><strong> The each and the for。在Java中,“for”循环是一个基本的工具，你随处可见。它有自己的可变范围，简单的语法，你可以很容易地突破。我从未在ruby代码中见过一次“for”循环(除了基本的showcase示例)。令人惊讶的是，不同之处在于范围。</strong></p>
+</li>
+<li>
+<p><em>每个</em></p>
+</li>
+</ul>
+<p><em>each</em></p>
+<p><em>为</em></p>
+<p>另一个趣闻:<strong>Rails社区倾向于厌恶XML </strong> -这让我非常高兴。我每天都与JSON和YAML打交道，上一次我不得不查看XML文件是在一年多以前。现在，对于地球上的每一个RoR项目来说，这肯定不是真的。有时你不得不处理这种地狱般的格式，但如果我们在这里谈论个人经历，我再高兴不过了。例如，将这与你在开发Android应用程序时不得不面对的<a href="/web/20221007083944/https://www.netguru.com/blog/best-practices-in-android-app-development" rel="noopener">进行比较。有时我想回到过去，这种记忆扼杀了那个思考过程，就像它从未发生过一样。</a></p>
+<p>我知道进去后觉得很棒的东西:</p>
+<ul>
+<li>一切都是物体。 2是对象，“javascript是地狱”是对象，3.14是对象，nil是对象。你不必处理原始的int和integer。你实际上可以在一个nil对象上调用方法，比如检查它是否真的是nil或者只是撒谎:nil.nil？# = &gt;真的</li>
+</ul>
+<h3><strong>Hashes</strong>——或者其他什么语言可以称之为字典或者关联数组。在Java中，这是一个数组列表和哈希表的组合，需要大量的变通方法才能使它像ruby使用哈希表一样工作。哈希允许您使用任何对象类型作为索引。它们在表示数据结构方面非常出色，可以嵌套、序列化、反序列化，并且通常会被滥用(实际上并不建议)。想拿钥匙吗？没问题，只要调用hash.keys就搞定了。公正价值观也是如此。Hash是我最喜欢Ruby的地方之一，它肯定会破坏你的其他语言。</h3>
+<ul>
+<li>
+<p> </p>
+</li>
+<li>
+<p>收藏令人惊叹。更确切地说，用它们可以做的事情是惊人的。你可以调用、选择、拒绝、收集、映射、排序…任何你真正需要的对象集合，以获得你想要的精确集合，并根据你的喜好进行转换。</p>
+</li>
+</ul>
+<p>Ruby是解释的，不是编译的。这意味着无需等待编译，能够随时随地或在控制台上运行代码。</p>
+<ul>
+<li>
+<p>更糟糕的事情:</p>
+</li>
+<li>
+<p>Ruby是解释的，不是编译的。这也让它明显比Java慢。与普遍的看法相反，Java非常快。以Twitter为例——在过去的某个时候，他们不得不从他们选择的框架Ruby on Rails辞职，转向Java，这使得他们的性能快了许多倍。</p>
+</li>
+</ul>
+<h3><strong>代码库大小。Java被更好地记录，有更广泛的传播，和巨大的代码库。开发人员的数量甚至不值得比较，因为Ruby在这方面是微不足道的。</strong></h3>
+<ul>
+<li>
+<p>据我所知，Ruby在Windows上的开发很糟糕。事实上，我甚至在某个时候尝试过设置它，但后来放弃了，转而继续使用linux。将它与rails和rvm结合起来，你会发现一场圣战正在进行，结束时可能会非常混乱。</p>
+</li>
+<li>
+<p>你会想念你的重构工具。遗憾的是，动态类型化的乐趣使得我们不可能写出接近Java的重构工具。</p>
+</li>
+<li>
+<p>从Java到Ruby经历了一段漫长的旅程。我绝对推荐花一个周末的时间和Ruby玩一玩，即使只是为了看看元编程是如何工作的，以及使用更自然的语言来编码是多么有趣。在开始的几个小时里，尝试使用“除非”语句会让你绞尽脑汁。哦，还要尽量让你的代码块尽可能的短，因为你可以！</p>
+</li>
+<li>
+<p>来自我们博客的其他<a href="http://web.archive.org/web/20221007083944/https://www.netguru.com/blog"> Ruby on Rails相关文章。</a></p>
+</li>
+</ul>
+<p> </p>
+<p>Other <a href="http://web.archive.org/web/20221007083944/https://www.netguru.com/blog">Ruby on Rails related posts from our blog</a>.</p>
+<p> </p></span></div></div>    
+</body>
+</html>

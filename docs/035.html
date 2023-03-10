@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>How to Use Devise Authentication With Emberjs</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>如何使用Emberjs设计认证</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/how-to-use-devise-authentication-with-emberjs#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/how-to-use-devise-authentication-with-emberjs#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h3"><p>这里有一个使用Ember应用程序设置Devise的指南。Devise是Ruby社区范围内的默认身份验证。Ember-simple-auth是Ember社区范围内的默认身份验证。这两者配合得很好——使用它们，不要重新发明轮子。</p></div><h2>后端设置</h2>
+<h2 id="id-[#ng-training]DeviseauthwithEmberjs-Backendsetup">您应该使用什么:</h2>
+<p><span>设计gem </span>作为认证基础</p>
+<ul>
+<li>作为令牌处理程序的simple _ token _ authentic ation-令牌认证支持已从Devise中移除；出于安全原因，你应该使用宝石</li>
+<li><span> rack-cors </span>支持跨产地资源共享</li>
+<li>步骤1:设置您的模型</li>
+</ul>
+<h3>按照simple_token身份验证的<a href="http://web.archive.org/web/20220925090804/https://github.com/gonzalo-bulnes/simple_token_authentication" rel="nofollow">自述文件中的说明进行设置。记住运行迁移，将身份验证令牌添加到用户的表中。</a></h3>
+<p>[代码]</p>
+<p data-gist-id="2c57553dbef21b29c8a3bb40a07d8950">[代码]</p>
+<p data-gist-id="5fc6bb0736cb281506f46aac5adc5cbf">步骤2:设置基本控制器</p>
+<p>确保在/api命名空间和目录下限定控制器的范围。创建一些基本的控制器类，它将<a href="http://web.archive.org/web/20220925090804/https://github.com/gonzalo-bulnes/simple_token_authentication#allow-controllers-to-handle-token-authentication" rel="nofollow">作为用户</a>的令牌认证处理程序。移除<span>protect _ from _ forcer with::exception</span>-它对Ember不起作用，因为表单不是由Rails呈现的。</p>
+<h3>[代码]</h3>
+<p>步骤3:设置会话控制器</p>
+<p data-gist-id="48a78661bacddbeddd230e55af318d2c">您的会话控制器应该从<span>device::session controller</span>继承并覆盖create action。在这个操作中，您返回将在前端作为会话数据处理的数据。您应该至少输入认证参数(电子邮件/令牌)。在那里，您可以添加任何必要的内容——如用户id、角色、全名或配置文件id。</p>
+<p>[代码]</p>
+<h3>步骤4:设置路线</h3>
+<p>在您的路由中使用<span>device _ for</span>来指定会话控制器:<span>device _ for:用户，控制器:{ sessions: 'api/sessions' } </span></p>
+<p data-gist-id="88875d242d19c26e6d3dc89444babdf6">[代码]</p>
+<p>步骤5:禁用会话存储为Cookie</p>
+<h3>Rails应用程序不应该发布会话cookies。相反，身份验证应该专门通过身份验证令牌来完成。在Rails中禁用会话最简单的方法是添加一个<span>初始化器配置/初始化器/session_store.rb </span>并禁用该文件中的会话存储。</h3>
+<p>[代码]</p>
+<p data-gist-id="36d697d31eac0134d1c8f57351c8d7e3">步骤6:添加CORS中间件</p>
+<h3>将CORS中间件添加到您的<span> config/application.rb. </span></h3>
+<p>[代码]</p>
+<p data-gist-id="51fc1d1fdb735227802e697d6102a262">[code]</p>
+<p>前端设置</p>
+<h3>您应该使用什么:</h3>
+<p><span>成员简单认证</span>用于基础认证和设备集成</p>
+<p data-gist-id="8dcf90f4879220cff5cc07560383cf42">来自<span>的<span>ApplicationRouteMixin</span>ember-simple-auth</span>将处理认证动作</p>
+<p><span> AuthenticatedRouteMixin </span>来自<span> ember-simple-auth </span>，如果用户未通过身份验证，它将重定向用户</p>
+<h2 id="id-[#ng-training]DeviseauthwithEmberjs-Frontendsetup"><span>来自<span> ember-simple-auth </span>的UnauthenticatedRouteMixin </span>，如果用户通过了身份验证，它将重定向用户</h2>
+<p>来自<span>的<span>DataAdapterMixin</span>ember-simple-auth</span>将授权EmberData请求</p>
+<ul>
+<li> </li>
+<li>步骤1:设置申请路线</li>
+<li>从ember-simple-auth扩展基本应用程序路由<span> ApplicationRouteMixin </span>。</li>
+<li>在<span>app/pods/application/route . js</span></li>
+<li>[代码]</li>
+</ul>
+<p>步骤2:创建登录路由</p>
+<h3>创建从ember-simple-auth扩展<span>UnauthenticatedRouteMixin</span>的登录路由。</h3>
+<p><span>app/pod/log in/controller . js</span></p>
+<p>[代码]</p>
+<p data-gist-id="0e863034536a7d0b5b90c47d64d60c99">app/pods/login/route.js</p>
+<p>[代码]</p>
+<h3><span>app/pods/log in/template . HBS</span></h3>
+<p>[代码]</p>
+<p><span> app/router.js </span></p>
+<p data-gist-id="84156c7e9f3d1fdf2b8946e4b212ebbd">[代码]</p>
+<p>步骤3:创建已登录的路由</p>
+<p data-gist-id="3b420dd48fd68fd7bf2555f902d517b3">该路由应该在所有必须限制已验证用户的路由之上。如有必要，可以将路径设置为空字符串。它应该从ember-simple-auth扩展<span> AuthenticatedRouteMixin </span>。</p>
+<p>app/pods/已登录/route.js</p>
+<p data-gist-id="5f4a7b67ef35871a119c1d9f3f19e3c8">[代码]</p>
+<p>app/pods/已登录/template.hbs</p>
+<p data-gist-id="2fc9524fc5e333b6f0fb24358b53fb99">[代码]</p>
+<p>app/router.js</p>
+<h3>[代码]</h3>
+<p>步骤4:创建设备验证器</p>
+<p>在<span>app/授权码</span>中创建名为<span>device . js</span>的文件。</p>
+<p data-gist-id="245129c8411dce22282d08cf7ae8c34a">[代码]</p>
+<p>步骤5:创建设计授权者</p>
+<p data-gist-id="9441dd90cf7e59a172aa3316965597b4">在<span>app/授权人</span>中创建名为<span>device . js</span>的文件。</p>
+<p>[代码]</p>
+<p data-gist-id="58670aa5e87ed0d48ab7987d87ec91a6">步骤6:设置应用适配器以授权会员数据</p>
+<h3>在<span> app/adapters/ </span>中创建<span> application.js </span>适配器。</h3>
+<p>[代码]</p>
+<p data-gist-id="b78421fcff395900e9cb757077b3c66a">步骤7:设置会话服务</p>
+<p>在<span>应用/服务</span>中创建<span> session.js </span>文件，该文件将从ember-simple-auth会话服务继承。你可以在这里放一些计算属性或者<span> currentUser </span>方法。</p>
+<h3> </h3>
+<p>步骤8:设置您的环境</p>
+<p data-gist-id="4d442efa9b510e1ac842e06382a84acf">在<span>内容安全策略</span>中更新您的<span> connect-src </span>密钥。为ember-simple-auth配置对象中的<span> routeAfterAuthentication </span>和<span>routeIfAlreadyAuthenticated</span>密钥添加路由名称。</p>
+<p>[代码]</p>
+<h3>摘要</h3>
+<p>用Emberjs设置Devise不是一个5分钟的任务，但也没那么难。如果有什么问题，欢迎在下面评论。</p>
+<p data-gist-id="0b42212488b206f3d5c508f656392c36">[code]</p>
+<p> </p>
+<h3>Step 7: Setup Your Session Service</h3>
+<p>Create <span>session.js</span> file in <span>app/services</span> that will inherit from ember-simple-auth session service. You can put here some computed properties or <span>currentUser</span> method.</p>
+<p> </p>
+<h3>Step 8: Setup Your Environment</h3>
+<p>Update your <span>connect-src</span> key in <span>contentSecurityPolicy</span>. Add route names for <span>routeAfterAuthentication</span> and <span>routeIfAlreadyAuthenticated</span> keys in ember-simple-auth config object.</p>
+<p data-gist-id="dcedaa14621a812556abd3b27e0b60af">[code]</p>
+<h3>Summary</h3>
+<p>Setting up Devise with Emberjs is not a 5-minute task, but it's not that hard. If you have any problems, feel free to comment below.</p></span></div>    
+</body>
+</html>

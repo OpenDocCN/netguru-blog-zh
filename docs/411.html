@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>Responsive System With AWS Aurora and a Ruby Application</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>带有AWS Aurora和Ruby应用程序的响应系统</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/responsive-system-with-aws-aurora-and-a-ruby-application#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/responsive-system-with-aws-aurora-and-a-ruby-application#0001-01-01</a></blockquote><div><div id="hs_cos_wrapper_post_body"><span><div class="blog-post__lead h3"><p>在这篇文章中，我将带您了解我们如何通过AWS Aurora服务满足客户对更高网络流量的需求，并逐步将其融入现有的基础设施设置。</p></div><h2><span data-preserver-spaces="true">首先要做的事情...</span></h2>
+<p>在我进入将我们的基础设施提升到下一个级别的实际计划之前，让我简单描述一下背景和我们所处的位置。为了简单起见，我将跳过所有不相关的系统部分，如缓存、队列或应用层，它们与升级无关。</p>
+<p>也就是说，这个系统非常简单。构成该架构的组件有:</p>
+<ul>
+<li><span data-preserver-spaces="true">RDS PostgreSQL；</span></li>
+<li>为Ruby on Rails (RoR)应用服务的静态ec2车队；</li>
+<li><span data-preserver-spaces="true">应用负载均衡器；</span></li>
+<li><span data-preserver-spaces="true">cloud watch；</span></li>
+</ul>
+<p><span data-preserver-spaces="true">继名句</span> <em> <span data-preserver-spaces="true">“一图胜过千言”，</span> </em> <span data-preserver-spaces="true">下图代表系统的原始设计。</span></p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/RDS%20Article.png?width=700&amp;name=RDS%20Article.png 700w, http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/RDS%20Article.png?width=1400&amp;name=RDS%20Article.png 1400w" src="../Images/56fa7b0ad9072edba69e0ed10a1826de.png" alt="AWS Aurora RDS" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/RDS%20Article.png?width=700&amp;name=RDS%20Article.png"/>
+  </figure><p/>
+<p><span data-preserver-spaces="true">如你所见，它是一个非常流行的</span> <a target="_blank" href="http://web.archive.org/web/20221007194155/https://en.wikipedia.org/wiki/Multitier_architecture#Three-tier_architecture" rel="noopener"> <span data-preserver-spaces="true">三层架构</span> </a> <span data-preserver-spaces="true">，表示层作为客户端的移动app，应用层作为我们的RoR应用，数据层使用和RDS PostgreSQL数据库。这样的设计非常适合我们的应用程序，但是传入的流量受限于EC2机器和RDS的计算能力。</span></p>
+<h2>挑战</h2>
+<p><span data-preserver-spaces="true">随着数字市场的增长，每个人，尤其是在冠状病毒季节，都疯狂地使用互联网服务，客户决定推广他们的服务并吸引更多用户，这显然会显著增加应用程序端的流量。需求很明确——“</span><em><span data-preserver-spaces="true">处理2.5k同时活跃用户的峰值，而没有任何服务中断</span> </em> <span data-preserver-spaces="true">”。这就是我们所做的。</span></p>
+<h2>这个计划</h2>
+<p>我们必须根据需求规划新的基础设施，但是首先我们对当前设置进行了性能测试，以获得参考点并检查实际瓶颈。</p>
+<p>第一次测试显示了两件事:</p>
+<ol>
+<li>当前的设置可以处理4.5k个请求/分钟，这与我们想要达到的目标相差甚远。</li>
+<li><span data-preserver-spaces="true">几分钟后，负载平衡器上开始出现超时(504 HTTP错误)</span></li>
+</ol>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/1-Feb-25-2021-01-05-13-42-PM.png?width=700&amp;name=1-Feb-25-2021-01-05-13-42-PM.png 700w, http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/1-Feb-25-2021-01-05-13-42-PM.png?width=1690&amp;name=1-Feb-25-2021-01-05-13-42-PM.png 1690w" src="../Images/be9af6ad7241a6ee24e1f4e8d719f718.png" alt="AWS" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/1-Feb-25-2021-01-05-13-42-PM.png?width=700&amp;name=1-Feb-25-2021-01-05-13-42-PM.png"/>
+  </figure><p/>
+<p><span data-preserver-spaces="true">显然，少量的应用EC2s是一个瓶颈，导致我们无法在10秒内完成客户端请求。有了这些信息，下一步就很清楚了——增加ec2的数量。为了避免不必要的成本，唯一合理的方法是使用自动缩放机制。</span></p>
+<p><span data-preserver-spaces="true">回到最初的基础架构——所有组件都是静态的，根本无法扩展。幸运的是，我们的应用程序是</span> <a target="_blank" href="http://web.archive.org/web/20221007194155/https://12factor.net/" rel="noopener"> <span data-preserver-spaces="true"> 12因素</span> </a> <span data-preserver-spaces="true">一致的，所以横向扩展几乎是现成的。有了AWS自动伸缩机制，根据<code>CPUUtilization</code>指标动态生成机器只需几分钟。</span></p>
+<p><span data-preserver-spaces="true">下一轮测试把我们带到了下图:</span></p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/2-Feb-25-2021-01-05-20-50-PM.png?width=700&amp;name=2-Feb-25-2021-01-05-20-50-PM.png 700w, http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/2-Feb-25-2021-01-05-20-50-PM.png?width=1692&amp;name=2-Feb-25-2021-01-05-20-50-PM.png 1692w" src="../Images/0e6b5d61fafb709c0e1d7d7471177383.png" alt="AWS Aurora RDS" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/2-Feb-25-2021-01-05-20-50-PM.png?width=700&amp;name=2-Feb-25-2021-01-05-20-50-PM.png"/>
+  </figure><p/>
+<p>正如您所看到的，随着计算能力的提高，请求的数量现在看起来好多了，但是我们仍然在与超时做斗争。我们检查了应用程序的日志，看到了许多类似这样的消息:</p>
+<pre data-stringify-type="pre">WARNING:  terminating connection because of crash of another server process<br/>DETAIL:  The postmaster has commanded this server process to roll back the current transaction and exit, because another server process exited abnormally and possibly corrupted shared memory.<br/>HINT:  In a moment you should be able to reconnect to the database and repeat your command.</pre>
+<p>这就是问题所在。看起来数据库在高负载下崩溃了，这就是为什么我们仍然在应用程序端收到超时。为了处理这样的流量高峰，我们必须增加数据库吞吐量。通过增加数据库实例的味道，我们将永久增加成本，但是由于我们只需要处理峰值，我们必须找到一些更具可伸缩性的解决方案——这就是Amazon Aurora发挥作用的地方。</p>
+<h2>旅程</h2>
+<p>此时，我们决定采用Amazon Aurora解决方案，以经济高效的方式扩展我们的数据层。Amazon Aurora是一个完全托管的关系数据库引擎，它通过基于嵌入式指标(如<code>CPUUtilization</code>或数据库连接)自动添加读取副本来实现数据库可伸缩性。这个简短的视频包含了您完成本文所需的一切:</p>
+
+<p> </p>
+<p>当然，Aurora还提供了许多其他很酷的功能，如增量备份或存储自动扩展。然而，这可能是一篇专门针对Aurora的独立文章。如果你觉得你更想探索极光，欢迎访问亚马逊官方极光文档<a target="_blank" href="http://web.archive.org/web/20221007194155/https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html" rel="noopener"><span data-preserver-spaces="true"/></a></p>
+<p><span data-preserver-spaces="true">从RDS迁移到Aurora后(流程有据可查</span> <a target="_blank" href="http://web.archive.org/web/20221007194155/https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.Migrating.html#AuroraPostgreSQL.Migrating.RDSPostgreSQL.Replica" rel="noopener"> <span data-preserver-spaces="true">此处</span> </a> <span data-preserver-spaces="true">)我们的基础架构看起来如下:</span></p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hubfs/Aurora%20Article%20(5)-png.png 0w" src="../Images/de268be205d6f41903471e96396cfe54.png" alt="AWS Aurora RDS" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hubfs/Aurora%20Article%20(5)-png.png"/>
+  </figure><p/>
+<p>请注意，实际上有两个极光端点。一个用于写，另一个用于读——这是读副本可伸缩性的结果。Aurora集群中的负载平衡器通过 <a target="_blank" href="http://web.archive.org/web/20221007194155/https://en.wikipedia.org/wiki/Round-robin_DNS" rel="noopener"> <span data-preserver-spaces="true">循环DNS </span> </a> <span data-preserver-spaces="true">在读取副本之间分配读取。理解这一部分至关重要，因为应用程序必须知道这两个端点，以便根据SQL查询类型选择合适的DB实例。为此，我们在应用程序中使用了</span><a target="_blank" href="http://web.archive.org/web/20221007194155/https://github.com/instacart/makara" rel="noopener"><span data-preserver-spaces="true">makara</span></a><span data-preserver-spaces="true">Ruby gem，它允许我们显式地指向读写数据库端点。</span></p>
+<p>每个层级都有如此可扩展的基础设施，应该不会再有瓶颈了，对吧？不对！</p>
+<p><span data-preserver-spaces="true">在下一组性能测试中出现了以下挑战:</span></p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/3_2.png?width=653&amp;name=3_2.png 653w, http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/3_2.png?width=1306&amp;name=3_2.png 1306w" src="../Images/49124c84a956445c7d655d84964e8278.png" alt="AWS Aurora RDS" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/3_2.png?width=653&amp;name=3_2.png"/>
+  </figure><p/>
+<p><span data-preserver-spaces="true">正如您所看到的，Aurora读取副本在大量使用CPU的情况下进行了扩展，但是在新的扩展读取副本上没有连接。这是怎么回事？原来，应用程序与之前的读取副本保持TCP连接(会话),只有少数连接来自EC2自动缩放过程中新启动的应用程序。这个问题可以通过两种方式解决:</span></p>
+<ol>
+<li><span data-preserver-spaces="true">更快地扩展读取副本，以便从新启动的EC2实例中获得更多连接。</span></li>
+<li><span data-preserver-spaces="true">防止创建长期TCP会话，并保持它们的短期存在。</span></li>
+</ol>
+<p>第一种解决方案是天真的，等于自找麻烦，因为几乎不可能使EC2实例群的扩展与读取副本同步。第二个听起来很好，但是我们必须找到一种机制，在特定的时间后拆除长期存在的TCP会话。具体到什么程度取决于您的系统和需求。例如，允许连接存活时间不超过10分钟意味着在第二个读取副本联机后大约10分钟，负载应该恢复平衡。</p>
+<p><span data-preserver-spaces="true">在深入研究了</span><a target="_blank" href="http://web.archive.org/web/20221007194155/https://github.com/instacart/makara" rel="noopener"><span data-preserver-spaces="true">makara</span></a><span data-preserver-spaces="true">gem和</span><a target="_blank" href="http://web.archive.org/web/20221007194155/https://guides.rubyonrails.org/active_record_basics.html" rel="noopener"><span data-preserver-spaces="true">ActiveRecord</span></a><span data-preserver-spaces="true">中的许多设置之后，我们最终发现了active record中的两个重要参数:</span></p>
+<ul>
+<li><code>idle_timeout</code> - <span data-preserver-spaces="true">在自动断开连接之前，连接在池中保持未使用状态的秒数(默认为300秒)。</span></li>
+<li><code><span>reaping_frequency</span></code> - <span data-preserver-spaces="true">定期运行</span> <a target="_blank" href="http://web.archive.org/web/20221007194155/https://api.rubyonrails.org/v5.1.7/classes/ActiveRecord/ConnectionAdapters/ConnectionPool/Reaper.html" rel="noopener"> <span data-preserver-spaces="true">收割者</span> </a> <span data-preserver-spaces="true">的频率(秒)，它试图从死线程中找到并恢复连接，如果程序员忘记在线程结束时关闭连接或线程意外死亡，就会发生这种情况。</span></li>
+</ul>
+<blockquote>
+<p><span data-preserver-spaces="true">这是特定于Ruby on Rails应用程序的，然而</span> <a target="_blank" href="http://web.archive.org/web/20221007194155/http://cloud.google.com/sql/docs/postgres/manage-connections#duration-python" rel="noopener"> <span data-preserver-spaces="true">在这里</span> </a> <span data-preserver-spaces="true">你可以找到其他编程语言有用的数据库连接参数。</span></p>
+</blockquote>
+<p>我们将每个设置为5秒，并再次进行性能测试。</p>
+<p><span/></p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/4_2.png?width=653&amp;name=4_2.png 653w, http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/4_2.png?width=1306&amp;name=4_2.png 1306w" src="../Images/b8942790dcf1e10bd57865aa733f4234.png" alt="AWS Aurora RDS" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/4_2.png?width=653&amp;name=4_2.png"/>
+  </figure></span><p>瞧啊！最后，流量在读取副本之间分布良好！</p><p>灾难恢复</p><h2>这样的设置足以用自动缩放机制处理请求的流量，但是我们希望确保我们的系统能够处理所有这些用户，即使当它的一部分中断时。应用程序层已经包含了灾难恢复计划，因为应用程序的每个损坏实例都可以在自动扩展组中轻松自动地替换。更有趣的部分是数据层。为了模拟一个数据库实例的崩溃，我们使用了Amazon的嵌入式故障转移机制。不幸的是，在故障转移之后，即使启用了<code>reaping_frequency</code>设置，应用程序仍然保持TCP会话。这导致大量应用程序实例具有大量未使用的打开的TCP会话，并填满了连接池，从而导致客户端超时。</h2>
+<p><em>旁注:</em>为了保持这个故事的合理简短，请参考下面的故事，在这些故事中，其他人也遇到了类似的问题:</p>
+<blockquote>
+<p>这是不可接受的，所以经过一些调试后，我们决定放弃makara gem，将连接池与第三方中间件软件分离。</p>
+
+</blockquote>
+<p>连接池</p>
+<h2>在我们进入中间件软件部分之前，我们必须了解连接池实际上是什么，以及它为什么如此重要。</h2>
+<p><span data-preserver-spaces="true">你可以从</span> <a target="_blank" href="http://web.archive.org/web/20221007194155/https://sudhir.io/understanding-connections-pools/" rel="noopener"> <span data-preserver-spaces="true">这篇伟大的文章</span> </a> <span data-preserver-spaces="true">中获得关于连接池的杰出知识，但是为了使它简短，我将在这里摘录一段引文，只是粘贴一段引文，以便让你理解我们正在谈论的内容:</span></p>
+<p>池是在内部维护一组连接的对象，不允许直接访问或使用。当需要与数据库进行通信时，这些连接由池发出，并在通信结束时返回到池中。该池可以用配置的连接数进行初始化，也可以按需缓慢填充。连接池的理想用法是，代码在需要使用时从池中请求连接(称为签出)，使用它，然后立即将它放回池中(释放)。这样，当所有其他与连接无关的工作都在进行时，代码就不会占用连接，从而大大提高了效率。这允许使用一个或几个连接来完成许多工作。如果在请求新的签出时池中的所有连接都在使用中，通常会让请求者等待(将阻塞)直到一个连接被释放。</p>
+<blockquote>
+<p>PostgreSQL中间件</p>
+</blockquote>
+<h2><span data-preserver-spaces="true">由于我们的系统变得越来越复杂，而且应用程序不能处理数据库故障转移，我们决定将连接池与第三方软件分离。PostgreSQL有两个流行的代理:</span></h2>
+<p>这些系统允许你建立尽可能多的数据库连接，而不用担心管理问题，因为它们给你的连接是廉价的模拟连接，处理开销很低。当您试图使用这些模拟连接之一时，它们会从内部池中拉出一个真实的连接，并将您的假连接映射到一个真实的连接上。在代理看到您已经使用完连接之后，它会保持您的假连接打开，但是会主动释放并重用真正的连接。连接数和释放积极性设置是可配置的，有助于您针对事务、预准备语句和锁等问题进行优化。</p>
+
+<p><span data-preserver-spaces="true">对于可伸缩的亚马逊Aurora数据库，只有PgPool适合，因为PgBouncer不支持读/写SQL查询拆分。PgPool的配置一开始可以让人应接不暇，但是有一套专门为极光</span>  <span data-preserver-spaces="true">设置的</span> <a target="_blank" href="http://web.archive.org/web/20221007194155/https://www.pgpool.net/docs/latest/en/html/example-aurora.html" rel="noopener"> <span data-preserver-spaces="true">可以作为一个很好的起点。特别值得关注的是<code>num_init_children</code>和<code>max_pool</code>参数，它们表明可以打开多少个数据库连接。关于参数之间的关系以及如何根据您的需要设置它们的更多信息可以在</span> </a><a target="_blank" href="http://web.archive.org/web/20221007194155/https://www.pgpool.net/mediawiki/index.php/Relationship_between_max_pool,_num_init_children,_and_max_connections" rel="noopener"> <span data-preserver-spaces="true">这里</span> </a> <span data-preserver-spaces="true">找到。</span></p>
+<p><span data-preserver-spaces="true">经过一些配置调整和一些性能测试，我们最终实现了目标:</span></p>
+<p><span data-preserver-spaces="true">After some configuration tuning and a couple more performance tests we finally managed to achieve the goal:</span></p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/6-Feb-25-2021-02-35-13-46-PM.png?width=653&amp;name=6-Feb-25-2021-02-35-13-46-PM.png 653w, http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/6-Feb-25-2021-02-35-13-46-PM.png?width=1306&amp;name=6-Feb-25-2021-02-35-13-46-PM.png 1306w" src="../Images/b88405acdf96a2eaa629f72571345810.png" alt="AWS Aurora RDS" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221007194155im_/https://www.netguru.com/hs-fs/hubfs/6-Feb-25-2021-02-35-13-46-PM.png?width=653&amp;name=6-Feb-25-2021-02-35-13-46-PM.png"/>
+  </figure><p>如您所见，连接均匀分布到副本，在故障切换会话期间，故障实例的连接被释放并立即切换到其他副本。</p>
+<p>结论</p>
+<h2><span data-preserver-spaces="true">几经波折后，我们实现了防弹的可扩展基础设施，在数据库和应用程序级别上具有弹性。该系统能够以经济高效的方式处理超过25k的并发用户，因为它可以根据系统负载自动扩展。本旅程描述旨在提供一个真实的例子，说明如何设计和改进基础设施系统，以及中间的所有起伏。</span></h2>
+<p>这个故事还没有结束，因为我们还有很多可以调整的地方，比如复制延迟。所以我想给你留下一句话，我认为这篇文章说明了:</p>
+<p>重要的不是如何结束，而是到达目的地的旅程。T3】</p>
+<blockquote>
+<p><span data-preserver-spaces="true">照片由</span> <a target="_blank" href="http://web.archive.org/web/20221007194155/https://unsplash.com/@tvick" rel="noopener"> <span data-preserver-spaces="true">泰勒维克</span> </a> <span data-preserver-spaces="true">上</span> <a target="_blank" href="http://web.archive.org/web/20221007194155/https://unsplash.com/" rel="noopener"> <span data-preserver-spaces="true">下</span> </a></p>
+</blockquote>
+<p><span data-preserver-spaces="true">Photo by </span><a target="_blank" href="http://web.archive.org/web/20221007194155/https://unsplash.com/@tvick" rel="noopener"><span data-preserver-spaces="true">Taylor Vick</span></a><span data-preserver-spaces="true"> on </span><a target="_blank" href="http://web.archive.org/web/20221007194155/https://unsplash.com/" rel="noopener"><span data-preserver-spaces="true">Unsplash</span></a></p></div></div>    
+</body>
+</html>

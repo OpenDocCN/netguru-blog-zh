@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>How to Avoid Shared States Between Mixins in Ember.js | Netguru Blog on Ember.js</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>如何避免Ember.js中Mixins之间共享状态| ember . js上的Netguru博客</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/how-to-avoid-shared-states-between-mixins-in-ember.js#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/how-to-avoid-shared-states-between-mixins-in-ember.js#0001-01-01</a></blockquote><div><span id="hs_cos_wrapper_post_body" class="hs_cos_wrapper hs_cos_wrapper_meta_field hs_cos_wrapper_type_rich_text" data-hs-cos-general-type="meta_field" data-hs-cos-type="rich_text"><p>就我个人而言，我经常使用mixins。在他们的帮助下，我们可以轻松地分离一个对象中的职责(无论是控制器、组件还是其他东西)，他们让我们以可重用的方式设计应用程序的架构。混合可以使我们的代码更干净，但是它们也带来了在多个对象之间共享状态的危险。您甚至可能没有意识到这一点，因为这种情况并不常见，但是如果发生这种情况，查找该bug可能会花费您几个小时的时间——所以最好做好准备！</p>
+<p/>
+<h2>Ember.js中Mixins之间的共享状态</h2>
+<h3>什么是共享状态？</h3>
+<p>我说的共享状态是什么意思？假设我们有两个组件，都存储一个列表，其中一个是“任务”，另一个是“要购买的物品”。我们决定将存储该列表的数组提取到一个mixin中(这可能看起来有点过分，但这只是一个例子！):</p>
+
+<p>接下来，我们创建两个组件，它们能够添加一个新任务或具有预定义名称的购物项目。<a href="http://web.archive.org/web/20201108144254/https://ember-twiddle.com/47bfc4020af5fb720d70" rel="nofollow" target="_blank">看看这个Ember Twiddle </a>看看现场演示，玩玩添加项目。</p>
+<p>如您所见，看起来它们共享同一个数组实例，这导致了错误的行为。这个bug很容易发现，但是假设你已经渲染了两个完全不同的组件，它们通过一个mixin以两种不同的方式分担部分责任。对于一些用户来说，应用程序会在访问第二条路线后在第一条路线上崩溃，而对于另一些用户来说，会在访问第一条路线后在第二条路线上崩溃。此外，很难重现车祸。</p>
+<h3>为什么会这样？</h3>
+<p>首先，我们来试着了解一下为什么会出现这种情况。如果我们更熟悉面向对象编程而不是原型继承，我们可能会认为创建两个扩展相同mixin的组件不可能意外地导致共享状态。当我们定义一个新的mixin，并最终将它导入到另一个文件(比如一个组件)时，它就被创建了。在这个创建过程中，我们为<code>list</code>属性定义的数组也被创建，<code>list</code>存储了一个对这个数组的引用。当我们呼唤，比如说，<code>Ember.Component.extend(OurMixin, { (...) })</code>，我们基本上创造了一个新的灰烬。从基成员复制可枚举属性的组件实例。组件实例，来自OurMixin实例和来自我们定义为组件的对象(顺序最后，优先级最高)。</p>
+<p>我们在mixins中定义的常规属性是可枚举的，所以<code>list</code>属性的值(对数组实例的引用)被复制到我们的组件中。同样的事情发生在我们使用mixin的任何其他地方——对同一个数组的相同引用被复制到一个新的对象，这就是bug的起源。面向对象编程中没有类对象这样的蓝图。只有第一个实例，可枚举属性从该实例复制到扩展对象。</p>
+<h3>通过使用计算属性避免共享状态</h3>
+<p>避免实现mixins的对象之间共享状态的最简单方法是用一个简单的getter将引用存储的对象(普通对象、数组)包装到计算的属性中:</p>
+
+<p>这里，被复制的是一个函数，而不是数组引用。在每个对象中，这个计算属性将返回一个新的Ember实例。在第一次计算它的时候，它不会在主对象的生命周期中的任何时刻改变实例。</p>
+<h3>使用#init()避免共享状态</h3>
+<p>另一种避免共享状态的方法是在mixin的<code>#init</code>方法中定义通过引用存储的属性。</p>
+
+<p><span class="hs-cta-wrapper" id="hs-cta-wrapper-0411e346-5348-468e-82db-ea1c964f49b1"><span class="hs-cta-node hs-cta-0411e346-5348-468e-82db-ea1c964f49b1" id="hs-cta-0411e346-5348-468e-82db-ea1c964f49b1"><a href="http://web.archive.org/web/20201108144254/https://cta-redirect.hubspot.com/cta/redirect/493098/0411e346-5348-468e-82db-ea1c964f49b1" target="_blank"><img class="hs-cta-img" id="hs-cta-img-0411e346-5348-468e-82db-ea1c964f49b1" src="../Images/1c2c78ec7946463376729240bc9eab31.png" alt="How NOT to Run IT Project " data-original-src="http://web.archive.org/web/20201108144254im_/https://no-cache.hubspot.com/cta/default/493098/0411e346-5348-468e-82db-ea1c964f49b1.png"/></a></span>T6】</span></p>
+<p>这样，每个实现mixin的对象都将评估自己的<code>#init</code>方法，从而创建自己的数组实例。然而，这种解决方案在忘记<code>this._super</code>方面有一点风险，并且仅仅通过扫描代码有点难以阅读。</p>
+<h3>包扎</h3>
+<p>Mixins很棒，我认为它们是<a href="/web/20201108144254/https://www.netguru.com/services/ember-js"> Ember </a>中对代码维护最有用的特性之一。请确保您理解正在发生的事情，以及它如何符合JavaScript原型继承。</p>
+<p>你遇到过类似的陷阱吗？你愿意分享你的经历吗？请在下面的评论中这样做！如果你喜欢我的文章，你可能也会对如何在Ember 中添加一个catch博客感兴趣。</p></span>
+        </div>    
+</body>
+</html>

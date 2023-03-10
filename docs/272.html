@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>What is Dapr - Distributed Application Runtime?</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>什么是Dapr -分布式应用程序运行时？</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/what-is-dapr#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/what-is-dapr#0001-01-01</a></blockquote><div><div>
+<p>云服务提供商主导市场。如果有人想向公众发布一个应用程序，它很有可能会被托管在一个流行的云平台上。使用这些工具，企业可以轻松设置基础设施，为其使用案例选择合适的计划，并扩展应用程序以满足客户需求。</p>
+<p>当与当今流行的模式结合时，云服务变得非常有用——本质上是分布式系统的微服务。这种架构面临许多挑战，包括<a href="http://web.archive.org/web/20230109200333/https://www.netguru.com/blog/building-scalable-cloud-infrastructure">可扩展性、弹性</a>和维护成本。</p>
+<p>解决这些问题会占用开发人员大量宝贵的时间。如果只关注业务逻辑，而把这些障碍留给其他事情，会好到哪里去呢？这就是Dapr发挥作用的地方。</p>
+<h2>什么是Dapr？</h2>
+<p>Dapr代表分布式应用程序运行时。这是一个自托管的开源项目，通过API(称为构建块)为<a href="http://web.archive.org/web/20230109200333/https://www.netguru.com/blog/cloud-native-applications">云原生应用</a>提供额外的功能，简化微服务连接。</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20230109200333im_/https://www.netguru.com/hs-fs/hubfs/dapr-overview.jpg?width=700&amp;name=dapr-overview.jpg 700w, http://web.archive.org/web/20230109200333im_/https://www.netguru.com/hs-fs/hubfs/dapr-overview.jpg?width=1400&amp;name=dapr-overview.jpg 1400w" src="../Images/503f7373e8aebca4e16ee5ecda181631.png" alt="dapr overview" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20230109200333im_/https://www.netguru.com/hs-fs/hubfs/dapr-overview.jpg?width=700&amp;name=dapr-overview.jpg"/>
+  </figure><p/>
+<p>实际上，该项目使用sidecar模式来集成我们的应用程序。随着Dapr边车添加到您的系统中，您可以根据需要利用任意多的构建模块。Dapr的构造块系统与作为独立容器或进程与应用程序一起运行的组件一起工作。此解决方案意味着通信是通过本地主机完成的。</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20230109200333im_/https://www.netguru.com/hs-fs/hubfs/dapr-overview-sidecar-model.jpg?width=700&amp;name=dapr-overview-sidecar-model.jpg 700w, http://web.archive.org/web/20230109200333im_/https://www.netguru.com/hs-fs/hubfs/dapr-overview-sidecar-model.jpg?width=1400&amp;name=dapr-overview-sidecar-model.jpg 1400w" src="../Images/875f89577fc2278a895e2128d18f5228.png" alt="Dapr using the sidecar pattern" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20230109200333im_/https://www.netguru.com/hs-fs/hubfs/dapr-overview-sidecar-model.jpg?width=700&amp;name=dapr-overview-sidecar-model.jpg"/>
+  </figure><p/>
+<p data-style-text-align-center=""><em>使用边车模式的Dapr】</em></p>
+<p>我们从中获得了什么？通过HTTP或gRPC，我们可以使用所谓的Dapr构建块API。这些构件提供了微服务最佳实践的实现，否则我们将不得不手工开发。</p>
+<ul>
+<li aria-level="1"><strong>服务-服务调用</strong> -通过内置的服务发现为服务调用提供可靠和安全的服务。</li>
+<li aria-level="1">如果我们使用高度并发的系统，我们可以使用Actor模式。参与者是轻量级的并发实体，它们以事件驱动的方式相互异步通信。我们为Dapr Actors构建块编写逻辑，系统处理可伸缩性和它们之间的通信。</li>
+<li aria-level="1"><strong>状态管理</strong>——用于将键/值对保存、读取和查询到某种存储中，使您能够创建有状态的服务。</li>
+<li aria-level="1"><span data-style-font-weight-bold="">发布&amp;订阅</span>——使<a href="http://web.archive.org/web/20230109200333/https://www.netguru.com/blog/microservices-enterprise-software">微服务</a>能够使用消息系统相互通信。这些pub子模块支持死信队列，并保证至少向每个订户发送一次消息。</li>
+<li aria-level="1"><strong>绑定</strong>——API提供了触发外部系统的方法，比如数据库、队列和文件系统。</li>
+<li aria-level="1">Secrets-Secrets building blocks API使开发人员更容易从secret store中使用应用程序机密。我们可以在Dapr配置文件和应用程序代码中使用查询。</li>
+<li aria-level="1"><strong>分布式锁</strong>——使应用程序能够获得对发生更新的资源的独占访问。</li>
+</ul>
+<p>在幕后，每个API都有Dapr组件支持。例如，状态存储可以由AWS DynamoDb、PostgreSQL或Redis等支持。这种设置很酷的一点是，如果您决定更改组件，您可以自由地这样做。代码保持不变，Dapr将为您处理实现！</p>
+<h2>Dapr受欢迎吗？</h2>
+<p>尽管该项目在2019年才发布，并且许多组件目前都处于alpha状态，但Dapr及其构建块系统正迅速获得认可。</p>
+<p>我们可以看到Dapr组件被用于不同的用例，Dapr开始在流行趋势列表上引起注意。开发人员定期召开社区会议，甚至有一年一度的博览会，在博览会上，Dapr社区的成员可以相互见面，谈论他们的项目。</p>
+<p>这种运行时越来越受欢迎背后有几个原因。</p>
+<h3>关注业务逻辑</h3>
+<p>Dapr旨在让开发者的生活更轻松。这是通过消除在您的应用程序和外部系统之间创建所有交互和集成的负担来实现的，这是微服务工作所必需的。</p>
+<p>有了Dapr的构建模块，开发人员可以专注于业务逻辑，并使他们的代码免受SDK和库的影响，否则就需要SDK和库。在这些情况下，Dapr系统服务几乎总是具有所需的构造块。</p>
+<p>此外，还可以生产便携式应用。如果您从一个云提供商迁移到一个新的提供商，您可以更改您的组件，而无需修改代码。</p>
+<p>最重要的是，Dapr构建块提供了配置选项，使应用程序具有高响应性和数据一致性。以下是一些例子:</p>
+<ol>
+<li aria-level="1">如果我们决定使用状态管理构建块，我们可以设置想要执行的操作类型。这些选项包括一致性级别、事务和批量读取。</li>
+<li aria-level="1">我们可以限制并发设置，这将限制来自Dapr的所有请求。</li>
+<li aria-level="1">复原力政策有很多。我们可以定义重试、断路器和超时策略。我们可以将这些策略应用于不同的组件，让它成为绑定、发布/订阅或状态管理。</li>
+</ol>
+<h3>灵活性</h3>
+<p>Dapr在很多方面都很灵活。如果你有一个用不同语言编写的微服务应用程序，每个团队可以设置Dapr，因为它支持所有流行的语言和开发人员框架。</p>
+<p>因为环境并不重要，Dapr可以自托管，用于本地开发目的，甚至在您上线之后。此外，Dapr可以在Kubernetes上运行，也可以在任何云平台上运行。</p>
+<h3>可观察性</h3>
+<p>开箱即用，Dapr有许多方法来跟踪我们的应用程序。</p>
+<p>首先，我们有日志功能。我们可以看到这个特性是由Dapr的内部组件在不同的粒度级别上实时完成的。我们还可以选择使用<span data-style-font-weight-bold=""> - enable-API-logging </span>开关来启用API日志。使用这个，我们将能够看到我们的应用程序如何与Dapr sidecar通信。</p>
+<p>在Dapr中启用概要分析将创建一个端点。从那里，我们可以获取分析会话或附加分析器来检查应用程序运行时。如果我们决定走这条路，值得一提的是Dapr是用go语言编写的，所以这需要一些专业知识。</p>
+<p>为了获得更详细、更直观的外观，Dapr还报告了跟踪数据。虽然最初只支持Zipkin格式，但新版本也已更新为支持开放式遥测采集器。</p>
+<p>最后但同样重要的是，Dapr也公开了一个Prometheus端点。它发出与Go相关的流程指标和与API相关的统计数据，包括大量的调用和延迟。</p>
+<h2>Dapr是用来做什么的？</h2>
+<p>在其核心，Dapr通过其构建块API降低了分布式应用程序开发的复杂性。通过让Dapr sidecars处理常见的挑战，如服务发现、消息代理集成和服务调用，Dapr允许为分布式应用程序构建弹性系统。</p>
+<p>更具体地说，Dapr实例的常见用例包括:</p>
+<h3>多环境应用</h3>
+<p>Dapr的组件模型通过将您的代码从所选技术中分离出来，使企业和开发人员受益。这使得您的应用程序与宿主环境无关，并支持可移植性。</p>
+<p>同样，Dapr非常适合多种云场景，其中云资产、软件和应用程序分布在多个云环境中，以使用多个云计算平台来支持单个应用程序或生态系统。</p>
+<h3>多语言微服务架构</h3>
+<p>如前所述，Dapr支持许多流行的编程语言，包括C++、Go、Java、JavaScript、.Net、PHP和Python。可选性允许企业利用最适合其用例的语言。多语言支持也使您的分布式微服务应用程序能够使用未来的编程语言。</p>
+<h3>需要提供构造块的应用</h3>
+<p>使用Dapr在云上构建微服务从未如此简单。该项目的灵活性可以归功于Dapr提供的微服务。从参与者服务到服务调用或发布-订阅模块到状态管理系统，您可以选择平稳运行应用程序所需的全部或部分Dapr sidecar实例。</p>
+<h2>如何用Java使用Dapr？</h2>
+<p>Java是一种非常流行的服务器端编程语言。除了大量的库之外，它还具有性能、可读性和可维护性的完美结合。总而言之，对于微服务架构来说，这是一个很好的选择，我们可以利用Dapr所提供的东西。</p>
+<p>幸运的是，<a href="http://web.archive.org/web/20230109200333/https://www.netguru.com/blog/java-17-features"> Java </a>也是一种受支持的语言。除了Spring支持，我们还有一个官方SDK来与Dapr APIs通信，这有助于设置一些组件。</p>
+<p>Dapr的优势之一是摆脱了许多我们用来设置与外部系统集成的库依赖，这在用Java编程时大放异彩。我们不必太担心生产者和消费者处理事件；我们需要关注的只是SDK和业务逻辑。</p>
+<p>一旦我们导入了<span data-style-font-weight-bold=""> io.dapr:dapr-SDK库</span>，我们就可以实例化一个<span data-style-font-weight-bold=""> DaprClient </span>实例。该客户端将通过默认端口上的gRPC与Dapr边车通信。如果我们在本地开发中运行多个容器，它可以用环境变量来改变。</p>
+<p>另一个需要的库是<span data-style-font-weight-bold=""> io.dapr:dapr-SDK-springboot。</span>它支持对消息消费者方法使用注释。它会自动为我们的应用程序订阅我们感兴趣的主题。</p>
+<p>有更多的方法来启动Dapr边车。我们可以在应用程序旁边使用docker compose，或者在我们的机器上安装一个Dapr CLI。要启动边车，我们需要三样东西:</p>
+<ul>
+<ul>
+<li aria-level="1">部件规格清单(YAML文件)，</li>
+<li aria-level="1">标识应用程序的id，</li>
+<li aria-level="1">以及我们正在监听的端口。</li>
+</ul>
+</ul>
+<pre><code>
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+name: inventory-state-store
+spec:
+type: state.aws.dynamodb
+version: v1
+metadata:
+  - name: table
+    value: "inventory"
+  - name: region
+    value: "eu-central-1"
+  - name: keyPrefix
+    value: "none"
+</code></pre>
+<p data-style-text-align-center=""><em>示例状态管理组件</em></p>
+<p>值得一提的是，尽管有很多关于如何使用Dapr的文档，但大多数都是特定于Azure的。例如，如果我们更熟悉AWS，这可能有点陌生。</p>
+<h2>与Dapr合作:最终印象</h2>
+<p>Dapr试图实现很多。它有许多功能，可以对我们积极工作的方式产生巨大的影响。它确实涉及到开发微服务所需的大部分方面。问题是它在现实生活中的表现如何。</p>
+<p>当我第一次使用Dapr时，我对它有一个非常好的第一印象。第一个惊喜是当我开始建立我的项目时。我在考虑我将使用什么样的消息系统，以及我应该使用什么样的库。然后我突然想到，我不需要考虑这个问题；Dapr会帮我处理的！</p>
+<p>当然，我不得不处理一些奇怪的问题。我很难使用状态管理，因为它无法获取我预先填充的数据。原来Dapr对键值使用了一些前缀，这些前缀只在Azure文档和Github上有记载。我还不得不花费额外的时间来找出如何设置我的Terraform代码，以便与Dapr组件很好地工作。</p>
+<p>总的来说，这些小的不便不会影响我整体的积极体验。我相信Dapr实现了它的承诺——让开发者的生活更轻松。</p>
+<p>如果您有兴趣了解更多关于Dapr及其对您的用例的适用性，请不要犹豫<a href="http://web.archive.org/web/20230109200333/https://www.netguru.com/services/web-development/java-development">联系Netguru并讨论我们的Java开发服务</a>。</p>
+</div></div>    
+</body>
+</html>

@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>Android Permissions Management – When and How to Ask Users for Information</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>Android权限管理——何时以及如何向用户询问信息</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/android-permissions-management#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/android-permissions-management#0001-01-01</a></blockquote><div><div id="hs_cos_wrapper_post_body"><span><div class="blog-post__lead h3"><p>在剑桥分析和引起的所有丑闻之后，考虑到脸书在其中扮演的角色，人们对公司正在收集的个人信息感到疯狂。许多用户撤销了应用程序的权限，或者移除了他们不使用的应用程序。</p></div></span><p/>
+<p>但是，当然，公司利用其他来源来获取私人信息。他们可以直接从手机上获取私人信息，如位置、短信、联系人、文件访问、WiFi状态、电话状态等。用户对品牌的信任度降低，因此在应用程序中获取私人信息变得越来越难。</p>
+<p>通常，访问用户的信息对于你的应用程序正常运行是必要的。那么，如何有效地收集用户的信息，又不会让他们觉得自己被欺骗了呢？这是一个小的指南，告诉你如何以及在哪里请求许可，当你需要它们来给你最好的用户体验的时候授予它们。</p>
+<h2><span> <strong>请求安卓权限</strong> </span></h2>
+<h3><span> <strong>权限请求先于安卓棉花糖</strong>T3】</span></h3>
+<p>首先，让我们来看看API以前是如何工作的，以及它在新的Android版本中是如何工作的。在Android Marshmallow之前，所有权限都是在安装应用程序之前请求的，没有任何关于为什么请求权限的解释。</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20220924173633im_/https://lh4.googleusercontent.com/ftSmltiFY_1dRvhXkCNpLwmWIFu6cHavDaINJC6Fk2eCYFOmDKRooeldN4B_3YO3jv4GI-Jd1jwVBj8W1O-E3jvBi76U-9e2q0zTaXeq2tmS9bX63ZpupnR4JxMsvIrg-b6SOi1A 338w, http://web.archive.org/web/20220924173633im_/https://lh4.googleusercontent.com/ftSmltiFY_1dRvhXkCNpLwmWIFu6cHavDaINJC6Fk2eCYFOmDKRooeldN4B_3YO3jv4GI-Jd1jwVBj8W1O-E3jvBi76U-9e2q0zTaXeq2tmS9bX63ZpupnR4JxMsvIrg-b6SOi1A 676w" src="../Images/cec5b76e71eaa404cdf68afd5a9a70a3.png" alt="" loading="lazy" data-original-src="http://web.archive.org/web/20220924173633im_/https://lh4.googleusercontent.com/ftSmltiFY_1dRvhXkCNpLwmWIFu6cHavDaINJC6Fk2eCYFOmDKRooeldN4B_3YO3jv4GI-Jd1jwVBj8W1O-E3jvBi76U-9e2q0zTaXeq2tmS9bX63ZpupnR4JxMsvIrg-b6SOi1A"/>
+  </figure><p/>
+<p><em> <span>这是脸书的安卓应用曾经要求的。您会安装一个在安装时请求这么多权限的应用程序吗？</span>T3】</em></p>
+<p>一开始，用户并不能控制权限。他们唯一的选择是安装或不安装应用程序。一如既往，有一些应用程序利用了这个系统。他们利用用户的无知和他们需要应用的事实。在旧的方法中，安装应用程序后无法撤销权限。</p>
+<p>但是这不仅仅是用户的问题。许多公司也遇到了这个系统的问题。在请求权限之前，没有简单的方法来澄清为什么需要特定的权限。请求权限时缺少上下文使得获取特定权限更加困难。</p>
+<p>想象一下，当你点击一个联系人的个人资料图片编辑按钮，应用程序请求你允许访问相机。不需要澄清任何事情，背景为你做了。</p>
+<p>请求安装方法有一个优点:应用程序一旦安装，权限就不能撤销。因此，不需要额外的逻辑来处理权限未被授予的情况，这应该使用运行时权限请求来处理。</p>
+<h3><span> <strong>权限请求后安卓棉花糖</strong>T3】</span></h3>
+<p>运行时权限请求是在Android Marshmallow(6.0版)中引入的。安装之前，应用程序不能同时请求所有权限。这允许用户在与前台运行的应用程序交互时接受或拒绝所请求的权限。此外，用户现在可以随时撤销或授予应用程序请求的权限。</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image">
+    <figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20220924173633im_/https://lh5.googleusercontent.com/Q2H-5AnuWGOJul25gTtiBakwpZhsnX610cKgW6x-c1MhVweuGeq9nGoJLtL4Kl6bInIaYw_q9YB5OdJM2FujAuImougqGcPXHHr_u7qd1tBeFKZE-klwlERkApYcSFUa_MHrh4lB 338w, http://web.archive.org/web/20220924173633im_/https://lh5.googleusercontent.com/Q2H-5AnuWGOJul25gTtiBakwpZhsnX610cKgW6x-c1MhVweuGeq9nGoJLtL4Kl6bInIaYw_q9YB5OdJM2FujAuImougqGcPXHHr_u7qd1tBeFKZE-klwlERkApYcSFUa_MHrh4lB 676w" src="../Images/f59a405b13c266e116ec66cb38b68545.png" alt="" loading="lazy" data-original-src="http://web.archive.org/web/20220924173633im_/https://lh5.googleusercontent.com/Q2H-5AnuWGOJul25gTtiBakwpZhsnX610cKgW6x-c1MhVweuGeq9nGoJLtL4Kl6bInIaYw_q9YB5OdJM2FujAuImougqGcPXHHr_u7qd1tBeFKZE-klwlERkApYcSFUa_MHrh4lB"/>
+  </figure>
+  </figure><p/>
+<p><span> <em>脸书权限请求在安卓棉花糖上运行</em> </span></p>
+<p>这种变化对用户有明显的好处，因为用户可以拒绝所请求的权限，但仍然可以安装和使用应用程序，至少是部分安装和使用。可以随时从应用程序的设置中撤销/授予权限。</p>
+<h2><span> <strong>最佳实践</strong> </span></h2>
+<p>现在，让我们深入了解一些有效请求权限的最佳实践，让您的用户能够理解您的意图，并且不会因为允许您访问他们设备上的信息而有任何问题。</p>
+<p><span> 1。在用户能够理解为什么请求权限的上下文中请求权限。例如，在脸书的情况下，当试图上传图片时，它会要求访问设备上的文件。</span></p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image">
+    <figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20220924173633im_/https://lh5.googleusercontent.com/Q2H-5AnuWGOJul25gTtiBakwpZhsnX610cKgW6x-c1MhVweuGeq9nGoJLtL4Kl6bInIaYw_q9YB5OdJM2FujAuImougqGcPXHHr_u7qd1tBeFKZE-klwlERkApYcSFUa_MHrh4lB 338w, http://web.archive.org/web/20220924173633im_/https://lh5.googleusercontent.com/Q2H-5AnuWGOJul25gTtiBakwpZhsnX610cKgW6x-c1MhVweuGeq9nGoJLtL4Kl6bInIaYw_q9YB5OdJM2FujAuImougqGcPXHHr_u7qd1tBeFKZE-klwlERkApYcSFUa_MHrh4lB 676w" src="../Images/f59a405b13c266e116ec66cb38b68545.png" alt="" loading="lazy" data-original-src="http://web.archive.org/web/20220924173633im_/https://lh5.googleusercontent.com/Q2H-5AnuWGOJul25gTtiBakwpZhsnX610cKgW6x-c1MhVweuGeq9nGoJLtL4Kl6bInIaYw_q9YB5OdJM2FujAuImougqGcPXHHr_u7qd1tBeFKZE-klwlERkApYcSFUa_MHrh4lB"/>
+  </figure>
+  </figure><p/>
+<p>2.不要让用户被大量的对话框所淹没，因为他们总是可以选择“不再询问”复选框。在那之后，获得用户的许可将会非常困难，因为他们必须去设置来改变它。</p>
+<p>3.只请求那些目前需要的权限，防止不良的用户体验，并降低因此而失去活跃用户的风险。</p>
+<p>4.如果上下文不足以证明所请求的权限，可以在实际的权限请求之前显示为什么需要它的解释。这将降低失去潜在用户的风险，因为与许可授予的摩擦将会降低。</p>
+<p>5.即使没有授予所有需要的权限，也要确保应用程序的行为是正确的。如果一个权限对于一个特性的工作是必不可少的，我们需要通知用户这种情况，让他们选择是否真的想使用它。如果许可没有被授予，我们应该提供某种信息来解释为什么它不能工作。功能主屏幕上的一些TextView或者类似的就正好了。</p>
+<p>6.提供一种撤销权限拒绝的简单方法，如果权限被拒绝，可以在功能屏幕上直接访问应用程序的设置。</p>
+<h2><span><strong/></span>我方拟对API进行修改</h2>
+<p>我认为Android的权限API已经足够了，但我们和Netguru的一些设计师一起，一直在思考如何改进它，以便给用户更多的安全和更好的隐私控制。我们想出了两个很酷的修改。</p>
+<p><span> <strong>请求限定时间的许可。</strong> </span> <span>想象一下，你打开一个照片编辑app，你需要给这个app访问你的文件的权限。通常，人们不会每天都使用这样的应用程序——只是偶尔使用。因此，这种请求应该只在一段时间内请求许可(直到午夜，持续</span> <span> <em> n </em> </span> <span>小时，等等)..)然后一旦时间过去就自动撤销许可。</span></p>
+<p><span> <strong>请求单个动作的权限。</strong> </span> <span>另一个想法是能够请求允许执行一个单独的动作，然后自动撤销它。例如，一个用于录制和上传视频的应用程序需要访问摄像头和麦克风。假设您只提供了录制一个视频的权限，然后该权限被撤销。在这种情况下，用户会确信</span> <span> <u> <a href="http://web.archive.org/web/20220924173633/https://medium.com/@damln/instagram-is-listening-to-you-97e8f2c53023">这个app不会用麦克风来窥探他们</a> </u> </span> <span>。</span></p>
+<p>当然，上述特性将补充当前的实现。</p>
+<p>你怎么想呢?Android的权限API还可以添加什么？</p>
+<h2><span> <strong>汇总</strong> </span></h2>
+<p>当使用当前的权限API请求权限时，我们应该小心。我们应该努力提供最好的用户体验，为此，我们需要让用户相信，应用程序需要我们所请求的权限，同时不打扰他们，并给他们最大量的信息。即使在权限被拒绝之后，也应该提供这一点，允许用户改变主意并在以后理解需求。</p></div></div>    
+</body>
+</html>

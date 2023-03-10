@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>Free Baby Monitoring System with ML for Safe Activity Transmission</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>带ML的免费婴儿监控系统，用于安全活动传输</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/free-baby-monitoring-system-with-ml-for-safe-activity-transmission#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/free-baby-monitoring-system-with-ml-for-safe-activity-transmission#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h3"><p>监控你孩子的应用程序——这个想法</p><p>作为新生儿的父母总是充满压力。</p> 
+<p>有许多问题冒出来:我能应付所有的新职责吗？我应该一直看着宝宝吗？如果宝宝需要我而我不在身边怎么办？</p></div><p/>
+<p>除了保姆，还有你的日常工作，这使得你不可能一直带着一个新生儿。现在，有了BabyGuard，新父母可以在做日常杂事的同时查看他们的宝宝。</p>
+<p>我们有了这个想法，因为我们发现现有的解决方案(应用程序或硬件)非常昂贵，或者对用户不友好。更重要的是，标准的电子保姆通常检测到高音调的声音，而不一定是婴儿的哭声，这使得他们很难依赖。</p>
+<p>我们的目标是建立一个现代应用程序，成为父母最好的朋友。我们希望让应用保持简单，并强调三个竞争优势:</p>
+<ul>
+<li>可用性——你可以使用你的旧安卓设备，而不是购买昂贵的电子保姆。</li>
+<li><strong>可靠性- </strong>由于采用了机器学习算法，我们的解决方案可以过滤周围的所有声音，只有在婴儿哭泣时才会通知父母，而不是当汽车经过时。</li>
+<li><strong>安全性</strong> -该应用程序完全开源，未经您的同意不会向第三方服务器发送任何数据，这意味着您将是唯一一个看到您孩子视频流的人。</li>
+</ul>
+<h2><strong>建造一个带摄像头和哭声检测的电子保姆——我们的方法</strong></h2>
+<p>3566小时，7名工程师，2名设计师在船上，一个愿景——让新父母的生活更轻松。</p>
+<p>我们花了很多时间来创建一个简单、实用且用户友好的应用来监测婴儿。BabyGuard是一款适用于Android的免费移动应用程序，采用原生编程语言构建。</p>
+<p>实现的技术(<a href="/web/20221209113008/https://www.netguru.com/services/machine-learning" rel="noopener" target="_blank">机器学习</a>，TensorFlow，WebRTC，WebSockets，Firebase)使得整个开发过程相当具有挑战性。我们不仅关注漂亮的设计，还关注视频流的稳定性和设备上的音频处理以及机器学习的能力。</p>
+<p>我们的ML工程师团队准备了一个解决方案，即<strong>检测婴儿哭声，并将其从周围所有其他噪音中过滤出来。</strong>这样，当孩子需要照顾时，父母总能得到通知。</p>
+<p/>
+<h2><strong>电子保姆是怎么工作的？</strong></h2>
+<p>你需要做的就是在两个移动设备上安装应用程序，无论是智能手机还是平板电脑，并将它们配对。将一个设备放在婴儿的房间里作为婴儿监视器，并将第二个设备作为接收器随身携带。</p>
+<p>每次宝宝醒来并开始哭闹时，您的BabyGuard父母设备都会自动收到通知。由于基于机器学习的智能哭泣婴儿警报，该应用程序不会通知你任何随机噪音，而是识别实际的哭泣。</p>
+<p>有了<strong>保姆摄像头系统</strong>，你可以随时通过实时视图查看你的宝宝。您可以随时将睡着的宝宝的视频和音频传输到您的父母设备上。</p>
+<p>对所有父母来说同样重要的是，BabyGuard保护你和你宝宝的隐私。该应用程序通过WiFi工作，所以它只使用本地网络。这意味着您宝宝的数据不会与任何第三方服务器共享。</p>
+<p>婴儿卫士可以在后台运行-如果您的宝宝开始哭泣，您的设备将自动从睡眠模式中唤醒。在后台运行该应用程序，您还可以在需要时将移动设备用于其他用途。</p>
+<h2><strong>开发BabyGuard的过程是怎样的？</strong></h2>
+<p>开始很有挑战性。</p>
+<p>我们在研究阶段的主要目标是找到一个能够在Android平台上运行的流媒体解决方案。我们测试了14种不同的工具，最终我们使用了WebRTC。</p>
+<p>对我们来说，这是最好的选择，因为它可以开箱即用地与Android兼容，让我们可以快速移动。市场上有更多的轻量级解决方案，但它们需要针对我们的用例进行更多的定制，并且不符合我们的目标，即快速构建概念验证。</p>
+<p>在选择WebRTC作为我们的主要工具后，我们可以开始进行项目的机器学习部分。我们开始建立一个ML模型来帮助我们区分哭声和其他噪音。想象一下，检查大约3个小时的录音，以确保它们只包含哭泣…</p>
+<hr/>
+<p><i>如果你想阅读更多关于学习全过程的内容，请查看案例研究:</i> <a href="/web/20221209113008/https://www.netguru.com/blog/how-to-use-machine-learning-models-to-detect-if-baby-is-crying.-case-study" rel="noopener"> <i>如何使用机器学习模型检测婴儿是否在哭</i> </a> <i>。</i></p>
+<hr/>
+<p>最后，我们已经开始努力让这款应用变得有用和用户友好。我们花了很多时间来弄清楚如何设计设备配对流程和附加功能。整个团队完成了一项了不起的工作，交付了一款看起来与最初设计一模一样的应用程序，而且非常注重细节。</p>
+<p>经过7个月的紧张工作，我们想分享我们在这个真正有趣的<a href="/web/20221209113008/https://www.netguru.com/blog/digital-transformation-program" rel="noopener" target="_blank"> R &amp; D项目</a>中学到的东西。</p>
+Although our team has a lot of experience in implementing Audio/Video streaming in many different scenarios, there are always new problems to solve. With BabyGuard we had to <strong>handle video stream freezes and minimise their number.</strong> Also, due to security reasons, we decided to use the <strong>local network</strong> to not pass the data to third parties.<br/>
+<h2><strong>结果如何？</strong></h2>
+<p>BabyGuard无疑是我们在R&amp;D项目中最感兴趣的项目之一。我们能够使用真正创新的技术解决方案，如<strong>智能哭泣检测或确保Android系统上的无缝通信。</strong></p>
+<p>更重要的是，我们可以创造一种具有多重竞争优势(与标准电子保姆设备相比)的<strong>产品，确保婴儿活动的安全传输，让父母的生活更轻松。</strong></p>
+<p>而且你自己也可以轻松尝试一下- <a href="/web/20221209113008/https://www.netguru.com/babyguard" rel="noopener" target="_blank">免费下载BabyGuard </a>。</p></span></div>    
+</body>
+</html>

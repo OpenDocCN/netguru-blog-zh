@@ -1,0 +1,107 @@
+<html>
+<head>
+<title>5 Things I Learned about Google Tag Manager Being RoR Developer</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>关于谷歌标签管理器成为RoR开发者我学到的5件事</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/5-things-i-learned-about-google-tag-manager#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/5-things-i-learned-about-google-tag-manager#0001-01-01</a></blockquote><div><div id="hs_cos_wrapper_post_body"><span><div class="blog-post__lead h3"><p>谷歌标签管理器是一个伟大的工具，使获取分析数据更加容易。为营销专家创建的可能对<a href="/web/20220929111821/https://www.netguru.com/services/web-development" rel="noopener"> web开发人员</a>非常有帮助，他们不必花费大量时间来实现类似的功能，使Google Analytics成为关于您的用户和应用程序真相的强大来源。即使这看起来很简单，你也应该知道一些规则，以确保你的数据是以正确的方式收集的。这里是我上个月学到的一些关于谷歌标签管理器和谷歌分析的小技巧，应该可以帮助你为你的页面添加基本的配置。</p></div><h2><strong>事件和虚拟浏览量</strong></h2>
+<p>这是每个初学者都会问的问题——我应该用事件还是虚拟浏览量来衡量用户的行为？两者都可以用来收集关于交互的信息，但不会产生典型的页面浏览量，但是有一些不同之处你应该知道。请看下表，了解最重要的几个:</p>
+<br/>
+<table>
+<tbody>
+<tr>
+<td> </td>
+<td>
+<p><span>虚拟浏览量</span></p>
+</td>
+<td>
+<p><span>事件</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>页面浏览量</span></p>
+</td>
+<td>
+<p><span>总浏览量的人为增加</span></p>
+</td>
+<td>
+<p><span>总浏览量没有增加</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>追踪详情</span></p>
+</td>
+<td>
+<p><span>有限信息</span></p>
+</td>
+<td>
+<p><span>跟踪与行动相关的更多细节</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><span>对跳出率的影响</span></p>
+</td>
+<td>
+<p><span>可能扭曲(减少)统计数据</span></p>
+</td>
+<td>
+<p><span>“非交互点击”以避免扭曲</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<br/>
+<p>已经创建了虚拟页面视图来收集关于用户活动的数据，我们期望页面刷新，但是由于使用的架构，重新加载是不可能的或者没有更大的意义(就像改变单页应用程序的视图)。第二个可能的选择是使用GA事件。他们可能会包括更多关于用户操作的上下文信息，而不需要刷新页面，也不应该复制我们的全局统计。这就是为什么在大多数情况下，我建议将事件作为数据的默认来源，但最终决定权在您。</p>
+<h2><strong>如何配置触发器？</strong></h2>
+<p>你会喜欢GTM的下一个原因是我们可能使用的内置触发器(动作)的数量。</p>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20220929111821im_/https://www.netguru.com/hs-fs/hubfs/Google%20Tag%20Manager%20-%20Triggers-1.png?width=700&amp;name=Google%20Tag%20Manager%20-%20Triggers-1.png 700w, http://web.archive.org/web/20220929111821im_/https://www.netguru.com/hs-fs/hubfs/Google%20Tag%20Manager%20-%20Triggers-1.png?width=1400&amp;name=Google%20Tag%20Manager%20-%20Triggers-1.png 1400w" src="../Images/9dad600a995d85512d1a724b491cc434.png" alt="Google Tag Manager - Triggers-1" loading="lazy" data-original-src="http://web.archive.org/web/20220929111821im_/https://www.netguru.com/hs-fs/hubfs/Google%20Tag%20Manager%20-%20Triggers-1.png?width=700&amp;name=Google%20Tag%20Manager%20-%20Triggers-1.png"/>
+  </figure><p/>
+<p>标准列表包括页面浏览量、表单提交量、点击量甚至页面元素的可见性。选择似乎是显而易见的，但并不总是最简单的解决方案是最好的。</p>
+<p>让我们考虑一个多页面应用程序(例如RoR monolith应用程序),其中许多表单是profiles multistep creator的一部分。我们想知道有多少用户完成了整个向导，有多少用户停留在前面的某个步骤。这类数据可能有助于找出转化率低的原因。您可能认为第一种方法(表单提交)不适合我们。为什么？</p>
+<ul>
+<li>Trigger不能很好地与MPAs一起工作(特别是在没有使用客户端验证的情况下),而且我们不能根据服务器响应来计算操作——提交只是被认为是一个发送的请求，服务器返回什么响应代码并不重要。在这种情况下，GTM可能会认为发送无效数据已经完成。</li>
+<li>最重要的问题:即使是带有客户端验证的表单，仍然有可能丢失大量数据。互联网连接弱或服务器响应太快(或至少比与GTM服务器通信快)可能会阻止数据并减少我们统计中的事件数量。</li>
+</ul>
+<p><span>如何处理？没有完美的解决方案。我们应该意识到一些可能影响我们数据的小问题，并至少了解我们应用程序的基本行为。假设我们在每一步都使用唯一的地址，我们可能会得到很好的结果，使用页面视图触发器并计算有多少用户(唯一会话)访问了所有页面。</span></p>
+<h2><strong>使用查找表分离测试和生产数据</strong></h2>
+<p>作为一名开发人员，你知道开发过程包括许多测试环境(比如你的本地机器、测试版、试运行等)。).使用调试模式是测试所有触发器如何工作的好方法，但不幸的是，默认配置不能阻止请求被发送到生产容器。为了确保你的测试不影响生产数据，你应该在除了生产之外的任何地方禁用GTM脚本，甚至更好——使用单独的Google Analytics容器并在那里存储你所有的调试信息。</p>
+<br/>
+<p><span>怎么做？下面是待办事项列表的例子:</span></p>
+<ol>
+<li><span>Define variable you should send with every request from GTM script. Here’s the example pseudocode for RoR app you might add to one of your layouts: </span>
+<p><span>data layer . push({ productionv:&lt;% = rails . env . production？%&gt;' })；</span></p>
+</li>
+<li><span>在GTM配置中定义相同的数据层变量<figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image"> <img class="image__content" srcset="http://web.archive.org/web/20220929111821im_/https://www.netguru.com/hs-fs/hubfs/Google%20Tag%20Manager%20-%20Data%20Layer%20Variable.png?width=700&amp;name=Google%20Tag%20Manager%20-%20Data%20Layer%20Variable.png 700w, http://web.archive.org/web/20220929111821im_/https://www.netguru.com/hs-fs/hubfs/Google%20Tag%20Manager%20-%20Data%20Layer%20Variable.png?width=1400&amp;name=Google%20Tag%20Manager%20-%20Data%20Layer%20Variable.png 1400w" src="../Images/0cb6a362d2d1d1bf882157e40187bc7f.png" alt="Google Tag Manager - Data Layer Variable" loading="lazy" data-original-src="http://web.archive.org/web/20220929111821im_/https://www.netguru.com/hs-fs/hubfs/Google%20Tag%20Manager%20-%20Data%20Layer%20Variable.png?width=700&amp;name=Google%20Tag%20Manager%20-%20Data%20Layer%20Variable.png"/> </figure> </span></li>
+<li><span>使用查找表结构，根据变量值<figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image"> <img class="image__content" srcset="http://web.archive.org/web/20220929111821im_/https://www.netguru.com/hs-fs/hubfs/Google%20Tag%20Manager%20-%20Lookup%20Table-1.png?width=700&amp;name=Google%20Tag%20Manager%20-%20Lookup%20Table-1.png 700w, http://web.archive.org/web/20220929111821im_/https://www.netguru.com/hs-fs/hubfs/Google%20Tag%20Manager%20-%20Lookup%20Table-1.png?width=1400&amp;name=Google%20Tag%20Manager%20-%20Lookup%20Table-1.png 1400w" src="../Images/b175bfef164afa700c4d957e9ab359d8.png" alt="Google Tag Manager - Lookup Table-1" loading="lazy" data-original-src="http://web.archive.org/web/20220929111821im_/https://www.netguru.com/hs-fs/hubfs/Google%20Tag%20Manager%20-%20Lookup%20Table-1.png?width=700&amp;name=Google%20Tag%20Manager%20-%20Lookup%20Table-1.png"/> </figure> </span>返回正确的GTM账户</li>
+<li><span>为所有标签启用“启用该标签中的覆盖设置”，并将查找表变量定义为“跟踪ID”</span></li>
+</ol>
+<h2><strong> IP匿名化</strong></h2>
+<p>根据GPDR，未经用户许可，我们不应与第三方应用共享任何私人数据。即使您遵循良好的实践，不使用任何个人数据来识别用户(如电子邮件地址)，GA仍然能够从您的用户那里获得更多的东西，因为默认配置-他们的IP地址。</p>
+<br/>
+<p><span>如何禁用所有标签？这很容易。-) </span></p>
+<p><span/></p><figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20220929111821im_/https://www.netguru.com/hs-fs/hubfs/Google%20Tag%20Manager%20-%20IP%20anonymization.png?width=700&amp;name=Google%20Tag%20Manager%20-%20IP%20anonymization.png 700w, http://web.archive.org/web/20220929111821im_/https://www.netguru.com/hs-fs/hubfs/Google%20Tag%20Manager%20-%20IP%20anonymization.png?width=1400&amp;name=Google%20Tag%20Manager%20-%20IP%20anonymization.png 1400w" src="../Images/b5080dcaec9b00f4bfb98eba25935888.png" alt="Google Tag Manager - IP anonymization" loading="lazy" data-original-src="http://web.archive.org/web/20220929111821im_/https://www.netguru.com/hs-fs/hubfs/Google%20Tag%20Manager%20-%20IP%20anonymization.png?width=700&amp;name=Google%20Tag%20Manager%20-%20IP%20anonymization.png"/>
+  </figure></span><p><span>打开谷歌分析设置变量配置</span></p>
+<ol>
+<li><span>展开“更多设置”选项，展开“要设置的字段”</span></li>
+<li><span>点击“添加字段”并添加以下配置:</span></li>
+<li><span>字段名:anonymizeIp </span></li>
+</ol><ul>
+<li><span>值:真</span></li>
+<li><span>保存并发布更改</span></li>
+</ul>
+<li><strong>会话统一</strong></li>
+
+<h2><span>分析数据非常有助于根据用户的行为发现用户行为的任何趋势。我们能够找出用户使用的最受欢迎的页面/功能，或者我们产品的弱点。为了获得最佳视角，不仅要收集一些数据，还要尝试确定我们的用户需求，有必要对他们多了解一点。正如你可能知道的(我认为这并不奇怪)，谷歌能够收集大量信息或预测其中的一些信息，如位置、性别甚至爱好，并根据一些群体显示他们的期望。太好了，我们来分析一下！有可能出错的地方吗？当然可以！</span></h2>
+<p><span>想象一下，一个用户在电脑上访问了您的网页，创建了一个帐户，登录并试图再次登录，但这次移动设备是流量的来源。从GA的角度来看，如果我们这边没有任何信息，Google可能会把这个用户当成两个完全不同的人。这种非常常见的情况(我们使用越来越多的方式来访问互联网资源)可能会使您的数据变得毫无价值。</span></p>
+<p><span>如何准备跨设备解决方案？很简单。只要通过设置UserID告诉GA谁是你的访问者，并打开会话统一。要了解这个过程是如何工作的，我推荐阅读他们的</span> <a href="http://web.archive.org/web/20220929111821/https://support.google.com/analytics/answer/4574780?hl=en"> <span>官方资源</span> </a> <span>和</span> <a href="http://web.archive.org/web/20220929111821/https://patrykkalinowski.com/blog/google-analytics-userid-in-hubspot/"> <span>非常短的文章，来自我的朋友</span> </a> <span>关于在实践中设置UserID。</span></p>
+<p><strong>总结</strong></p>
+<h2>谷歌标签管理器有助于检查用户的期望，并且可能是你的项目的一个很好的数据来源。我提供了一些提示，对所有想要配置项目和测量基本事件的开发人员应该会有帮助。希望你喜欢它！</h2>
+<p><span>Google Tag Manager helps to check users expectations and might be a great source of the data about your projects. I’ve provided some tips that should be helpful for all the devs who want to configure their projects and measure basic events. Hope you liked it! </span></p></div></div>    
+</body>
+</html>

@@ -1,0 +1,255 @@
+<html>
+<head>
+<title>A Short Love Story about Adyen and Service Objects</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>关于阿丁和服务对象的爱情小故事</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/a-short-love-story-about-adyen-and-service-objects#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/a-short-love-story-about-adyen-and-service-objects#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h3"><p>一段时间以前，我被分配到一个神秘的任务，为我们客户的奥地利服务分析和实现与一个新的支付提供商的集成。要求很简单:新的支付服务应该是Adyen，因为Adyen支持SEPA支付。这是一个关于这一切是如何发生的故事。</p></div><p>等等，什么？</p>
+<h2><strong>TL；T2博士:下面是关于这个项目和问题的一些信息。对于更多的技术资料，只需向下滚动，直到你看到固定宽度字体的文本。</strong></h2>
+<p><strong>项目</strong></p>
+<h3>我实现这个功能的项目叫做<a href="http://web.archive.org/web/20221202095656/http://lemonfrog.ch/" target="_blank" rel="noopener"><span/></a><span>。它是一套针对</span> <i> <span>配对用户</span> </i> <span>的web apps，不仅仅是约会意义上的。我们可以将Lemonfrog的服务分为两大类:</span></h3>
+<p><strong>护理服务</strong> <span>:他们为找工作的人和寻求帮助的人牵线搭桥，如</span> <a href="http://web.archive.org/web/20221202095656/http://tutor24.ch/" target="_blank" rel="noopener"> <span> tutor24 </span> </a> <span>(学生和家教)或</span> <a href="http://web.archive.org/web/20221202095656/https://homeservice24.ch/" target="_blank" rel="noopener"> <span>家政服务24 </span> </a> <span>(各种家务)。</span></p>
+<ul>
+<li><strong>交友服务</strong> <span>，如</span><a href="http://web.archive.org/web/20221202095656/https://singlemitkind.ch/" target="_blank" rel="noopener"><span>singlimitkind</span></a><span>(针对单亲)。</span></li>
+<li>虽然Lemonfrog的总部设在瑞士，但它的服务也在奥地利和德国，这两个国家也有大量的用户。</li>
+</ul>
+<p>我们客户的主要收入来源是高级账户——某些类型的用户需要高级账户才能与其他人联系。各种各样的服务及其目标用户需要不止一种支付方式，因此除了最受欢迎的支付提供商(即Stripe和PayPal)，我们还有其他选择，如 <i> <span>通过电子邮件/信函开具发票</span> </i> <span>。记住，不是每个人都知道如何使用信用卡。</span></p>
+<p><strong>问题</strong></p>
+<h3>对于一个以瑞士为基础的以奥地利为目标的应用程序来说，最大的问题是奥地利货币是欧元，而瑞士货币是法郎。这个问题的解决方案被称为 <strong>单一欧元支付区</strong> <span>，这是欧盟为简化以欧元计价的银行转账而提出的支付整合倡议。</span></h3>
+<p>更简单地说，由于SEPA(奥地利和瑞士都是其成员),奥地利人可以很容易地向瑞士人付款，而且费用更低。</p>
+<p>Adyen </p>
+<h3>Adyen是最符合支持SEPA要求的支付解决方案提供商。它提供了世界各地的多种支付方式(包括特定于一个国家的方式和更多的全球方式，如SEPA银行转账)。</h3>
+<p><strong>如何？</strong></p>
+<h2>好了，现在我们知道了问题是什么，我们应该使用什么工具，是时候分析如何使用这个工具来解决问题了。经过几个小时的研究，我发现只有一个现成的解决方案(名为 <span> adyen </span> <span>的gem)可能会有所帮助，但是考虑到我们的需求以及该gem似乎没有得到很好的支持这一事实(上次提交是在将近半年前)，我们决定最好编写自己的解决方案。</span></h2>
+<p><span>没有必要深入研究Adyen的细节，它提供什么或如何工作——所有这些信息都可以在</span> <a href="http://web.archive.org/web/20221202095656/https://docs.adyen.com/" target="_blank" rel="noopener"> <span>开发者文档</span> </a> <span>中找到。在这篇文章中，我将从开发者的角度出发，只关注一些关于如何在你的应用中实现与Adyen集成的建议。</span></p>
+<p><span>在我工作的“调查”阶段，我试图写下所有必要的信息:</span></p>
+<p>我们需要为我们的每个服务存储三个值: <strong>帐户名</strong> <span>，</span> <strong>皮肤代码</strong> <span>和</span> <strong> HMAC键</strong> <span>。</span></p>
+<ul>
+<li><span>支付流程可以分为三个主要动作:</span></li>
+<li><span>创建并发送</span> <strong>付款请求</strong> <span>。</span></li>
+<ul>
+<li><span>接收并处理用户完成支付后返回我们服务时的</span> <strong>响应</strong> <span>。</span></li>
+<li><span>经办</span> <strong>通知</strong> <span>关于支付状态的变更。</span></li>
+<li><span>创建和发送付款请求包括准备正确的</span> <strong>请求参数</strong> <span>，这些参数符合Adyen的文档以及我们请求的</span> <strong>签名</strong> <span>。</span></li>
+</ul>
+<li>我决定将每个动作分成单独的服务类——一个服务对象负责一个动作。如果你想了解更多的服务对象，可以在这里  <span>找到一篇关于这种做法的文章</span> <a href="http://web.archive.org/web/20221202095656/https://www.netguru.com/blog/service-objects-in-rails"> <span>。</span></a></li>
+</ul>
+<p><strong>充电请求</strong></p>
+<h3><span>要创建并成功向Adyen发送收费请求，我们需要执行三个步骤:</span></h3>
+<p><span>根据支付数据建立参数列表。</span></p>
+<ul>
+<li>签署这些参数。</li>
+<li>基于这些参数和应用程序当前运行的环境构建请求URI。</li>
+<li>从我们支付管理员的角度来看，我们只需要在选择Adyen支付方式时将用户重定向到的URI。这将由 <span>负责请求服务</span> <span> : </span>处理</li>
+</ul>
+<p>它的构造函数接受两个对象作为参数:一个是支付数据，另一个是与当前服务及其配置相关的数据。然后，它将构建参数委托给我们的<span>RequestParamsService</span><span>。基于</span> <span> @params </span> <span> hash和当前app环境，构建并返回一个URI给Adyen的</span> <span> live </span> <span>或</span> <span> test </span> <span>端点。</span></p>
+<pre><code class="language-ruby">
+module Adyen
+  class ChargeRequestService
+    attr_reader :params
+
+    def initialize(payment, service)
+      @params = RequestParamsService.new(payment, service).call
+    end
+
+    def call
+      request_url + "?" + URI.encode_www_form(params)
+    end
+
+    private
+
+    def env
+      Rails.env.production? ? "live" : "test"
+    end
+
+    def request_url
+      "https://#{env}.adyen.com/hpp/select.shtml"
+    end
+  end
+end
+</code></pre>
+<p><strong>构建和签名参数</strong></p>
+<h3><span>现在，我们将仔细看看参数是如何构建和签名的。</span></h3>
+<p>在负责构建我们的参数的服务中，我们使用了一些常量中定义的值。最重要的一个叫做 <span>参数</span> <span>，因为它包含了我们希望包含在生成的hash中的所有参数的列表(按字母顺序排列)。名字写在</span> <span> snake_case、</span> <span>中，因为每个名字都有自己的私有方法负责生成它的值，但是Adyen要求我们的键写在</span><span>lower case</span><span>中。这就是为什么我们需要叫</span> <span>。camelize(:lower) </span> <span>在我们的</span> <span> build_params </span> <span>方法中。</span></p>
+<pre><code class="language-ruby">
+module Adyen
+  class RequestParamsService
+    PARAMETERS = %w(... merchant_account ...).freeze
+
+    attr_reader :params
+
+    def initialize(payment, service)
+      @service = service
+      @payment = payment
+      @params = build_params
+    end
+
+    def call
+      params["merchantSig"] = build_signature
+      params
+    end
+
+    private
+
+    attr_reader :service, :payment
+
+    def build_params
+      PARAMETERS.each_with_object({}) { |param, hash| hash[param.camelize(:lower)] = send(param) }
+    end
+
+    def build_signature
+      SignatureService.new(service.adyen_hmac_key, params).call
+    end
+
+    def merchant_account
+      service.adyen_account_name || GLOBAL_ADYEN_ACCOUNT
+    end
+  end
+end
+</code></pre>
+<p><strong>参数签名</strong></p>
+<h3><span>在返回带有参数的hash之前，我们想通过调用</span><span>signature reservice</span><span>来生成他们的签名，HMAC密钥是通过Adyen面板生成的，并保存为</span> <span> adyen_hmac_key </span> <span>。</span></h3>
+<p><span>根据文档，签名生成算法应该是这样的:</span></p>
+<pre><code class="language-ruby">
+module Adyen
+  class SignatureService
+    def initialize(key, params)
+      @key = Array(key).pack("H*")
+      @params = params
+    end
+
+    def call
+      calculate_signature
+    end
+
+    private
+
+    attr_reader :key, :params
+
+    def calculate_signature
+      Base64.strict_encode64(hmac)
+    end
+
+    def hmac
+      digest = OpenSSL::Digest.new("sha256")
+      OpenSSL::HMAC.digest(digest, key, params_string)
+    end
+
+    def keys_string
+      params.keys.join(":")
+    end
+
+    def params_string
+      "#{keys_string}:#{values_string}"
+    end
+
+    def values_string
+      params.values.map { |v| v.gsub(":", "\\:").gsub("\\", "\\\\") }.join(":")
+    end
+  end
+end
+</code></pre>
+<p><span>按关键字的字母顺序对哈希进行排序。</span></p>
+<ol>
+<li><span>分别用</span> <span> \: </span> <span>和</span> <span> \\ </span> <span>对值中的冒号和反斜杠进行转义。</span></li>
+<li><span>用</span> <span> : </span> <span>连接键，然后对值做同样的操作，并连接两个字符串(也用</span> <span> : </span> <span>)。</span></li>
+<li>将HMAC密钥转换成二进制形式——它被认为是十六进制值。</li>
+<li><span>使用SHA-256计算第3步签名字符串的HMAC。</span></li>
+<li><span>使用Base64编码方案对结果进行编码。</span></li>
+<li>Adyen在其仪表板上提供了一个表格，用于测试生成的签名对于给定值是否正确。</li>
+</ol>
+<p><strong>处理Adyen的响应</strong></p>
+<h3>付款完成后，Adyen会将用户重定向回我们的页面，并向我们发送一些关于处理结果的信息。我们将在单独的服务中处理这些响应。</h3>
+<p><span>首先，我们希望根据收到的数据在数据库中找到付款。下一步是更新此付款的状态。我们还想保存付款的外部ID——这可能对识别付款很有用。</span></p>
+<pre><code class="language-ruby">
+module Adyen
+  class HandleResponseService
+    attr_reader :params, :payment
+
+    def initialize(params)
+      @params = params
+      @payment = Payment.find(payment_id)
+    end
+
+    def call
+      payment.update_attributes(
+        state: fetch_state,
+        external_id: fetch_external_id
+      )
+    end
+
+    private
+
+    def fetch_external_id
+      params["pspReference"]
+    end
+
+    def fetch_state
+      params["authResult"]
+    end
+
+    def payment_id
+      # Here you can get payment_id for example from “merchantReference”
+    end
+  end
+end
+</code></pre>
+<p><strong>响应变更:处理通知</strong></p>
+<h3><span> SEPA支付没有信用卡或PayPal支付快——在SEPA中，付款需要大约一个工作日的授权和结算时间。这使得接收和响应来自Adyen的通知对我们的案例至关重要。这是负责此事的服务。</span></h3>
+<p>Adyen通知以一组<span>notification items</span><span>的形式出现——我们希望遍历每一项并处理每一个通知事件。这是在</span><span>handle _ notification _ item</span><span>方法中完成的。首先，我们需要检查是否为给定的数据找到了付款。接下来，我们应该检查通知是否说事件是成功的。如果不成功，我们可以以某种方式存储关于失败的数据(例如，将其发送到Rollbar)。</span></p>
+<pre><code class="language-ruby">
+module Adyen
+  class HandleNotificationService
+    attr_reader :notifications
+
+    def initialize(params)
+      @notifications = params["notificationItems"]
+    end
+
+    def call
+      notifications.each do |item|
+        @current_item = item["NotificationRequestItem"]
+        handle_notification_item
+      end
+    end
+
+    private
+
+    attr_reader :current_item
+
+    def handle_notification_item
+      return false unless payment
+      if successful?
+        send "handle_#{event}"
+      else
+        Rollbar.info(failure_reason_message)
+      end
+    rescue ::NoMethodError
+      Rollbar.info(not_implemented_for_message)
+    end
+
+    def event
+      current_item["eventCode"].downcase
+    end
+
+    def handle_authorisation
+      # Code for handling authorisation event
+    end
+
+    def handle_cancellation
+      # Code for handling cancellation event
+    end
+
+    def successful?
+      current_item["success"] == "true"
+    end
+  end
+end
+</code></pre>
+<p><span>处理事件由</span> <span> handle_【事件名称】</span> <span>方法管理，这些方法是动态调用的——在这些方法中，我们可以实现负责在这种特定事件的情况下做我们想做的事情的代码(例如，对于</span><span>handle _ authorization</span><span>，我们可以将</span> <span>支付</span> <span>状态更新为</span> <span>已支付</span> <span>，并触发一个邮件程序，通知用户支付已被批准我们还想存储关于未知事件的信息(Adyen可能会发送大量事件代码，但只有少数对我们有用)——在</span><span>NoMethodError</span><span>的情况下，我们将信息发送到Rollbar。</span></p>
+<p><strong>总结</strong></p>
+<h2>从商业角度来看，Adyen对你的客户非常有用。知道有这样的工具存在，知道怎么用就好。不幸的是，既没有面向Ruby开发者的文档，也没有最新的现成解决方案。希望这篇文章能帮助你在应用程序中实现与Adyen的集成。</h2>
+<p><span>Adyen can be very useful for your client from the business perspective. It’s good to know that such a tool exists and know how to use it. Unfortunately, there is neither documentation meant for Ruby developers nor any up-to-date out-of-the-box solution. Hopefully, this article will help you with implementing the integration with Adyen in your app.</span></p></span></div>    
+</body>
+</html>

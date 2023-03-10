@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>Frontend Quick Tips #4 Strong Typings For Redux State</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>前端快速提示# 4 Redux状态的强类型</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/frontend-tips-4-strong-typings-for-redux-state#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/frontend-tips-4-strong-typings-for-redux-state#0001-01-01</a></blockquote><div><div id="hs_cos_wrapper_post_body"><span><div class="blog-post__lead h3"><p>没有人喜欢那些大文章——这就是为什么我们创建快速提示——从你阅读它们的那一刻起改变你的开发者生活的简短提示。这些可能是JS代码中解释的一些模式，或者是一些更好的代码的技术。</p></div>Problem
+<p><span/>您希望使用<a href="http://web.archive.org/web/20220925214534/https://www.typescriptlang.org/"> <span> TypeScript </span> </a>对您的<a href="http://web.archive.org/web/20220925214534/https://redux.js.org/"> <span> Redux </span> </a>状态进行强类型化，并与IDE集成自动完成、实时错误和更容易重构等特性。</p>
+<h2>解决办法</h2>
+<p>我们可以使用<span>类型安全动作</span> ( <a href="http://web.archive.org/web/20220925214534/https://github.com/piotrwitek/typesafe-actions">链接</a> ) <span>，一个由</span> <a href="http://web.archive.org/web/20220925214534/https://github.com/piotrwitek"> Piotr Witek </a> <span>创建和维护的包。它是一组帮助函数，允许我们轻松地创建和管理Redux状态。</span></p>
+<h3>创建根缩减器</h3>
+<p>src/store/rootReducer.ts</p>
+<p>给定当前状态树和要处理的动作，reducer是返回下一个状态树的函数。根变径管是应用中所有变径管的组合。</p>
+<pre data-pm-slice="1 1 []"><code>import { combineReducers } from "redux";<br/>import gridReducer from "./ducks/grid/reducer";<br/><br/>const rootReducer = combineReducers({<br/>  grid: gridReducer<br/>});<br/><br/>export default rootReducer;</code></pre>
+<p>我们可以通过使用StateType(<a href="http://web.archive.org/web/20220925214534/https://github.com/piotrwitek/typesafe-actions#statetype"><span>documentation</span></a>)助手来生成状态树形状类型，该助手从reducer函数中推断状态对象类型。</p>
+<pre data-pm-slice="1 1 []"><code>import { StateType } from "typesafe-actions";<br/><br/>type RootState = StateType&lt;typeof rootReducer&gt;<br/>// { grid: GridStateShape }</code></pre>
+<h3>创建助手类型</h3>
+<p>您可以定义全局类型并扩展默认的类型安全操作定义，以实现更好的IDE集成和自动完成。</p>
+<h3>创建动作创建者</h3>
+<p>src/store/ducks/grid/action creators . ts</p>
+<p>typesafe-actions公开一个createAction帮助器。它会自动创建一个标准化的动作创建器，你可以在调度功能中使用它。</p>
+<h3>创建一个减速器</h3>
+<p>src/商店/鸭子/网格/减速器. ts</p>
+<p>typesafe-actions公开了一个createReducer帮助器来创建typesafe reducers。给定一个动作创建者，您可以分配接受状态和动作参数的动作处理程序，这些参数的类型将被自动缩小。</p>
+<br/>
+<p>请注意，您可以始终使用标准的开关/条件缩减器，并通过使用getType(<a href="http://web.archive.org/web/20220925214534/https://github.com/piotrwitek/typesafe-actions#gettype"><span>documentation</span></a>)助手来缩小类型:</p></span></div></div>    
+</body>
+</html>

@@ -1,0 +1,282 @@
+<html>
+<head>
+<title>Your Best Friend For CI/CD - What Is CircleCI?</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>CI/CD你最好的朋友CircleCI是什么？</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/what-is-circleci#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/what-is-circleci#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h2"><p>在一个敏捷的世界中，我们必须快速适应变化，但是对于有固定期限的工程团队来说，这可能是一个挑战。CircleCI是一款顶级的CI/CD工具。</p></div><br/>
+<p>Automation和CircleCI在这里登场——一款顶级CI/CD工具。下面，我们探索什么是CircleCI，以及更多。</p>
+<p>自动化有助于加快工作，其中很大一部分是CI/CD。</p>
+<p>第一部分，CI，代表持续集成。这个概念鼓励开发人员定期将他们正在处理的代码与共享存储库集成在一起——越频繁越好。当代码合并时，就会触发自动化测试和构建。</p>
+<p>第二部分，CD，模棱两可。它代表持续交付或持续部署。两者都意味着先前集成过程的进一步自动化。连续交付是指在软件应用程序中自动创建图像。</p>
+<p>这些映像存在于某种存储库中，可以手动部署。对于连续部署，该手动步骤也涵盖在自动化过程中。</p>
+<p>我们所概述的可能看起来像许多不必要的自动化大惊小怪，但是这些实践是值得投资的。有了CI/CD平台，软件团队可以更快地得到关于bug的通知，有助于交付更稳定的产品，同时增加团队的信心和生产力。为了让您更好地理解，我们来看看CircleCI持续集成工具。</p>
+<h2>什么是CircleCI？</h2>
+<p>CircleCI是一个CI/CD解决方案，有助于提高您团队的效率。它提供了一个托管的云服务，也有一个自托管的选项。你可以通过CircleCI的网站访问它——有一个免费层，所以很容易试用。</p>
+<p>多年来，CircleCI已经成为最受欢迎的CI/CD平台之一。下面，我们来看看它的特性和示例管道，看看为什么这么多公司选择CircleCI来自动化他们的工作流程。</p>
+<h2>CircleCI的组件</h2>
+<p>一般来说，大多数CI工具都有类似的工作方式。尽管如此，熟悉CircleCI生态系统还是很重要的，这样你就能理解本文后面的示例代码片段。</p>
+<h3>步伐</h3>
+<p>步骤是工作流的基本构件。大多数时候，它们由可执行的bash命令组成。其他时候，可以使用CircleCI提供的预定义步骤，涵盖常见用例——例如，从存储库签出代码或处理管道缓存。</p>
+<h3>乔布斯</h3>
+<p>作业有两个配置部分。首先，他们需要一个步骤列表。当执行作业时，这些步骤按顺序作为一个单元运行。第二，执行一个作业需要一个执行者。CircleCI支持许多平台——<a href="http://web.archive.org/web/20221220010244/https://www.netguru.com/blog/python-docker-tutorial">Docker、</a> Windows、macOS和虚拟机。</p>
+<pre><code>
+#...
+jobs:
+ build: # Job name
+   docker: # Job executor
+     - image: 
+       auth:
+         username: mydockerhub-user
+         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+   steps:
+     - checkout # Special step to checkout your source code
+     - run: # Run step to execute commands, see
+         # circleci.com/docs/configuration-reference/#run
+         name: Running tests
+         command: make test # executable command run in
+         # non-login shell with /bin/bash -eo pipefail option
+         # by default.
+#...
+</code></pre>
+<p>作业和步骤示例</p>
+<h3>工作流程</h3>
+<p>工作流位于层次结构的顶端。它们由作业组成，每个作业都有一个步骤列表。</p>
+<p>为了减少长执行时间，作业以不同的方式执行——顺序、并行或手动。稍后，我们将更详细地了解优化技术。</p>
+<p>工作流示例</p>
+<pre><code>
+#...
+workflows:
+ build_and_test: # name of your workflow
+   jobs:
+     - build1 # predefined job name from the jobs section
+     - build2:
+         requires:
+           - build1 # wait for build1 job to complete successfully before starting
+           # see circleci.com/docs/workflows/ for more examples.
+     - build3:
+         requires:
+           - build1 # wait for build1 job to complete successfully before starting
+</code></pre>
+<p>球</p>
+<h3>工作流是从头开始实施的。为了避免重复的配置，球体开始发挥作用。orb提供了可重用的代码片段，涵盖了像创建Docker映像并上传到Docker Hub这样的常见用例。CircleCI提供了一个易于查找和使用的orbs存储库，任何人都可以浏览。</h3>
+<p>资料来源:circleci.com</p>
+<p>语境</p><figure class="image&#10;    &#10;    image--framed&#10;    " data-image="" data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20221220010244im_/https://www.netguru.com/hs-fs/hubfs/config-elements-orbs.jpg?width=700&amp;name=config-elements-orbs.jpg 700w, http://web.archive.org/web/20221220010244im_/https://www.netguru.com/hs-fs/hubfs/config-elements-orbs.jpg?width=1400&amp;name=config-elements-orbs.jpg 1400w" src="../Images/cd8773a31809ad83cb9db91ea388e87c.png" alt="config elements orbs" loading="lazy" data-image-content="" data-original-src="http://web.archive.org/web/20221220010244im_/https://www.netguru.com/hs-fs/hubfs/config-elements-orbs.jpg?width=700&amp;name=config-elements-orbs.jpg"/>
+  </figure><p>众所周知，管道工具提供了创建配置选项的方法。CircleCI通过包含一组环境变量的上下文来提供这一点。这些值可用于您组织中的所有项目。</p>
+<p>假设您有一个所有服务都可以访问的安全API。您可以构建一个上下文，并将API键配置为一个环境变量，每个团队都在他们的管道中引用该上下文。在运行时，CircleCI将变量注入到工作流作业中。</p>
+<h3>管道优化</h3>
+<p>过一段时间后，构建应用程序的时间增加是很常见的。考虑到这一点，<a href="http://web.archive.org/web/20221220010244/https://www.netguru.com/blog/ci-cd-pipeline"> CircleCI提供了一系列功能来使流程更快</a>和更简单。</p>
+<p>并发</p>
+<h2>在CircleCI术语中，并发指的是作业执行。如果一个工作流中有许多作业，并且它们互不依赖，那么它们将并发运行。注意:这是一个软限制。</h2>
+<p>从上一节中，我们知道作业可以有各种执行器环境。除此之外，您可以根据CPU和内存需求微调执行器。通过提供像small、medium或large这样的资源类，可以影响这些因素。</p>
+<h4>如果你使用了大量的CPU和内存，限制因素就会起作用。如果发生这种情况，CircleCI会限制并发性，以确保平台保持稳定。但不用担心，CircleCI的高级支持可以为您提高限额。</h4>
+<p>根据经验，如果可能的话，不要为工作流中的每个任务定义需求，这样它们可以并发运行。</p>
+<p>平行</p>
+<p>这在作业级别进行解释，表明完成特定作业需要多少执行者。我们使用这个特性来分散测试执行——它没有听起来那么复杂。</p>
+<p>CircleCI有一个命令行工具，帮助将测试用例分成更易管理的几堆。对于分割逻辑，使用三种方法之一:时间、名称或文件大小。</p>
+<h4>数据持久性</h4>
+<p>在构建期间，会生成和处理许多文件。有依赖关系、测试报告、编译代码和图像等等。在某些时候，您可能需要访问和使用这些数据，因此您需要一个可以存储这些数据的地方。CircleCI提供以下方式:</p>
+<p><strong>缓存</strong>–用密钥存储文件或目录。作业保存到缓存或通过键从缓存中检索数据。例如，使用它来加速依赖项管理器。</p>
+<h4><strong>工作区</strong>–这些是工作流感知存储空间。使用它们在作业之间传递生成的版本号，或者在以后需要的编译代码之间传递。</h4>
+<p><strong>工件</strong>–在工作流完成后持久保存数据的存储类。这些对于存储jar文件和测试报告非常有用。</p>
+<ol>
+<li aria-level="1">Docker层缓存</li>
+<li aria-level="1">Docker通常用于管道中。例如，我们对作业使用Docker执行器，或者有生成某种Docker映像的步骤。这个CircleCI特性缓存公共Docker层。它们在工作流运行过程中持续存在，并加速了映像的构建过程。</li>
+<li aria-level="1">CircleCI的额外功能</li>
+</ol>
+<h4>为了总结我们对CircleCI的介绍，我们还要提到几个特性。</h4>
+<p><strong>分支特定配置</strong>–可以根据管道当前正在执行的分支来排除或包含作业。</p>
+<h2><strong>步骤的条件执行</strong>——你可以写条件，如果条件测试为真，则执行该步骤。如果您查看orb存储库，您可以看到示例，在那里您可以查看源代码。</h2>
+<p><strong>命令</strong>–这些命令定义了一系列的步骤，是使代码可重用的有用特性。</p>
+<ol>
+<li aria-level="1"><strong>参数</strong>–在作业、命令和执行者下定义，参数最好与条件一起使用，以定义动态工作流。</li>
+<li aria-level="1">用于Java的CircleCI示例</li>
+<li aria-level="1">到目前为止，我们已经讨论了理论。现在，让我们概述代码示例。</li>
+<li aria-level="1">要创建CircleCI工作流，您需要定义以下内容:</li>
+</ol>
+<h2>您想要使用的球体列表</h2>
+<p>如果orb不支持某些东西，则列出已定义的作业</p>
+<p>将执行作业的工作流列表</p>
+<ol>
+<li aria-level="1">将这些信息放入yml文件中。circleci/config.yml，circleci会选择它。</li>
+<li aria-level="1">简单工作流程</li>
+<li aria-level="1">主要亮点:</li>
+</ol>
+<p>以上是来自Gradle orb官方的一份工作。默认情况下，它将运行build命令。它还使用缓存来存储依赖关系。我们对默认设置做了一点小小的更改，因为基本作业当前配置为使用Java 13。使用tag参数，我们将其更改为CircleCI图像报告中的新版本。</p>
+<h3>我们定义了作业的前置和后置步骤来添加新功能。这里，我们希望将jar文件带到下一个作业，这样我们就可以将它推送到弹性容器注册中心(ECR)。为了实现这一点，我们还使用了工作区特性。</h3>
+<pre><code>
+version: 2.1
+
+orbs:
+  gradle: circleci/gradle@3.0.0
+  aws-ecr: circleci/aws-ecr@8.1.2
+  
+workflows:
+  build-and-push:
+    jobs:
+      - gradle/run:                         # &lt;--------------- 1.
+          executor:
+            name: gradle/default
+            tag: 17.0.4
+          post-steps:                       # &lt;--------------- 2.
+            - persist_to_workspace:
+                root: build
+                paths:
+                  - libs
+      - aws-ecr/build-and-push-image:       # &lt;--------------- 3.
+          repo: ng-java-circle-test-backend
+          attach-workspace: true
+          workspace-root: ./build
+          tag: ${CIRCLE_BRANCH}.${CIRCLE_SHA1}
+          requires:
+            - gradle/run
+</code></pre>
+<p>这是AWS-ECR orb的工作。我们只需要简单的参数来确保jar文件在之前的作业中可用。对于标记，我们使用CircleCI的内置环境变量。在表面之下，orb使用额外的配置——一系列环境变量——我们需要与AWS进行通信:<br/> <br/></p>
+<ol>
+<li aria-level="1">AWS_ACCESS_KEY_ID</li>
+<li aria-level="1">AWS_SECRET_ACCESS_KEY</li>
+<li aria-level="1">AWS _ ECR _注册表_ID</li>
+</ol>
+<ol>
+<li>AWS_REGION</li>
+<li>梯度并行工作流</li>
+<li>我们从官方Java指南中复制了这个例子，它描述了大部分步骤。</li>
+<li> </li>
+</ol>
+<h3>我们有一个额外的注意事项:包含作业的orb有一个executor分配。如示例所示，如果您需要其他东西，可以更改它。在本例中，我们将其配置为使用Docker层缓存特性。</h3>
+<pre><code>
+version: 2.1
+
+jobs:
+  build-with-caches-and-parallel:
+    parallelism: 2
+    environment:
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+    docker:
+      - image: cimg/openjdk:17.0.4
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-gradle-wrapper-
+      - restore_cache:
+          key: v1-gradle-cache-
+      - run:
+          name: Run tests in parallel
+          command: |
+            cd src/test/java
+            # Get list of classnames of tests that should run on this node
+            CLASSNAMES=$(circleci tests glob "**/*.java" \
+              | cut -c 1- | sed 's@/@.@g' \
+              | sed 's/.\{5\}$//' \
+              | circleci tests split --split-by=timings --timings-type=classname)
+            cd ../../..
+            # Format the arguments to "./gradlew test"
+            GRADLE_ARGS=$(echo $CLASSNAMES | awk '{for (i=1; i&lt;=NF; i++) print "--tests",$i}')
+            echo "Prepared arguments for Gradle: $GRADLE_ARGS"
+            ./gradlew test $GRADLE_ARGS
+      - save_cache:
+          paths:
+            - ~/.gradle/wrapper
+          key: v1-gradle-wrapper-
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+          key: v1-gradle-cache-
+      - run:
+          name: Assemble JAR
+          command: |
+            if [ "$CIRCLE_NODE_INDEX" == 0 ]; then
+              ./gradlew bootJar
+            fi
+      - run:
+          name: Create build folder on all nodes
+          command: |
+            mkdir -p ./build/libs
+      - persist_to_workspace:
+          root: build
+          paths:
+            - libs
+
+workflows:
+  build-and-push-with-caches-and-parallel:
+    jobs:
+      - build-with-caches-and-parallel
+      - aws-ecr/build-and-push-image:
+          repo: ng-java-circle-test-backend
+          attach-workspace: true
+          workspace-root: ./build/libs
+          tag: ${CIRCLE_BRANCH}.${CIRCLE_SHA1}
+          executor:                                   # &lt;------- Extra Note
+            name: aws-ecr/default
+            use-docker-layer-caching: true
+          requires:
+            - build-with-caches-and-parallel
+</code></pre>
+<p>Terraform简单工作流程</p>
+<p>我们还应该自动化与基础设施相关的变更。使用Terraform，我们可以通过代码来管理它。下面是一个管道示例:</p>
+<p>主要亮点:</p>
+<h3>YAML代码重用示例。该截面被锚定，可以在以后引用。</h3>
+<pre><code>
+version: 2.1
+
+orbs:
+  terraform: circleci/terraform@3.1.0
+
+common:                                                 # &lt;------------ 1.
+  terraform-common: &amp;terraform-common
+    path: terraform
+    tag: 1.2.8
+
+workflows:
+  deploy_infrastructure:
+    jobs:
+      - terraform/validate:
+          &lt;&lt;: *terraform-common
+          checkout: true
+      - terraform/plan:                                 # &lt;------------ 2.
+          &lt;&lt;: *terraform-common
+          var_file: vars/test.tfvars
+          persist-workspace: true
+          requires:
+            - terraform/validate
+      - wait-for-apply-approval:
+          type: approval
+          filters:                                      # &lt;------------ 3.
+            branches:
+              only: main
+          requires:
+            - terraform/plan
+      - terraform/apply:
+          &lt;&lt;: *terraform-common
+          attach-workspace: true
+          filters:
+            branches:
+              only: main
+          requires:
+            - wait-for-apply-approval
+</code></pre>
+<p>这些是来自地球的工作。我们在配置文件中添加了通用步骤，并在需要的地方扩展了它们。这里，Terraform使用提供的var文件来填充定义的变量。一旦它有了一个计划，它就持续到工作区，确保应用步骤执行我们批准的内容。</p>
+<p>分支过滤在起作用。我们只从主分支部署基础设施；对于其他分支，最后两步是不可见的。</p>
+<p>CircleCI的Netguru最佳实践</p>
+<ol>
+<li aria-level="1">CircleCI是我们鼓励开发人员在Netguru使用的CI/CD解决方案。许多工程团队将它用于内部和客户项目。</li>
+<li aria-level="1">我们努力遵守<a href="http://web.archive.org/web/20221220010244/https://www.netguru.com/blog/top-10-best-practises-to-benefit-more-form-circleci">以下准则</a>:</li>
+<li aria-level="1">使用大量较小的作业</li>
+</ol>
+<h2>确定并行性可以在哪些方面发挥作用</h2>
+<p>尽可能使代码可重用</p>
+<p>如果合适，使用球体</p>
+<ul>
+<li aria-level="1">集成滚动条以跟踪部署状态</li>
+<li aria-level="1">集成测试报告的代码环境</li>
+<li aria-level="1">切尔莱西:前进的道路</li>
+<li aria-level="1">本指南将帮助您使用CircleCI持续集成工具更容易地开始Java项目。我们回答了“CircleCI是什么？”并概述了它如何帮助<a href="http://web.archive.org/web/20221220010244/https://www.netguru.com/services/web-development/java-development">开发团队</a>为他们的日常任务创建高效的工作流。如果您想了解更多信息，请随时联系我们。</li>
+<li aria-level="1">Integrate Rollbar to track deployment status</li>
+<li aria-level="1">Integrate CodeClimate for test reports</li>
+</ul>
+<h2>CircleCI: the way forward</h2>
+<p>This guide will help you get started more easily with Java projects using the CircleCI Continuous Integration tool. We answered the question “what is CircleCI?” and outlined how it helps <a href="http://web.archive.org/web/20221220010244/https://www.netguru.com/services/web-development/java-development">development teams</a> create an efficient workflow for their daily tasks. If you’d like more information, feel free to get in touch.</p></span></div>    
+</body>
+</html>

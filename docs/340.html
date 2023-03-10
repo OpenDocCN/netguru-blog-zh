@@ -1,0 +1,92 @@
+<html>
+<head>
+<title>How to Setup Callio, a Slack-Twillo Integration</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>如何设置Callio，Slack-Twillo集成</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/callio-setup-slack-twillo-integration#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/callio-setup-slack-twillo-integration#0001-01-01</a></blockquote><div><div id="hs_cos_wrapper_post_body"><span><div class="blog-post__lead h3"><p>最近，我们发现我们可以<a href="http://web.archive.org/web/20221007094317/https://www.netguru.com/blog/introducing-callio-track-twilio-calls-slack">改善内部流程，接听主要来自国外的客户电话</a>。我们的想法是建立一个简单的<a href="http://web.archive.org/web/20221007094317/https://www.netguru.com/callio">应用</a>，它将拦截来电，发布一个空闲通知，并允许我们通过使用Twilio number的网络浏览器来接听这些电话。Callio就是这样诞生的。在这篇文章中，你会发现一个关于它如何工作以及如何将它与你的账户相结合的综合指南。</p></div><h3><span>好处</span></h3>
+<p>Callio是一款极其轻量级的应用。它使用Sinatra与 <a href="http://web.archive.org/web/20221007094317/https://slack.com/" rel="nofollow" target="_blank"> <span> Slack </span> </a> <span>和</span><a href="http://web.archive.org/web/20221007094317/https://twilio.com/" rel="nofollow" target="_blank"><span>Twilio</span></a><span>API进行通信，使用一个简单的web客户端和一些JavaScript来处理浏览器中的语音呼叫，并使用几个webhooks来使其顺利运行。</span></p>
+<ul>
+<li>
+<p><span>办公室里不需要真正的电话——你只需要一个网络浏览器，不需要额外的设备。</span></p>
+</li>
+<li>
+<p>对于找不到你的号码的客户来说没有问题——由于Twilio，你可以从几十个国家中选择一个号码。</p>
+</li>
+<li>
+<p>空闲频道上的任何人都可以接听电话。</p>
+</li>
+<li>
+<p>Callio保留了你所有电话的完整历史记录以及每一个电话的录音。如果你错过了什么，你仍然可以在Slack上看到有人试图联系你的消息</p>
+</li>
+</ul>
+<br/>
+<h3><span>Callio在实践中如何工作</span></h3>
+<ol>
+<li>
+<p>有人打电话给你。</p>
+</li>
+<li>
+<p>Callio会在你的Slack频道上发布一条通知，并提供一个网络浏览器链接，你可以在那里接听电话。</p>
+</li>
+<li>
+<p><span>您点击通知中的链接。</span></p>
+</li>
+<li>
+<p>当你点击浏览器中的“呼叫”按钮时，Slack会发布另一条通知，让团队的其他成员知道有人已经接听了电话。</p>
+</li>
+<li>
+<p><span>呼叫被执行并被记录。</span></p>
+</li>
+<li>
+<p>当其中一方挂断时，Slack会发出通知，然后线路就可以再次使用了。</p>
+</li>
+<li>
+<p><span>通话详情和录音被添加到通话记录中</span></p>
+</li>
+</ol>
+<h3><span>如何设置Callio </span></h3>
+<h4><strong> Twilio账户</strong></h4>
+<p>要开始使用Callio，你必须注册使用<a href="http://web.archive.org/web/20221007094317/https://www.twilio.com/" rel="nofollow" target="_blank"><span>【Twilio】</span></a><span>，并选择一个你想使用的号码。它是免费的，为测试目的提供了完整的功能-你只会收到一条短信，告知你正在运行一个试用帐户。</span></p>
+<h4><strong> Twilio传入连接webhook </strong></h4>
+<p>在Twilio上注册并选择号码后，你必须配置你的第一个webhook。为此，将你的Callio应用的地址粘贴到电话号码下，然后:配置- &gt;语音- &gt;有电话进来</p>
+<h4><strong>用于完成连接的Twilio web hook</strong></h4>
+<p>在粘贴Callio来电webhook的同一个地方，您可以输入端点地址，通知用户通话已经结束。它位于“通话状态更改”输入框下(见上面的截图)。</p>
+<h4><strong> Twilio应用程序</strong></h4>
+<p><span>完成号码后，进入可编程语音- &gt;工具- &gt; TwiML应用程序，创建一个应用程序。您的Twilio应用程序将在几秒钟内准备就绪(稍后您将需要它的SID)。接下来，您可以配置一个webhook来处理语音呼叫，只需在voice请求的URL中键入您的Callio地址。</span></p>
+<h4><strong>松弛应用</strong></h4>
+<p>当我们完成Twilio后，是时候创建一个简单的Slack应用程序了。去https://api.slack.com/apps<a href="http://web.archive.org/web/20221007094317/https://api.slack.com/apps" rel="nofollow" target="_blank"><span/></a><span>创建一个app。你还需要它的令牌。请记住为此应用程序设置适当的权限，以便能够在您的频道上发布消息。我们需要的唯一权限是chat:write:bot。</span></p>
+<h4><strong> Twilio-Slack-Notifier设置</strong></h4>
+<p>你必须在 <span> config.yml </span> <span>文件中提供一些秘密数据。一个示例配置文件应该类似于下面的内容:</span></p>
+<p><span>slack</span><span>:</span><span><br/></span><span/><span>client _ token</span><span>:</span><span>' xoxp-1234-your 0 slack-99 secret 4 token-nom nom 3 '</span><span><br/></span><span/><span>频道</span>:<span/><span>' awesome-slack-channel-name '</span><span><br/> </span><span>' apand 8 your 9 app 3 sid 9 from 1 twilio '</span><span><br/></span><span/><span>client _ name</span><span>:</span><span>' your-client-name '</span><span><br/></span><span/><span>caller</span><span>:</span><span>'+</span></p>
+<p>那是什么？我从哪里得到所有这些数据？</p>
+<ul>
+<li>
+<p>Slack客户端令牌:这是一个在您使用应用程序时授权您的Slack帐户的令牌。首先，你要创建一个Slack应用程序(只需如上给它一个名字和权限)，当你在<a href="http://web.archive.org/web/20221007094317/https://api.slack.com/apps" rel="nofollow" target="_blank"><span>【https://api.slack.com/apps.】</span></a>下选择你的应用程序时，你就会得到令牌</p>
+</li>
+<li>
+<p>Slack channel:它只是您希望发布通知的频道名称。只要通道确实存在，它可以是任何东西。</p>
+</li>
+<li>
+<p><span> Twilio账号SID:登录后在你的Twilio仪表盘中获取:</span><a href="http://web.archive.org/web/20221007094317/https://www.twilio.com/console" rel="nofollow" target="_blank"><span>【https://www.twilio.com/console】</span></a></p>
+</li>
+<li>
+<p><span> Twilio auth token:如上:</span><a href="http://web.archive.org/web/20221007094317/https://www.twilio.com/console" rel="nofollow" target="_blank"><span>【https://www.twilio.com/console】</span>T5】</a></p>
+</li>
+<li>
+<p>Twilio应用SID:你必须先创建一个Twilio应用。进入控制台- &gt;可编程语音- &gt;工具- &gt; TwiML应用。创建新的应用程序后，您将在那里获得应用程序SID。</p>
+</li>
+<li>
+<p>Twilio客户端名称:这是您必须在Twilio仪表板和Callio配置中键入的名称。它授权浏览器连接到您的Twilio并执行电话呼叫。</p>
+</li>
+<li>
+<p>来电者:你的Twilio电话号码。</p>
+</li>
+<li>
+<p>web客户端链接:您的Web客户端的端点地址。这是发布在Slack频道上的链接。</p>
+</li>
+</ul>
+<p>你已经准备好了！现在你不会错过任何来电。</p></span></div></div>    
+</body>
+</html>

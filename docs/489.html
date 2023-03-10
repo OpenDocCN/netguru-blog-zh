@@ -1,0 +1,89 @@
+<html>
+<head>
+<title>Kotlin Multiplatform as iOS Developer</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>作为iOS开发者的Kotlin多平台</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/kotlin-multiplatform-as-ios-developer#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/kotlin-multiplatform-as-ios-developer#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h3"><p>关于“跨平台还是原生”的争论由于谷歌的骚动而愈演愈烈。谷歌正试图革新移动开发，与此同时，JetBrains正在慢慢尝试开发一些“值得考虑”的解决方案。说实话，Java很受欢迎...非常受欢迎，在未来，Kotlin可能是下一个大事件，因为受欢迎程度预计会像现在这样增长。根据<a href="http://web.archive.org/web/20220930111141/https://insights.stackoverflow.com/survey/2018/" rel="noopener" target="_blank"> <u> Stack Overflow的2018年度开发者调查</u> </a> Kotlin是开发者中第二受喜爱的语言。</p></div><h2>Kotlin多平台？</h2>
+<p>Kotlin多平台将JetBrains完成的所有艰苦工作整合在一起，允许将Kotlin编译成三个不同的目标:JS、JVM和Native是三个独立的项目，您也可以单独使用。Kotlin Native就是其中之一，它基本上是一个将Kotlin代码编译成本地二进制文件的解决方案。主要是它被设计成允许在没有任何虚拟机的情况下编译。此刻<a href="http://web.archive.org/web/20220930111141/https://kotlinlang.org/docs/tutorials/native/targeting-multiple-platforms.html">的目标平台</a>是:</p>
+<ul>
+<li>ios</li>
+<li>马科斯</li>
+<li>机器人</li>
+<li>Windows操作系统</li>
+<li>Linux操作系统</li>
+<li>web程序集</li>
+</ul>
+<p>这意味着我们的业务逻辑只需编写一次，就可以在所有这些平台上本地共享。不错！</p>
+<p> </p>
+
+<p> </p>
+<h2><strong>跨平台</strong></h2>
+<p>当决定是本地开发还是跨平台开发时，有几件事我们必须考虑。首先是金钱和时间——从商业角度来看，这些是最重要的东西。众所周知，创建跨平台应用程序更便宜、更快。在平台之间共享代码似乎是一个好主意，但是……它总是这么好吗？</p>
+<p>第二件事来了——<strong>技术</strong>。</p>
+<p>我们有Xamarin，它编译成CIL和React Native，基本上是JS。有了它们，我们在UI层之上有了额外的抽象。我们还运行了一个在给定平台上性能可能不是最好的代码。JS将必须在V8/JavaScriptCore上运行，然后通过某种桥梁与本机代码通信。同样的情况也会发生在Xamarin上，它将使用ACW和MCW来包装Android上的本地调用(类似于JNI的机制)。</p>
+<p>Kotlin多平台编译到多个目标，在我们需要的地方给我们本地二进制文件——iOS或JVM字节码输出——例如Android。</p>
+<p>此外，我们使用为UI构建而制作的标准组件，因此我们可以完全分离和区分两个平台的UI。</p>
+<p>让我们以我们的Kotlin多平台存储为例(由Kotlin多平台制造)。你可以在这里 阅读更多关于创建它的信息<a href="/web/20220930111141/https://www.netguru.com/blog/what-weve-learned-by-developing-the-kotlin-multiplatform-storage-library" rel="noopener"> <u/></a></p>
+<p>我们想为这两个平台创建安全的钥匙链包装器，所以我猜<em> UserDefaults </em>不是这种数据的最佳位置。首先，我们试图实现完全用Kotlin编写的<em>钥匙链</em>，但由于缺乏Objective-C的角色转换，这最终似乎是不可能的。经过多次尝试，我们最终决定，我们将使用c-interop工具，创建原生库，并将其连接到Kotlin应用程序。我们所做的，基本上是创建Objective-C库，该库将从链接框架创建Kotlin接口，因此我们可以在Swift应用程序中使用它！是的…我知道-跨平台...</p>
+<p>现在很难说这些措施中是否有可以做得更好的。这项技术仍然是非常实验性的，没有文档，没有教程，没有堆栈溢出主题。</p>
+<p> </p>
+<h2>Kotlin多平台背后的基础是什么？</h2>
+<p>我们有两种类型的模块——特定于平台的和通用的。</p>
+<p>特定于平台的模块定义视图，并从公共视图实现代码。</p>
+<p><strong>公共主模块</strong>是保存项目所有公共部分的模块。放在这个模块中的代码在每个声明的平台之间共享。但是，它有一些限制，因为您不能在这里访问特定于平台的特性。相反，<strong>公共主</strong>模块可以使用<a href="http://web.archive.org/web/20220930111141/https://kotlinlang.org/docs/reference/platform-specific-declarations.html">期望/实际机制为那些特性定义一个公共接口。</a>所以，这是实现通用业务逻辑的好地方！</p>
+<p><strong>平台包(</strong>例如<strong>【安卓主】)</strong>是依赖于平台的代码。例如平台的框架实现。</p>
+<p> </p>
+
+<p> </p>
+<h2><strong>实施</strong></h2>
+<p>这是一个iOS平台的模块示例</p>
+<p>仅仅为了利用共享代码库，您必须在您的Swift类中实现接口。在本例中，我们将拥有<em>主视图</em>界面</p>
+Kotlin
+<pre><code class="kotlin">interface MainView {
+
+    fun showElementAddedInfo()
+    
+    fun showToDoList(toDoList: List&lt;String&gt;)
+}
+</code></pre>
+<p>迅速发生的</p>
+<pre><code class="swift">final class MainViewController: UIViewController, MainView { }</code></pre>
+<p>接口为您提供了在Kotlin中使用的方法。这就是斯威夫特“委托”科特林方法的方式。以及它是如何以另一种方式运作的？</p>
+<p>我们只需要创建用Kotlin编写的<em> Presenter </em>的实例，这样我们就可以使用那里创建的方法。</p>
+<p>Kotlin</p>
+<pre><code class="kotlin">class MainPresenter {
+    fun foo() {
+        print(„bar")
+    }
+}
+</code></pre>
+<p>Swift</p>
+<pre><code class="swift">private lazy var presenter: MainPresenter = {
+    MainPresenter()
+}()
+
+func bar() {
+    presenter.foo()
+}
+</code></pre>
+<p>另一件事，我们不能忘记的是附加和分离视图</p>
+<p>我们应该在创建<em> ViewController </em>实例时附加视图。没有它，Kotlin代码就不能被正确调用。</p>
+<pre><code class="swift">presenter.attachView(view: self)</code></pre>
+<p>attachView 正在创建对传递的对象的强引用，所以要释放对象，我们只需调用</p>
+<pre><code class="swift">deinit {
+    presenter.detachView()
+}
+</code></pre>
+<p>我的锅</p>
+<pre><code class="kotlin">fun detachView() {
+    this.view = null
+}
+</code></pre>
+<p>毕竟，我们不需要太多来利用共享代码库，但是上面我们有一个场景，当整个环境已经设置好了。因此，您必须导入生成的框架，在构建设置中更改框架搜索路径，并调用脚本。如果你想试一试，你应该看看这个</p>
+<h2><strong>结论</strong></h2>
+<p>作为iOS开发者，你可以毫无问题地阅读Kotlin代码。较小代码片段的语法相似度可以超过60%，所以在Kotlin中读写代码不成问题(甚至有现成的转换器可以使用，比如这个<a href="http://web.archive.org/web/20220930111141/https://github.com/angelolloqui/SwiftKotlin" rel="noopener" target="_blank"> one </a>)。如果没有代码片段上面的注释，可能很难判断哪个代码是用Swift或Kotlin编写的。但令人难过的是，您仍然需要知道如何在其他平台上创建视图，因此至少必须了解特定于平台的UI构建。此外，像Kotlin Native这样的解决方案可以成为未来，一个代码库，许多目标，包括后端，前端，移动，甚至嵌入式！现在这项技术还处于实验阶段，还没有准备好投入生产，但是我们很可能会在未来听到更多关于它的消息，因为它有很大的潜力。</p>
+<p> </p></span></div>    
+</body>
+</html>

@@ -1,0 +1,13 @@
+<html>
+<head>
+<title>Node.js is Going Multithread: The Future of JavaSript’s Backend Framework</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>Node.js走向多线程:JavaSript后端框架的未来</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/node-js-multithreading#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/node-js-multithreading#0001-01-01</a></blockquote><div><div id="hs_cos_wrapper_post_body"><span><div class="blog-post__lead h3"><p>有没有考虑过使用Node.js进行CPU密集型计算？如果是这样，你必须意识到这不是最好的方法。然而，随着Node.js的新面孔出现在地平线上，这种情况可能会在未来发生变化。</p></div><p>Node.js，一个单线程的JavaScript运行时，提供了许多优势。它具有出色的非阻塞I/O性能。它也是轻量级和高效的，它为实时解决方案提供了无与伦比的支持，如sockets.io或WebRTC。它带有最大的包装生态系统。非常适合开发微服务架构。所有这些特性使Node.js成为一项伟大的技术，但是Node.js在一个领域失败了。单线程非常适合处理异步代码，但对于CPU密集型计算来说肯定不是最佳选择。在Node.js中，任何耗时的计算都会阻塞事件循环，从而阻塞整个应用程序。</p>
+<p><span>来自<a href="/web/20220927120223/https://www.netguru.com/blog/how-the-node.js-developer-community-can-help-your-app-succeed" rel="noopener" target="_blank"> Node.js社区</a>的最新消息让我们认为这在不久的将来将会改变。10.5.0版本宣布了Node.js中的多线程功能。该功能仍处于试验阶段，可能会经历广泛的变化，但它确实显示了Node.js的发展方向。</span></p>
+<p>最新版本引入了worker模块，它公开了代表独立JavaScript执行线程的worker。Workers使得在多线程上运行代码以及通过消息通道同步这些代码成为可能。workers旨在处理CPU密集型操作，并不意味着处理异步I/O。此外，与集群模式或进程不同，workers可以高效地共享内存。如果您希望深入了解，请关注 <a href="http://web.archive.org/web/20220927120223/https://nodejs.org/api/worker_threads.html"> <span>官方文档</span> </a> <span>。</span></p>
+<p>Node.js吹嘘自己是单线程的，为什么现在要实现一个与其基本假设完全相反的特性呢？我的想法是，一旦多线程完全发挥作用，<a href="/web/20220927120223/https://www.netguru.com/blog/node-js-apps" rel="noopener"> Node.js应用程序</a>将从单线程和多线程中受益。换句话说，Node.js将保持单线程，除非它决定以其他方式来适应特定的业务需求。最后，Node.js将为图形、复杂数据处理和<a href="/web/20220927120223/https://www.netguru.com/blog/when-to-use-machine-learning" rel="noopener" target="_blank">机器学习</a>腾出空间。</p></span></div></div>    
+</body>
+</html>

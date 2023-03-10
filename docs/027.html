@@ -1,0 +1,83 @@
+<html>
+<head>
+<title>How to Configure Ruby on Rails with Paranoia Gem</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>如何用偏执狂Gem配置Ruby on Rails</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/how-to-configure-ruby-on-rails-with-paranoia-gem#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/how-to-configure-ruby-on-rails-with-paranoia-gem#0001-01-01</a></blockquote><div><span><div data-lead-length="published:true;212;2016-07-06 12:18:47;;How to Configure Ruby on Rails with Paranoia Gem;" class="blog-post__lead h3"><p>偏执狂是一块宝石，它能让你隐藏记录，而不是毁掉记录。如果需要，您可以稍后恢复它们。这是一个非常简单的actsaspaonical的重新实现(一个包含大约300行代码的文件)。</p></div><p id="id-[#ng-training]Railswithparanoia-Assumptions:">我假设您有一个Rails应用程序，它创建了用户、对话和消息模型，并在对话中添加了显示作者和消息的基本视图。<span><br/>T2】</span></p>
+<p>你将使用什么</p>
+<h2 id="id-[#ng-training]Railswithparanoia-Whatyouwilluse:">What You Will Use</h2>
+
+<p>优点:</p>
+<h3 id="id-[#ng-training]Railswithparanoia-Pros:">非常简单的宝石，</h3>
+<ul>
+<li>
+<p>易于调试(只有一个文件)，</p>
+</li>
+<li>
+<p>它做它设定要做的事，</p>
+</li>
+<li>
+<p>积极维护，</p>
+</li>
+<li>
+<p>文档不错。</p>
+</li>
+<li>
+<p>缺点:</p>
+</li>
+</ul>
+<h3 id="id-[#ng-training]Railswithparanoia-Cons:">第一步</h3>
+
+<br/>
+<h3 id="id-[#ng-training]Railswithparanoia-Step1">将偏执狂宝石添加到您的宝石文件中:</h3>
+<p>您这样添加它是因为最新的版本不包括本教程中将要用到的一些特性。</p>
+<pre>gem 'paranoia', git: 'git@github.com:rubysherpas/paranoia.git', branch: 'core'</pre>
+<p>第二步</p>
+<p>现在，假设您想要删除一个用户，但是他的消息仍然应该显示他的作者姓名(在您的视图中，您将看到类似message.user.name的内容)。如果您删除了那个用户，<span>当您试图显示他的消息时，会得到一个错误</span>:</p>
+<h3 id="id-[#ng-training]Railswithparanoia-Step2">为了避免这种情况，您应该将记录标记为已删除，而不是销毁记录。这叫做软删除，这就是偏执狂宝石的全部。</h3>
+<p> </p>
+<pre>undefined method `name` for nil:NilClass</pre>
+<p>要为用户模型启用这种行为，请向其添加以下代码行:</p>
+<p>您还需要生成并运行这个迁移:</p>
+<p>从现在开始，对任何用户调用destroy都会将deleted_at设置为当前日期，而不是实际销毁记录。</p>
+<pre>class User &lt; ActiveRecord::Base<br/>  acts_as_paranoid<br/>  [...]</pre>
+<p>第三步</p>
+<pre>rails generate migration AddDeletedAtToUsers deleted_at:datetime:index<br/>rake db:migrate</pre>
+<p>但是，如果您尝试轻轻地删除一个用户并显示他的消息，您仍然会得到和以前一样的错误。那是因为偏执狂gem改变了一个模型的default_scope，所以每个查询都会把软删除的记录当做不存在(<span>WHERE“users”)。“deleted_at”为空</span>将被添加到查询中)。当然，如果您喜欢您的default_scope，并且不希望它发生变化，您可以做到这一点:</p>
+<p>您还可以通过其他方式访问被软删除的用户记录:</p>
+<h3 id="id-[#ng-training]Railswithparanoia-Step3">如果您需要包括或忽略其他地方被软删除的记录，除了上述方法之外，还有几种方法可以做到这一点:</h3>
+<p><span> User.with_deleted </span>、<span>user . with _ deleted</span>和<span> User.only_deleted </span>范围</p>
+<pre># not available in the newest release, you have to add paranoia gem as in step 1<br/>acts_as_paranoid without_default_scope: true</pre>
+<p>可以用<span> user.paranoia_destroyed检查一条记录是否被软删除？</span>还是<span> user.deleted？</span>方法</p>
+
+
+<p>请注意，如果您希望索引忽略被软删除的记录，您必须按如下方式修改它们:</p>
+<ul>
+<li>
+<p>第四步</p>
+</li>
+<li>
+<p>如果要恢复用户，请使用以下代码:</p>
+</li>
+</ul>
+<p>或者</p>
+<pre>add_index :users, :some_column, where: "deleted_at IS NULL"</pre>
+<h3 id="id-[#ng-training]Railswithparanoia-Step4">第五步</h3>
+<p>如果你想轻轻地删除一个用户和他的所有邮件呢？您可以简单地通过为消息模型实现<span> acts_as_paranoid </span>(如步骤2中一样，您还需要添加一个迁移)，然后使用<span> dependent: :destroy <br/> </span>来实现</p>
+<pre>User.restore(message.user.id)</pre>
+<p> </p>
+<pre>Message.user.restore</pre>
+<h3 id="id-[#ng-training]Railswithparanoia-Step5">请注意，如果您没有为消息模型实现<span> acts_as_paranoid </span>，消息将被正常销毁，并且您将无法恢复它们。此外，恢复用户不会恢复他的所有邮件，除非您使用:</h3>
+<p>或者</p>
+<pre>class User &lt; ActiveRecord::Base <br/>  acts_as_paranoid <br/>  has_many :messages, dependent: :destroy <br/>  [...]</pre>
+<p data-hasbody="true" data-macro-name="code">摘要</p>
+<p>偏执狂是一个非常简单的宝石，使软删除更容易。如果您需要这样一个简单的功能，并且不需要实现您自己的解决方案所带来的更好的控制，那么选择paranoia应该会非常有效。</p>
+<pre>User.restore(user_id, recursive: true)</pre>
+<p>or</p>
+<pre>user.restore(recursive: true)</pre>
+<h3 id="id-[#ng-training]Railswithparanoia-Summary">Summary</h3>
+<p>Paranoia is a really simple gem that makes soft deleting easier. If you need such a simple functionality and you don’t need a better control that comes with implementing your own solution, choosing paranoia should work very well.</p></span></div>    
+</body>
+</html>

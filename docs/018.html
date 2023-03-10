@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>5 steps to make your iOS app more secure</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>让你的iOS应用更安全的5个步骤</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/5-steps-to-make-your-ios-app-more-secure#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/5-steps-to-make-your-ios-app-more-secure#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h2"><p>安全是一件重要的事情。不仅是金融类app，所有都是。你应该一直记在心里。我想给你介绍5个简单易行的步骤，但能让你的iOS应用更安全。</p></div><h2>1.将机密数据存储在安全的地方</h2>
+<p>就存储机密值而言，<strong> Keychain是唯一正确的答案</strong>。当你处理首选项时，用户默认值是好的，但是你不应该在其中存储凭证或个人数据。Keychain可能看起来更难，但是使用包装器会使它更容易。我个人推荐<a href="http://web.archive.org/web/20221006051551/https://github.com/matthewpalmer/Locksmith" rel="noopener" target="_blank">锁匠</a>。</p>
+<p>请记住，Keychain是使用硬件模块(在现代设备、A7和更新的芯片上)保护的<strong>，并且备份到iCloud(这是非常酷的副作用)。</strong></p>
+<p>如果你想加密你的数据库，这也是可能的。对于核心数据来说有点困难，但是对于领域来说确实很简单。</p>
+<p>你也可以使用四种不同的保护级别来编写你的文件。默认级别很好，但是您可以轻松地使您的文件更加安全。你可以在这里了解更多关于<a href="http://web.archive.org/web/20221006051551/https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy/encrypting_your_app_s_files" rel="noopener" target="_blank">的信息。</a></p>
+<h2>2.使网络层无懈可击</h2>
+<p><strong>强烈不推荐HTTP</strong>。由于iOS 9.0应用传输安全(ATS)默认是启用的，所以你必须使用HTTPS而不是不加密的HTTP。不幸的是，ATS很容易被禁用。如果应用程序处于开发阶段，并且您的服务器还没有提供SSL，这没什么，但是应用程序商店构建不应该调用HTTP请求，并且应该启用ATS。</p>
+<p>根据NowSecure的数据，2016年12月，201个下载量最大的免费iOS应用中有80%选择退出ATS。我真诚地希望今天会好得多。</p>
+<p>HTTPS很有效，但是不能保护你免受一种叫做<em>中间人</em>的攻击。<strong>SSL pin</strong>确实如此。这是一个非常简单的技巧，尤其是如果你使用<a href="http://web.archive.org/web/20221006051551/https://github.com/Alamofire/Alamofire/blob/master/Documentation/AdvancedUsage.md#security" rel="noopener" target="_blank"> Alamofire </a>进行网络交流的话。唯一的缺点是，每当服务器的SSL密钥改变时，应用程序必须更新。</p>
+<h2>3.想想你的秘密(比如API)密钥</h2>
+<p>它们<strong>不应该存储在存储库</strong>中。相反，你可以使用<a href="http://web.archive.org/web/20221006051551/https://github.com/orta/cocoapods-keys" rel="noopener" target="_blank"> cocoapods-keys </a>来混淆它们。一个<strong>混淆</strong>对于一个专业的应用程序破解者来说可能没什么大不了的，但至少你的原始秘密值不是Git历史的一部分。</p>
+<p>在GitHub上对<em> client_secret </em> 的<a href="http://web.archive.org/web/20221006051551/https://github.com/search?q=client_secret&amp;type=Commits" rel="noopener" target="_blank">搜索显示，有超过40，000个提交可能会暴露API密钥和秘密。不要推这些东西。</a></p>
+<p>现在你知道它对公共存储库极其重要，但同样适用于私有存储库。</p>
+<h2>4.小心第三方集成</h2>
+<p>这很困难，但是你应该尽最大努力确保第三方框架不容易受到攻击。最简单，但不是100%有效的方法是<strong>保持他们更新</strong>到最新的稳定版本。您尤其应该确保您使用的ad库(如果有的话)是安全的。永远不要为他们禁用ATS，即使他们礼貌地请求。</p>
+<h2>5.不断学习</h2>
+<p>当然，这还不是全部。您仍然应该了解最新的新漏洞。这个<a href="http://web.archive.org/web/20221006051551/https://github.com/felixgr/secure-ios-app-dev" rel="noopener" target="_blank">库</a>可能会有所帮助，因为它包含了iOS应用程序中最常见的漏洞列表。</p>
+<p>在总结之前，我想再和大家分享两个小技巧。</p>
+<p>我坚信你的生产应用不应该打印(或登录Obj-C命名)重要的语句。它们是为调试而设计的，但是黑客很容易看到它们。</p>
+<p>你也不应该忘记Xcode的静态分析报告。你可以通过按⇧⌘B.得到它。这个工具有助于揭示逻辑缺陷，内存泄漏，未使用的变量和其他错误。</p>
+<h2>总结</h2>
+<p>即使遵循这些步骤也不意味着你的iOS应用程序100%不会受到攻击。开发者和破解者之间有一场永恒的战争。我希望这篇博文能成为有用的武器。</p></span></div>    
+</body>
+</html>

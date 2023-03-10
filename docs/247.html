@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>Frontend Quick Tips #7 Versioning - How to Make Your PM Smile After Deployment</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>前端快速提示#7版本控制——如何让您的项目经理在部署后微笑</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/frontend-quick-tips-7-versioning#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/frontend-quick-tips-7-versioning#0001-01-01</a></blockquote><div><span><div class="blog-post__lead h3"><p>没有人喜欢那些大文章——这就是为什么我们创建快速提示——从你阅读它们的那一刻起改变你的开发者生活的简短提示。这些可能是JS代码中解释的一些模式，或者是一些更好的代码的技术。</p></div><span/><p>问题</p>
+<h2>发布新版本的应用程序时，可能会问你一个问题:</h2>
+<p>客户:“好的，那么自从上次发布以来你实际上做了什么？”</p>
+<p>你:“嗯……很多！”</p>
+<p>你可能做了很多改变/特性，但是你想要更多的信息。</p>
+<p>另一个问题包括无法跟踪应用程序的哪些实例提供了哪些功能。你的最新作品包括所有的新功能吗？这个bug修复已经发布到测试环境了吗？嗯，现在我必须挑选所有这些提交…</p>
+<p>解决办法</p>
+<h2>要解决这些(以及更多)问题，您可以做的事情很少:</h2>
+<p>在每个版本上更新你的应用程序——你可以很容易地从一个部署的版本跳到另一个，</p>
+<ul>
+<li aria-level="1">增加提交的可读性，</li>
+<li aria-level="1">创建一个changelog来跟踪自上次发布以来的更改。</li>
+<li aria-level="1">Create a changelog to track changes since last release.</li>
+</ul>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20220925011306im_/https://www.netguru.com/hs-fs/hubfs/1025d2d7-d924-43de-bb00-96f06e71e78d.png?width=700&amp;name=1025d2d7-d924-43de-bb00-96f06e71e78d.png 700w, http://web.archive.org/web/20220925011306im_/https://www.netguru.com/hs-fs/hubfs/1025d2d7-d924-43de-bb00-96f06e71e78d.png?width=2000&amp;name=1025d2d7-d924-43de-bb00-96f06e71e78d.png 2000w" src="../Images/5a516100ebd7b1296988dc69ed4f1b88.png" alt="conventional commits" loading="lazy" data-original-src="http://web.archive.org/web/20220925011306im_/https://www.netguru.com/hs-fs/hubfs/1025d2d7-d924-43de-bb00-96f06e71e78d.png?width=700&amp;name=1025d2d7-d924-43de-bb00-96f06e71e78d.png"/>
+  </figure>You can use the<a href="http://web.archive.org/web/20220925011306/https://www.conventionalcommits.org/en/v1.0.0/"><span> https://www.conventionalcommits.org/en/v1.0.0/</span></a> convention to make sure your commits are readable and unified.<p/>
+<p/><figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20220925011306im_/https://www.netguru.com/hs-fs/hubfs/dc4a4318-f825-4b16-a0d1-89a95e552dd8.png?width=348&amp;name=dc4a4318-f825-4b16-a0d1-89a95e552dd8.png 348w, http://web.archive.org/web/20220925011306im_/https://www.netguru.com/hs-fs/hubfs/dc4a4318-f825-4b16-a0d1-89a95e552dd8.png?width=696&amp;name=dc4a4318-f825-4b16-a0d1-89a95e552dd8.png 696w" src="../Images/7fae5c379628c2ed0de3396b8ec6ee99.png" alt="commits" loading="lazy" data-original-src="http://web.archive.org/web/20220925011306im_/https://www.netguru.com/hs-fs/hubfs/dc4a4318-f825-4b16-a0d1-89a95e552dd8.png?width=348&amp;name=dc4a4318-f825-4b16-a0d1-89a95e552dd8.png"/>
+  </figure>← Here is an example of the syntax<p>您可以使用预定义的前缀之一:</p>
+<p>更多(查看文档)。</p>
+<pre>feat, fix, style, chore </pre>
+<p>然后是门票的范围(可选)和说明(我也建议使用吉拉门票参考)。</p>
+<p>所以模式应该是:</p>
+<p>那很好，但是不够酷！</p>
+<pre>prefix(scope): description.<br/><span/></pre>
+<h2>…这就是为什么你可以把它和这个很酷的插件<a href="http://web.archive.org/web/20220925011306/https://github.com/conventional-changelog/standard-version"> <span>传统版本/标准版本</span> </a>结合起来</h2>
+<p>在一条命令上(我喜欢使用package.json脚本</p>
+<p>)你可以升级新版本的应用程序，并根据你在Markdown中的提交自动创建一个changelog。没错。不仅如此——插件会自动计算如何修改你的应用程序版本(如果只有修正，它只会修改)</p>
+<pre>"release”: ”standard-version”</pre>
+<p>如果有功能的话，它会把版本提高20%</p>
+<pre>x.x.1; </pre>
+<p>附加说明:</p>
+<pre>x.1).</pre>
+<p>你可能听说过我们ReactArea团队关于新项目的CRA模板的最新工作。它从一开始就包含了这个插件。</p><figure class="image&#10;    &#10;    image--framed&#10;    " data-component="image">
+    <img class="image__content" srcset="http://web.archive.org/web/20220925011306im_/https://www.netguru.com/hs-fs/hubfs/f0b94d29-08fc-4cb0-8b6b-0a429e6404ff.png?width=690&amp;name=f0b94d29-08fc-4cb0-8b6b-0a429e6404ff.png 690w, http://web.archive.org/web/20220925011306im_/https://www.netguru.com/hs-fs/hubfs/f0b94d29-08fc-4cb0-8b6b-0a429e6404ff.png?width=1380&amp;name=f0b94d29-08fc-4cb0-8b6b-0a429e6404ff.png 1380w" src="../Images/6c3b673a3ce8487c508a145ccd0c278d.png" alt="features, bug fixes" loading="lazy" data-original-src="http://web.archive.org/web/20220925011306im_/https://www.netguru.com/hs-fs/hubfs/f0b94d29-08fc-4cb0-8b6b-0a429e6404ff.png?width=690&amp;name=f0b94d29-08fc-4cb0-8b6b-0a429e6404ff.png"/>
+  </figure>Here is an example of my project’s latest changelog (all styles, chores and tests are hidden - fixes and features are grouped). And since it creates a CHANGELOG.md file in your repo, you can just simply send a link from Github to your PM. Trust me - they will love it.<p>附注2</p>
+<h3>还有一个类似的包<a href="http://web.archive.org/web/20220925011306/https://github.com/semantic-release/semantic-release" rel="noopener" target="_blank">emantic-release/semantic-release</a>做了几乎相同的事情，尽管它也自动发布/发布你对遥控器的更改。有了标准版，你可以更好地控制你所推送的内容，但是你可以自由地尝试找到最适合你的解决方案。</h3>
+<p>更多<a href="http://web.archive.org/web/20220925011306/https://www.npmjs.com/package/standard-version#how-is-standard-version-different-from-semantic-release-" rel="noopener">此处</a>。</p>
+<h3> </h3>
+<p>There is also a similar package <a href="http://web.archive.org/web/20220925011306/https://github.com/semantic-release/semantic-release" rel="noopener" target="_blank">emantic-release/semantic-release</a> which does mostly the same thing, although it also automatically releases/publishes your changes to the remote. With standard-version you can have more control over what you push, but feel free to experiment to find the solution that suits you the best.</p>
+<p>More <a href="http://web.archive.org/web/20220925011306/https://www.npmjs.com/package/standard-version#how-is-standard-version-different-from-semantic-release-" rel="noopener">here</a>.</p>
+<p> </p></span></div>    
+</body>
+</html>

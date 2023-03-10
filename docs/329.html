@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>New Elements in Array Are Shown at the Bottom and Go to the Top After a Short Delay</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>数组中的新元素显示在底部，并在短暂延迟后显示在顶部</h1>
+<blockquote>原文：<a href="http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/new-elements-in-array-are-shown-at-the-bottom-and-go-to-the-top-after-short-delay#0001-01-01">http://web.archive.org/web/20230307163032/https://www.netguru.com/blog/new-elements-in-array-are-shown-at-the-bottom-and-go-to-the-top-after-short-delay#0001-01-01</a></blockquote><div><div id="hs_cos_wrapper_post_body"><span><p class="blog-post__lead h2">假设您有一个有序笔记列表...型号:</p><pre class="cq-content wiki-content">sortCreatedAtDesc: ['createdAt:desc'],<br/>notesSorted: Ember.computed.sort('notes', 'sortCreatedAtDesc')</pre>
+<p class="cq-content wiki-content">...它们显示在这样的视图中:</p>
+
+<p class="cq-content wiki-content">问题</p>
+<h2 class="cq-content wiki-content">向收藏添加新笔记后，它会出现在页面的底部，并在短暂的延迟后移动到顶部(它应该出现在第一个位置，因为它是最新的)。<br/> <br/>如何让它立刻出现在最上面？</h2>
+<p class="cq-content wiki-content">解决办法</p>
+<p class="cq-content wiki-content">显然，发生这种情况是因为新便笺在信息从服务器返回之前就已显示。属性是在后端设置的，所以在很短的时间内——当等待后端响应时——它的值为<span> null </span>并被放置在页面的底部。<br/> <br/>这个问题的解决方案是只对保存的笔记进行排序，省略掉那些带有<span>是新的</span>属性的笔记。<br/>型号中的<br/>:</p>
+<h2 class="cq-content wiki-content">请记住，在点击“保存”和在列表上显示新注释之间会有短暂的延迟。因此，您应该考虑相应地更改UI。例如，您可以禁用“保存”按钮或显示“笔记正在保存中…”给用户的消息。</h2>
+<p> </p>
+<pre>sortCreatedAtDesc: ['createdAt:desc'],<br/>notesSaved: Ember.computed.filterBy('notes', 'isNew', false),<br/>notesSorted: Ember.computed.sort('notesSaved', 'sortCreatedAtDesc'),</pre>
+<p>下面是在保存操作中使用<span>保存</span>的示例:</p>
+<p> </p>
+<p>Here's an exemplary use of <span>isSaving</span> in save action:</p>
+<pre>saveNote: function() {<br/> this.set('isSaving', true);<br/> //...<br/> note.save().then(() =&gt; {<br/>   this.set('isSaving', false);<br/> }<br/> this.set("noteBody", "");<br/>}</pre></span></div></div>    
+</body>
+</html>
